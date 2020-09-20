@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Projects from "./projectsComponent";
 import Inventory from "./inventoryComponent";
 import Trip from "./tripComponent";
+import Species from './speciesCardComponent';
 import { createStackNavigator } from "react-navigation";
 import { View, Platform } from "react-native";
 
@@ -10,6 +11,7 @@ const Navigator = createStackNavigator(
     Projects: { screen: Projects },
     Inventory: { screen: Inventory },
     Collection: { screen: Trip },
+    Info: {screen: Species}
   },
   {
     initialRouteName: "Projects",

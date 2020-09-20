@@ -30,7 +30,8 @@ class Trip extends Component {
     };
 
     const speciesList = ({ item }) => {
-      return <ListItem title={item.comName} subtitle={`Total: ${item.total}`} leftAvatar={{ source: require("./images/caveSalamander.jpg") }} />;
+      const {navigate} = this.props.navigation;
+      return <ListItem title={item.comName} subtitle={`Total: ${item.total}`} leftAvatar={{ source: require("./images/caveSalamander.jpg") }} onPress={() => navigate('Info', {specimen: item})} />;
     };
     return (
       <ScrollView>
