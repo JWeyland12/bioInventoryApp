@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { ScrollView, FlatList } from "react-native";
-import { ListItem } from "react-native-elements";
+import { View, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { ListItem, Icon } from "react-native-elements";
 import { PROJECTSLIST } from "../shared/projects";
 import { MASTER, TRIP, SPECIES } from "../shared/inventory";
 
@@ -44,13 +44,33 @@ class Inventory extends Component {
     };
 
     return (
-      <ScrollView>
-        {console.log(this.state.index)}
+      <View style={{flex: 1}}>
         <InventoryMaster projectId={projectId} project={project} />
         <InventoryList trip={tripFil} projectId={projectId} />
-      </ScrollView>
+        <TouchableOpacity style={styles.TouchableOpacityStyle}>
+          <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
+        </TouchableOpacity>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+
+  TouchableOpacityStyle: {
+    position: "absolute",
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    right: 30,
+    bottom: 30,
+  },
+  FloatingButtonStyle: {
+    resizeMode: "contain",
+    width: 50,
+    height: 50,
+  },
+});
 
 export default Inventory;

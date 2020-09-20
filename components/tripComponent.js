@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { ScrollView, FlatList } from "react-native";
+import { View, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { SPECIES, TRIP } from "../shared/inventory";
-import { ListItem } from "react-native-elements";
+import { ListItem, Icon } from "react-native-elements";
 
 class Trip extends Component {
   constructor(props) {
@@ -34,13 +34,31 @@ class Trip extends Component {
       return <ListItem title={item.comName} subtitle={`Total: ${item.total}`} leftAvatar={{ source: require("./images/caveSalamander.jpg") }} onPress={() => navigate('Info', {specimen: item})} />;
     };
     return (
-      <ScrollView>
-        {console.log(`tripId: ${tripId}`)}
-        {/* {console.log(`tripInded: ${}`)} */}
+      <View style={{flex: 1}}>
         <FlatList data={speciesSelector()} renderItem={speciesList} keyExtractor={(item) => item.id.toString()} />
-      </ScrollView>
+        <TouchableOpacity style={styles.TouchableOpacityStyle}>
+          <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
+        </TouchableOpacity>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  TouchableOpacityStyle: {
+    position: "absolute",
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    right: 30,
+    bottom: 30,
+  },
+  FloatingButtonStyle: {
+    resizeMode: "contain",
+    width: 50,
+    height: 50,
+  },
+});
 
 export default Trip;
