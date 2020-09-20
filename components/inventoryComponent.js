@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, ScrollView, FlatList } from "react-native";
-import { Tile } from "react-native-elements";
+import { Tile, ListItem } from "react-native-elements";
 import { PROJECTSLIST } from "../shared/projects";
 import { MASTER, TRIP, SPECIES } from "../shared/inventory";
 
@@ -25,7 +25,7 @@ class Inventory extends Component {
     const tripFil = this.state.trip.filter((trip) => trip.index === projectId);
 
     const renderList = ({ item }) => {
-      return <Tile title={`Date: ${item.date}`} featured imageSrc={require("./images/neversinkPit.jpg")} />;
+      return <ListItem title={`Inventory Date: ${item.date}`} featured leftAvatar={{source: require("./images/neversinkPit.jpg")}} />;
     };
 
     const InventoryList = ({trip}) => {
@@ -36,7 +36,7 @@ class Inventory extends Component {
     const InventoryMaster = ({project}) => {
       {console.log('project' + project.name)}
       if (project) {
-        return <Tile title={`${project.name} Master List`} featured imageSrc={require("./images/stephensGap.jpg")} />;
+        return <ListItem title={`${project.name} Master List`} featured leftAvatar={{source: require("./images/stephensGap.jpg")}} />;
       }
       return <View />;
     };
