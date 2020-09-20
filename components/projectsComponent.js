@@ -1,25 +1,31 @@
-import React from 'react';
-import {FlatList} from 'react-native';
-import {ListItem} from 'react-native-elements';
+import React, {Component} from "react";
+import { FlatList, Text } from "react-native";
+import { ListItem, Tile } from "react-native-elements";
+import {PROJECTSLIST} from '../shared/projects'
 
-const Projects = (props) => {
-
-  const renderProject = ({item}) => {
-    return (
-      <ListItem
-        title={item.name}
-        subtitle={item.county - item.state}
-        leftAvatar={{ source: require('./images/stephensGap.jpg')}}
-        />
-    )
+class Projects extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      projectsList: PROJECTSLIST
+    };
   }
-  return (
-    <FlatList
-      data={props.projects}
-      renderItem={renderProject}
-      keyExtractor={item => item.id.toString()}
-      />
-  );
+  
+  static navigationOptions = {
+    title: "Projects"
+  }
+  
+  render() {
+    const { navigate } = this.props.navigation;
+    const renderProject = ({ item }) => {
+      return (
+        <Tile onPress={() => navigate('Inventory', {projectId: item.id, projectList: this.state.projectList})} title={item.name} caption={item.county} imageSrc={require("./images/stephensGap.jpg")}/>
+      );
+    };
+
+
+  return <FlatList data={this.state.projectsList} renderItem={renderProject} keyExtractor={(item) => item.id.toString()} />;
+}
 };
 
 export default Projects;
