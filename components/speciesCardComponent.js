@@ -14,7 +14,7 @@ class Species extends Component {
   render() {
   const specimen = this.props.navigation.getParam('specimen')
     return (
-      <View>
+      <View style={{flex: 1}}>
         <Card
           image={require('./images/caveSalamander.jpg')}
         >
