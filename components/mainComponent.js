@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Projects from "./projectsComponent";
 import Inventory from "./inventoryComponent";
+import Trip from "./tripComponent";
 import { createStackNavigator } from "react-navigation";
 import { View, Platform } from "react-native";
 
@@ -8,6 +9,7 @@ const Navigator = createStackNavigator(
   {
     Projects: { screen: Projects },
     Inventory: { screen: Inventory },
+    Collection: { screen: Trip },
   },
   {
     initialRouteName: "Projects",
@@ -15,19 +17,18 @@ const Navigator = createStackNavigator(
       headerStyle: {
         backgroundColor: "#00ced1",
       },
-      headerTintColor: '#000',
+      headerTintColor: "#000",
       headerTitleStyle: {
-        color: '#000'
-      }
+        color: "#000",
+      },
     },
   }
 );
 
 class Main extends Component {
-
   render() {
     return (
-      <View style={{flex: 1, paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight }}>
+      <View style={{ flex: 1, paddingTop: Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight }}>
         <Navigator />
       </View>
     );
