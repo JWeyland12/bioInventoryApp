@@ -21,11 +21,11 @@ class Inventory extends Component {
 
   render() {
     const projectId = this.props.navigation.getParam("projectId");
-    const project = this.state.projectsList.filter((project) => project.id === projectId);
+    const project = this.state.projectsList.filter((project) => project.id === projectId)[0];
     const tripFil = this.state.trip.filter((trip) => trip.index === projectId);
 
     const renderList = ({ item }) => {
-      return <Tile title={item.date} featured imageSrc={require("./images/neversinkPit.jpg")} />;
+      return <Tile title={`Date: ${item.date}`} featured imageSrc={require("./images/neversinkPit.jpg")} />;
     };
 
     const InventoryList = ({trip}) => {
@@ -34,8 +34,9 @@ class Inventory extends Component {
     };
 
     const InventoryMaster = ({project}) => {
+      {console.log('project' + project.name)}
       if (project) {
-        return <Tile title={project.name} featured imageSrc={require("./images/stephensGap.jpg")} />;
+        return <Tile title={`${project.name} Master List`} featured imageSrc={require("./images/stephensGap.jpg")} />;
       }
       return <View />;
     };

@@ -15,17 +15,17 @@ export const TRIP = [
   {
     index: 0,
     id: 0,
-    date: "01/25/1995",
+    date: "Jan 25, 2020",
   },
   {
     index: 0,
     id: 1,
-    date: "01/25/1995",
+    date: "Jan 25, 2020",
   },
   {
     index: 0,
     id: 2,
-    date: "01/25/1995",
+    date: "Jan 25, 2020",
   },
 ];
 
