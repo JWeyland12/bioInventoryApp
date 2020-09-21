@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, FlatList, TouchableOpacity, StyleSheet } from "react-native";
-import { ListItem, Icon } from "react-native-elements";
+import { View, FlatList, TouchableOpacity, StyleSheet, Text } from "react-native";
+import { ListItem, Icon, Card } from "react-native-elements";
 import { PROJECTSLIST } from "../shared/projects";
 import { MASTER, TRIP, SPECIES } from "../shared/inventory";
 
@@ -31,7 +31,19 @@ class Inventory extends Component {
     };
 
     const InventoryList = ({trip}) => {
-      return <FlatList data={trip} renderItem={renderList} keyExtractor={(item) => item.id.toString()} />;
+      if (trip.length > 1) {
+        return <FlatList data={trip} renderItem={renderList} keyExtractor={(item) => item.id.toString()} />;
+      } else {
+      return (
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+          <Card containerStyle={styles.emptyScreenCard} dividerStyle={{display: 'none'}}>
+            <Text style={styles.textInCard}>You haven't created any inventories yet!</Text>
+            <Text></Text>
+            <Text style={styles.textInCard}>Click the '+' button to get started!</Text>
+          </Card>
+        </View>
+      )
+      }
     };
 
     const InventoryMaster = ({project}) => {
@@ -71,6 +83,23 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+  textInCard: {
+    top: 30,
+    fontSize: 20,
+    alignContent: 'center',
+    textAlign: 'center',
+    color: 'dimgray'
+  },
+  emptyScreenCard: {
+    width: "60%",
+    height: 250,
+    alignItems: 'center',
+    backgroundColor: 'whitesmoke',
+    borderRadius: 10,
+    shadowColor: 'black',
+    shadowOpacity: 10,
+    
+  }  
 });
 
 export default Inventory;
