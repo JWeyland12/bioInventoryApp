@@ -17,11 +17,13 @@ const Navigator = createStackNavigator(
     initialRouteName: "Projects",
     navigationOptions: {
       headerStyle: {
-        backgroundColor: "#00ced1",
+        backgroundColor: "#008b8b",
+        justifyContent: 'center',
+        alignItems: 'center'
       },
       headerTintColor: "#000",
       headerTitleStyle: {
-        color: "#000",
+        color: "#FFF",
       },
     },
   }

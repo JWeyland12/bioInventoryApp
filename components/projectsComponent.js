@@ -18,7 +18,9 @@ class Projects extends Component {
   render() {
     const { navigate } = this.props.navigation;
     const renderProject = ({ item }) => {
-      return <Tile onPress={() => navigate("Inventory", { projectId: item.id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require("./images/stephensGap.jpg")} />;
+      {console.log(item.imgSrc)}
+      const image = item.imgSrc
+      return <Tile onPress={() => navigate("Inventory", { projectId: item.id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
     };
 
     const RenderContent = ({projectsList}) => {
