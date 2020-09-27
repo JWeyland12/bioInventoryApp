@@ -3,12 +3,14 @@ import Projects from "./projectsComponent";
 import Inventory from "./inventoryComponent";
 import Trip from "./tripComponent";
 import Species from './speciesCardComponent';
+import Areas from './areaComponent';
 import { createStackNavigator } from "react-navigation";
 import { View, Platform } from "react-native";
 
 const Navigator = createStackNavigator(
   {
     Projects: { screen: Projects },
+    Area: {screen: Areas},
     Inventory: { screen: Inventory },
     Collection: { screen: Trip },
     Info: {screen: Species}

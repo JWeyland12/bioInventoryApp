@@ -20,8 +20,16 @@ class Projects extends Component {
     const renderProject = ({ item }) => {
       {console.log(item.imgSrc)}
       const image = item.imgSrc
-      return <Tile onPress={() => navigate("Inventory", { projectId: item.id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
+      return <Tile onPress={() => navigate("Area", { projectId: item.id, projName: item.name })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
     };
+
+    // render() {
+    //   const { navigate } = this.props.navigation;
+    //   const renderProject = ({ item }) => {
+    //     {console.log(item.imgSrc)}
+    //     const image = item.imgSrc
+    //     return <Tile onPress={() => navigate("Inventory", { projectId: item.id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
+    //   };
 
     const RenderContent = ({projectsList}) => {
       if (!projectsList) {
