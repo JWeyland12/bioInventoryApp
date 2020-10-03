@@ -18,7 +18,8 @@ areaRouter
 })
 
 .post((req, res, next) => {
-  req.body.project = req.body.projectId
+  if (req.body.projectId) {
+    req.body.project = req.body.projectId
   Area.create(req.body)
   .then(area => {
     res.statusCode = 200,
@@ -26,6 +27,11 @@ areaRouter
     res.json(area)
   })
   .catch(err => next(err))
+  } else {
+    err = new Error(`${area} has no associated project`);
+    err.status = 406;
+    return next(err)
+  }
 })
 
 .put((req, res, next) => {
