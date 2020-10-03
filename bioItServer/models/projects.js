@@ -1,22 +1,6 @@
 const mongoose = require('mongoose');
-const projectRouter = require('../routes/projectRouter');
 const Schema = mongoose.Schema;
 
-const areaSchema = new Schema (
-  {
-    area: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    geoRef: {
-      type: String,
-    }
-  },
-  {
-    timestamps: true
-  }
-)
 
 const projectSchema = new Schema (
   {
@@ -37,12 +21,12 @@ const projectSchema = new Schema (
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     },
-    areas: [areaSchema]
   },
   {
     timestamps: true
   }
 );
+
 
 const Project = mongoose.model('Project', projectSchema);
 

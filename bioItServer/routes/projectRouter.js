@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const Project = require("../models/projects");
+const Area = require('../models/areas')
 
 const projectRouter = express.Router();
 
@@ -37,7 +38,11 @@ projectRouter
     .catch(err => next(err))
   })
   .delete((req, res, next) => {
-    Project.findByIdAndDelete(req.body._id)
+    async function asyncCall(req) {
+      await Area.deleteMany({project: req.body._id})
+    }
+    asyncCall(req, next)
+    Project.findOneAndDelete({_id: req.body._id})
     .then(response => {
       res.stausCode = 200;
       res.setHeader('Content-Type', 'application/json');
@@ -46,67 +51,7 @@ projectRouter
     .catch(err => next(err))
   })
 
-projectRouter
-.route('/:projectId/areas')
-.get((req, res, next) => {
-  Project.findById(req.params.projectId)
-  .then(project => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json')
-    res.json(project.areas)
-  })
-  .catch(err => next(err))
-})
-.post((req, res, next) => {
-  Project.findById(req.params.projectId)
-  .then(project => {
-    project.areas.push(req.body)
-    project.save()
-    .then(project => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json')
-      res.json(project)
-    })
-    .catch(err => next(err))
-  })
-  .catch(err => next(err))
-})
-// .put((req, res, next) => {
-//   Project.findByIdAndUpdate(req.body._id)
-//   .then(area => {
-//     res.statusCode = 200;
-//     res.setHeader('Content-Type', 'application/json')
-//     res.json(area)
-//   })
-//   .catch(err => next(err))
-// })
-// .delete((req, res, next) => {
-//   Project.findById(req.params.projectId)
-// })
 
-projectRouter
-.route('/:projectId/areas/:areaId')
-.put((req, res, next) => {
-  Project.findById(req.params.projectId)
-  .then(project => {
-    if(req.body.area) {
-      project.areas.id(req.params.areaId).area = req.body.area;
-    }
-    if (req.body.geoRef) {
-      project.areas.id(req.params.areaId).geoRef = req.body.geoRef;
-    }
-    project.save()
-    .then(project => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json')
-      res.json(project)
-    })
-    .catch(err => next(err))
-  })
-  .catch(err => next(err))
-})
-.delete((req, res, next) => {
-  
-})
+
 
 module.exports = projectRouter;
