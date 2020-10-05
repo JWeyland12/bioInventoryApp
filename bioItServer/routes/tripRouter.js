@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const Trip = require("../models/trips");
+const Species = require('../models/species');
 
 const tripRouter = express.Router();
 tripRouter.use(bodyParser.json());
@@ -42,6 +43,24 @@ tripRouter
   .catch(err => next(err))
 })
 .delete((req, res, next) => {
+  async function removeTripRefFromSpecies(req, next) {
+    await Species.find()
+    .then(species => {
+      for (let i = species.length-1; i>=0; i--) {
+        console.log('enter loop 1')
+        for (let j = species[i].tripArr.length-1; j>=0; j--) {
+          console.log('enter loop 2')
+          if (species[i].tripArr[j].tripRef.toString() === req.body._id.toString()) {
+            console.log('enter for')
+            species[i].tripArr[j].remove()
+            species[i].save()
+          }
+        }
+      }
+    })
+    .catch(err => next(err))
+  }
+  removeTripRefFromSpecies(req, next)
   Trip.findByIdAndDelete(req.body._id)
   .then(trip => {
     res.statusCode = 200;

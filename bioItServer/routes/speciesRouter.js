@@ -27,34 +27,35 @@ speciesRouter
         if (specimen && req.body.tripObj) {
           Species.findById(req.body._id)
             .then((specimen) => {
-              console.log('Species exists, adding tripRef to array')
-              const tripRefArr = specimen.tripArr.map(tripArr => tripArr.tripRef)
+              console.log("Species exists, adding tripRef to array");
+              const tripRefArr = specimen.tripArr.map((tripArr) => tripArr.tripRef);
               // make sure species is unique to trip
               if (!tripRefArr.includes(req.body.tripObj.tripRef)) {
-              specimen.tripArr.push(req.body.tripObj);
-              specimen.save()
-              .then((specimen) => {
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "application/json");
-                res.json(specimen);
-              })
-              .catch(err => next(err))
-            } else {
-              const err = new Error(`You've already found a ${specimen.comName} on this trip!`)
-              err.statusCode = 406;
-              return next(err)
-            }
+                specimen.tripArr.push(req.body.tripObj);
+                specimen
+                  .save()
+                  .then((specimen) => {
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "application/json");
+                    res.json(specimen);
+                  })
+                  .catch((err) => next(err));
+              } else {
+                const err = new Error(`You've already found a ${specimen.comName} on this trip!`);
+                err.statusCode = 406;
+                return next(err);
+              }
             })
-            .catch((err) => next(err))
+            .catch((err) => next(err));
         } else if (specimen) {
           // handles species created from species list that already exists
-          console.log('Species created from species list - already exists')
+          console.log("Species created from species list - already exists");
           const err = new Error(`${req.body.sciName} already exists!`);
           err.statusCode = 406;
           return next(err);
         } else if (!specimen && req.body.tripObj) {
           // handles speceies created within a trip that doesn't exist
-          console.log('species created within a trip')
+          console.log("species created within a trip");
           req.body.tripArr = [req.body.tripObj];
           Species.create(req.body)
             .then((specimen) => {
@@ -65,7 +66,7 @@ speciesRouter
             .catch((err) => next(err));
         } else {
           // handles species created from species list
-          console.log('species created from species list')
+          console.log("species created from species list");
           Species.create(req.body)
             .then((specimen) => {
               res.statusCode = 200;
@@ -77,6 +78,40 @@ speciesRouter
       })
       .catch((err) => next(err));
   })
-  .put((req, res, next) => {});
+  .put((req, res, next) => {
+    Species.findById(req.body._id)
+      .then((specimen) => {
+        if (specimen) {
+          specimen.sciName = req.body.sciName;
+          specimen.comName = req.body.comName;
+          for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
+            console.log("enter loop")
+
+            if (specimen.tripArr[i]._id.toString() === req.body.tripObj._id.toString()) {
+              specimen.tripArr[i].tripRef = req.body.tripObj.tripRef;
+              specimen.tripArr[i].total = req.body.tripObj.total;
+              // break;
+            } else {
+              console.log(specimen.tripArr[i]._id);
+              console.log(req.body.tripObj._id);
+              console.log("you didn't enter the if block, try again");
+            }
+          }
+          specimen
+            .save()
+            .then((specimen) => {
+              res.statusCode = 200;
+              res.setHeader("Content-Type", "application/json");
+              res.json(specimen);
+            })
+            .catch((err) => next(err));
+        } else {
+          const err = new Error(`${specimen} does not exist!`);
+          err.statusCode = 404;
+          return next(err);
+        }
+      })
+      .catch((err) => next(err));
+  });
 
 module.exports = speciesRouter;
