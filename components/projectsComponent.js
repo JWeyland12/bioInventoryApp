@@ -41,7 +41,7 @@ class Projects extends Component {
           </View>
         );
     } else {
-      return <FlatList data={projects} renderItem={renderProject} keyExtractor={(item) => item.id.toString()} />
+      return <FlatList data={projects} renderItem={renderProject} keyExtractor={(item) => item._id.toString()} />
     }
   }
 
