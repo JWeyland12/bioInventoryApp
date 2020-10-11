@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import { FlatList, View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { ListItem, Tile, Icon, Card } from "react-native-elements";
-import { PROJECTSLIST } from "../shared/projects";
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => {
+  return {projects: state.projects}
+}
 
 class Projects extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      projectsList: PROJECTSLIST,
-    };
-  }
 
   static navigationOptions = {
     title: "Projects",
@@ -20,7 +18,7 @@ class Projects extends Component {
     const renderProject = ({ item }) => {
       {console.log(item.imgSrc)}
       const image = item.imgSrc
-      return <Tile onPress={() => navigate("Area", { projectId: item.id, projName: item.name })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
+      return <Tile onPress={() => navigate("Area")} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
     };
 
     // render() {
@@ -31,8 +29,8 @@ class Projects extends Component {
     //     return <Tile onPress={() => navigate("Inventory", { projectId: item.id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
     //   };
 
-    const RenderContent = ({projectsList}) => {
-      if (!projectsList) {
+    const RenderContent = ({projects}) => {
+      if (!projects) {
         return (
           <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
             <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
@@ -43,14 +41,13 @@ class Projects extends Component {
           </View>
         );
     } else {
-      return <FlatList data={projectsList} renderItem={renderProject} keyExtractor={(item) => item.id.toString()} />
+      return <FlatList data={projects} renderItem={renderProject} keyExtractor={(item) => item.id.toString()} />
     }
   }
 
     return (
       <View style={{ flex: 1 }}>
-        {console.log(this.state.projectsList)}
-        <RenderContent projectsList={this.state.projectsList}/>
+        <RenderContent projects={this.props.projects.projects}/>
         <TouchableOpacity style={styles.TouchableOpacityStyle}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
@@ -92,4 +89,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Projects;
+export default connect(mapStateToProps)(Projects);

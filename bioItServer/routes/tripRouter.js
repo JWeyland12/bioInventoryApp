@@ -47,14 +47,12 @@ tripRouter
     await Species.find()
     .then(species => {
       for (let i = species.length-1; i>=0; i--) {
-        console.log('enter loop 1')
         for (let j = species[i].tripArr.length-1; j>=0; j--) {
-          console.log('enter loop 2')
           if (species[i].tripArr[j].tripRef.toString() === req.body._id.toString()) {
-            console.log('enter for')
             species[i].tripArr[j].remove()
             species[i].save()
           }
+          // expensive process. time complexity O(n^2), space complexity O(n). Better solution?
         }
       }
     })

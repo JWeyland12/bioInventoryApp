@@ -13,6 +13,10 @@ const speciesSchema = new Schema(
       type: String,
       required: true,
     },
+    plant: {
+      type: Boolean,
+      required: true,
+    },
     tripArr: [
       {
         tripRef: String,

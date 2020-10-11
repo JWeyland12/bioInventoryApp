@@ -2,26 +2,32 @@ import React, { Component } from "react";
 import Projects from "./projectsComponent";
 import Inventory from "./inventoryComponent";
 import Trip from "./tripComponent";
-import Species from './speciesCardComponent';
-import Areas from './areaComponent';
+import Species from "./speciesCardComponent";
+import Areas from "./areaComponent";
 import { createStackNavigator } from "react-navigation";
 import { View, Platform } from "react-native";
+import { connect } from "react-redux";
+import { fetchProjects } from "../redux/actionCreators";
+
+const mapDispatchToProps = {
+  fetchProjects,
+}
 
 const Navigator = createStackNavigator(
   {
     Projects: { screen: Projects },
-    Area: {screen: Areas},
+    Area: { screen: Areas },
     Inventory: { screen: Inventory },
     Collection: { screen: Trip },
-    Info: {screen: Species}
+    Info: { screen: Species },
   },
   {
     initialRouteName: "Projects",
     navigationOptions: {
       headerStyle: {
         backgroundColor: "#008b8b",
-        justifyContent: 'center',
-        alignItems: 'center'
+        justifyContent: "center",
+        alignItems: "center",
       },
       headerTintColor: "#000",
       headerTitleStyle: {
@@ -32,6 +38,11 @@ const Navigator = createStackNavigator(
 );
 
 class Main extends Component {
+
+componentDidMount() {
+  this.props.fetchProjects();
+}
+
   render() {
     return (
       <View style={{ flex: 1, paddingTop: Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight }}>
@@ -41,4 +52,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default connect(null, mapDispatchToProps)(Main);
