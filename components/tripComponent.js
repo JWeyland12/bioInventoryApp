@@ -55,8 +55,12 @@ class Trips extends Component {
       }
     };
 
+    const { navigate } = this.props.navigation
+
     return (
       <View style={{ flex: 1 }}>
+        {/* add area photo as avatar */}
+        <ListItem title={'Area Summary'} onPress={() => navigate('AreaSummary', {areaId: areaId})}/>
         <RenderTrips trips={trips} />
         <TouchableOpacity style={styles.TouchableOpacityStyle}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />

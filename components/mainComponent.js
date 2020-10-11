@@ -4,6 +4,7 @@ import Inventory from "./inventoryComponent";
 import Trips from "./tripComponent";
 import Species from "./speciesCardComponent";
 import Areas from "./areaComponent";
+import AreaSummary from './areaSummaryComponent';
 import { createStackNavigator } from "react-navigation";
 import { View, Platform } from "react-native";
 import { connect } from "react-redux";
@@ -24,6 +25,7 @@ const Navigator = createStackNavigator(
     Projects: { screen: Projects },
     Areas: { screen: Areas },
     Trips: {screen: Trips},
+    AreaSummary: {screen: AreaSummary},
     // Inventory: { screen: Inventory },
     // Collection: { screen: Trip },
     // Info: { screen: Species },
