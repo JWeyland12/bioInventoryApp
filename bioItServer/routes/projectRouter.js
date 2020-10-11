@@ -2,6 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const Project = require("../models/projects");
 const Area = require('../models/areas')
+const multer = require('multer');
+
+const upload = multer({
+  dest: 'public/images'
+})
 
 const projectRouter = express.Router();
 
@@ -9,7 +14,7 @@ projectRouter.use(bodyParser.json());
 
 projectRouter
   .route("/")
-  .get((req, res, next) => {
+  .get(upload.single('imageFile'), (req, res, next) => {
     Project.find()
       .then((Projects) => {
         res.statusCode = 200;

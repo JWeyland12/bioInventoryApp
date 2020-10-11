@@ -1,63 +1,63 @@
 import React, { Component } from "react";
 import { View, FlatList, TouchableOpacity, StyleSheet, Text } from "react-native";
-import { SPECIES, TRIP } from "../shared/inventory";
 import { ListItem, Icon, Card } from "react-native-elements";
+import { connect } from "react-redux";
 
-class Trip extends Component {
+const mapStateToProps = (state) => {
+  return { trips: state.trips };
+};
+
+class Trips extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      species: SPECIES,
-      trip: TRIP,
-    };
   }
 
   static navigationOptions = {
-    title: "Collection",
+    title: "Trips",
   };
 
   render() {
-    const tripId = this.props.navigation.getParam("tripId");
-    const tripFil = this.props.navigation.getParam("tripFil");
+    const areaId = this.props.navigation.getParam("areaId");
+    const trips = this.props.trips.trips.filter((trips) => trips.areaId === areaId);
 
-    const speciesSelector = () => {
-      if (tripId === undefined) {
-        const tripArr = tripFil.map((trip) => trip.id);
-        const master = this.state.species.filter((species) => tripArr.includes(species.index));
-        return master;
-      } else if (tripId.toString()) {
-        const species = this.state.species.filter((species) => species.index === tripId);
-        return species;
-      } else {
-        const noReturn = null;
-        return noReturn;
-      }
-    };
+    // const speciesSelector = () => {
+    //   if (tripId === undefined) {
+    //     const tripArr = tripFil.map((trip) => trip.id);
+    //     const master = this.state.species.filter((species) => tripArr.includes(species.index));
+    //     return master;
+    //   } else if (tripId.toString()) {
+    //     const species = this.state.species.filter((species) => species.index === tripId);
+    //     return species;
+    //   } else {
+    //     const noReturn = null;
+    //     return noReturn;
+    //   }
+    // };
 
-    const speciesList = ({ item }) => {
+    const tripList = ({ item }) => {
       const { navigate } = this.props.navigation;
-      return <ListItem title={item.comName} subtitle={`Total: ${item.total}`} leftAvatar={{ source: require("./images/caveSalamander.jpg") }} onPress={() => navigate("Info", { specimen: item })} />;
+      return <ListItem title={item.date} onPress={() => navigate("Inventory", { tripId: item._id })} />;
     };
-// CORRECT NO CONTENT CARD
-    const RenderContent = ({species}) => {
-      if (!species) {
+    // CORRECT NO CONTENT CARD
+    const RenderTrips = ({ trips }) => {
+      if (trips.length === 0) {
         return (
           <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
             <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
-              <Text style={styles.textInCard}>You haven't created any inventories yet!</Text>
+              <Text style={styles.textInCard}>You haven't created any trips yet!</Text>
               <Text></Text>
               <Text style={styles.textInCard}>Click the '+' button to get started!</Text>
             </Card>
           </View>
         );
       } else {
-        return <FlatList data={speciesSelector()} renderItem={speciesList} keyExtractor={(item) => item.id.toString()} />;
+        return <FlatList data={trips} renderItem={tripList} keyExtractor={(item) => item._id.toString()} />;
       }
     };
 
     return (
       <View style={{ flex: 1 }}>
-        <RenderContent species={this.state.species} tripFil={tripFil}/>
+        <RenderTrips trips={trips} />
         <TouchableOpacity style={styles.TouchableOpacityStyle}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Trip;
+export default connect(mapStateToProps)(Trips);

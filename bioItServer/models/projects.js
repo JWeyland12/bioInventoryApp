@@ -17,6 +17,7 @@ const projectSchema = new Schema (
       type: String,
       required: true
     },
+    imgSrc: String,
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
