@@ -17,7 +17,6 @@ class AreaSummary extends Component {
 
   render() {
     const areaId = this.props.navigation.getParam("areaId");
-    const trips = this.props.trips.trips.filter((trips) => trips.areaId === areaId);
     const species = this.props.species.species;
     const speciesArr = [];
 
@@ -31,9 +30,6 @@ class AreaSummary extends Component {
       });
     });
 
-    const test = speciesArr.map((species) => species.comName);
-    console.log(test);
-
     const speciesTotal = (speciesArr) =>
       speciesArr.forEach((s) => {
         const totalArr = s.tripArr.map((r) => {
@@ -41,12 +37,10 @@ class AreaSummary extends Component {
             return r.total;
           }
         });
-        console.log(`totalArr: ${totalArr}`);
         const total = totalArr.reduce((a, b) => {
           return a + b;
         }, 0);
         s.total = total;
-        console.log(s);
       });
 
     speciesTotal(speciesArr);
@@ -72,6 +66,7 @@ class AreaSummary extends Component {
 
     return (
       <View style={{ flex: 1 }}>
+        <ListItem title={'Geo-reference'} subtitle={'84.428000, -111.548000'}/>
         <RenderSpecies speciesArr={speciesArr} />
       </View>
     );
