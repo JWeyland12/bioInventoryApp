@@ -18,36 +18,33 @@ class AreaSummary extends Component {
   render() {
     const areaId = this.props.navigation.getParam("areaId");
     const trips = this.props.trips.trips.filter((trips) => trips.areaId === areaId);
-    // const species = this.props.species.species.map((species) => {
-    //   console.log("you are here");
-    //   console.log(`filtered trips: ${trips.length}`)
-    //   for (const id of trips) {
-    //     console.log("enter first for loop");
-    //     console.log(`tripArr._id: ${species.tripArr.length}`)
-    //     if (species.tripArr.length !== 0){
-    //       console.log('entered second if block')
-    //       console.log(`species.tripArr._id: ${toString(species.tripArr._id)}`)
-    //       if(id === species.tripArr._id) {
-    //         return species
-    //       }
-    //     }
-        
-    //   }
-    // });
+    const species = this.props.species.species;
+    const speciesArr = []
 
-    const species = this.props.species.species.filter(species => {
-      for (let i = trips.length - 1; i <= 0; i--) {
-        species.tripArr._id === trips[i]._id
-      }
-    })
+    const speciesFil = species.forEach((s) => {
+      trips.forEach((trip) => {
+        console.log("you are here");
+        console.log(`s.tripArr: ${s.tripArr}`);
+        console.log(`trip._id: ${trip.tripRef}`);
+        s.tripArr.forEach((t) => {
+          console.log(`t._id: ${t._id}`)
+          if (t.tripRef === trip._id) {
+            console.log("enter if block");
+            console.log(s);
+            speciesArr.push(s)
+          }
+        });
+      });
+    });
+    console.log(speciesArr)
 
     const speciesList = ({ item }) => {
       // add species photo
       return <ListItem title={item.comName} subtitle={item.sciName} />;
     };
 
-    const RenderSpecies = ({ species }) => {
-      if (species.length === 0) {
+    const RenderSpecies = ({ speciesArr }) => {
+      if (speciesArr.length === 0) {
         return (
           <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
             <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
@@ -56,14 +53,13 @@ class AreaSummary extends Component {
           </View>
         );
       } else {
-        return <FlatList data={species} renderItem={speciesList} keyExtractor={(item) => item._id.toString()} />;
+        return <FlatList data={speciesArr} renderItem={speciesList} keyExtractor={(item) => item._id.toString()} />;
       }
     };
 
     return (
       <View style={{ flex: 1 }}>
-        {console.log(`filtered species: ${species}`)}
-        <RenderSpecies species={species} />
+        <RenderSpecies speciesArr={speciesArr} />
       </View>
     );
   }
