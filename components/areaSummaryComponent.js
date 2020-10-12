@@ -19,28 +19,41 @@ class AreaSummary extends Component {
     const areaId = this.props.navigation.getParam("areaId");
     const trips = this.props.trips.trips.filter((trips) => trips.areaId === areaId);
     const species = this.props.species.species;
-    const speciesArr = []
+    const speciesArr = [];
 
     const speciesFil = species.forEach((s) => {
-      trips.forEach((trip) => {
-        console.log("you are here");
-        console.log(`s.tripArr: ${s.tripArr}`);
-        console.log(`trip._id: ${trip.tripRef}`);
-        s.tripArr.forEach((t) => {
-          console.log(`t._id: ${t._id}`)
-          if (t.tripRef === trip._id) {
-            console.log("enter if block");
-            console.log(s);
-            speciesArr.push(s)
+      s.tripArr.forEach((t) => {
+        if (t.areaRef === areaId) {
+          if (!speciesArr.includes(s)) {
+            speciesArr.push(s);
           }
-        });
+        }
       });
     });
-    console.log(speciesArr)
+
+    const test = speciesArr.map((species) => species.comName);
+    console.log(test);
+
+    const speciesTotal = (speciesArr) =>
+      speciesArr.forEach((s) => {
+        const totalArr = s.tripArr.map((r) => {
+          if (r.areaRef === areaId) {
+            return r.total;
+          }
+        });
+        console.log(`totalArr: ${totalArr}`);
+        const total = totalArr.reduce((a, b) => {
+          return a + b;
+        }, 0);
+        s.total = total;
+        console.log(s);
+      });
+
+    speciesTotal(speciesArr);
 
     const speciesList = ({ item }) => {
       // add species photo
-      return <ListItem title={item.comName} subtitle={item.sciName} />;
+      return <ListItem title={item.sciName} subtitle={`${item.comName} - Total: ${item.total}`}/>;
     };
 
     const RenderSpecies = ({ speciesArr }) => {
@@ -85,3 +98,15 @@ const styles = StyleSheet.create({
 });
 
 export default connect(mapStateToProps)(AreaSummary);
+
+// const speciesFil = species.forEach((s) => {
+//   trips.forEach((trip) => {
+//     s.tripArr.forEach((t) => {
+//       if (t.tripRef === trip._id) {
+//         if (!speciesArr.includes(s)) {
+//           speciesArr.push(s);
+//         }
+//       }
+//     });
+//   });
+// });

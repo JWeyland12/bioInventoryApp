@@ -19,12 +19,25 @@ const speciesSchema = new Schema(
     // },
     tripArr: [
       {
-        tripRef: String,
-        total: Number
+        tripRef: {
+          type: String,
+          required: true,
+          unique: true
+        },
+        areaRef: {
+          type: String,
+          required: true
+        },
+        projRef: {
+          type: String,
+          required: true
+        },
+        total: {
+          type: Number,
+          required: true
+        }
       }
     ],
-    areaArr: [],
-    projectArr: [],
   },
   {
     timestamps: true
