@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Button, StyleSheet} from 'react-native';
+import {View, Button, StyleSheet, Alert} from 'react-native';
 import {Input, Icon} from 'react-native-elements';
 import { postProject } from '../redux/actionCreators/projects';
 import {connect} from 'react-redux';
@@ -28,6 +28,24 @@ class CreateProject extends Component {
     this.props.postProject(this.state.projectName, this.state.projectState, this.state.projectCounty)
     this.resetForm()
     navigate('Projects')
+  }
+
+  confirmProject = () => {
+    Alert.alert(
+      'Do you want to create this project?',
+      `${this.state.projectName} \n ${this.state.projectCounty} county, ${this.state.projectState}`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        {
+          text: 'Confirm',
+          onPress: () => this.handleSubmit(),
+        }
+      ],
+      {canceleable: false}
+    )
   }
 
   resetForm = () => {
@@ -82,7 +100,7 @@ class CreateProject extends Component {
         value={this.state.projectCounty}
       />
       <View style={{margin: 10}}>
-        <Button style={styles.button} title='Create Project' onPress={() => {this.handleSubmit()}}/>
+        <Button style={styles.button} title='Create Project' onPress={() => {this.confirmProject()}}/>
       </View>
       </View>
       </View>

@@ -31,7 +31,11 @@ projectRouter
         res.setHeader("Content-Type", "application/json");
         res.json(project);
       })
-      .catch((err) => next(err));
+      .catch(() => {
+        const err = new Error(`The ${req.body.name} project already exists!`)
+        err.statusCode = 406
+        return next(err)
+      });
   })
   .put((req, res, next) => {
     Project.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true })

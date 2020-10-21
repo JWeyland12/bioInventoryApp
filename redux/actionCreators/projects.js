@@ -49,7 +49,7 @@ export const postProject = (projectName, projectState, projectCounty) => dispatc
   .then(response => dispatch(addProject(response)))
   .catch(error => {
     console.log('post project', error.message)
-    alert(`Your project could not be created. Error: ${error.message}`)
+    alert(`The ${projectName} project already exists!`)
   })
 }
 
