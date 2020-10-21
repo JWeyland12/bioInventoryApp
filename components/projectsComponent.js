@@ -47,7 +47,7 @@ class Projects extends Component {
     return (
       <View style={{ flex: 1 }}>
         <RenderContent projects={this.props.projects.projects}/>
-        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('Create Project')}>
+        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateProject')}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
       </View>
