@@ -49,7 +49,6 @@ class Projects extends Component {
 
     const setProjectState = () => {
       const filteredProject = this.props.projects.projects.find((project) => project._id.toString() === this.state.modalIndex.toString());
-      console.log(filteredProject.name);
       this.setState({
         projectName: filteredProject.name,
         projectState: filteredProject.state,

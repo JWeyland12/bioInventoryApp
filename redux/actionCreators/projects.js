@@ -3,7 +3,6 @@ import {baseUrl} from '../../shared/baseUrl';
 
 export const fetchProjects = () => dispatch => {
   fetch(baseUrl + 'projects')
-  // console.log(`fetch made to ${baseUrl}projects`)
   .then(
     response => {
       if (response.ok) {

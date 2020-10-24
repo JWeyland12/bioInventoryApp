@@ -42,8 +42,6 @@ class Areas extends Component {
     };
     return (
       <View style={{ flex: 1 }}>
-        {/* {console.log(`projectId: ${projectId}`)}
-      {console.log(`area: ${this.props.areas.areas}`)} */}
         <RenderAreas areas={areas} />
         <TouchableOpacity style={styles.TouchableOpacityStyle}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
