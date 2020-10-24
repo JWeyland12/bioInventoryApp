@@ -58,8 +58,8 @@ export const addProject = project => ({
   payload: project
 });
 
-export const updateProject = (projectId, name, state, county) => dispatch => {
-  fetch(baseUrl + 'projects', {
+export const updateProject = (projectId, name, state, county) => async dispatch => {
+  await fetch(baseUrl + 'projects', {
     method: 'PUT',
     body: JSON.stringify({_id: projectId, name, state, county}),
     headers: {'content-type': 'application/json'}
@@ -76,5 +76,34 @@ export const updateProject = (projectId, name, state, county) => dispatch => {
   err => {throw err}
   )
   .then(response => response.json())
-  .then(fetchProjects())
+  .catch(error => {
+      console.log('Update project', error.message)
+      alert(`Project ${name} could not be updated.`)
+  })
+  dispatch(fetchProjects())
+}
+
+export const deleteProject = (_id) => async dispatch => {
+  await fetch(baseUrl + 'projects', {
+    method: 'DELETE',
+    body: JSON.stringify({_id}),
+    headers: {'content-type': 'application/json'},
+  })
+  .then(response => {
+    if (response.ok){
+      return response
+    } else {
+      const err = new Error(`Error ${response.status}: ${response.statusText}`)
+      err.response = response
+      throw err
+    }
+  },
+  err => {throw err}
+  )
+  .then(response => response.json())
+  .catch(error => {
+    console.log('Delete project', error.message)
+    alert(`Project could not be deleted`)
+  })
+  dispatch(fetchProjects())
 }

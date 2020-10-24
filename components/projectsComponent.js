@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { FlatList, View, StyleSheet, TouchableOpacity, Text, Alert, Modal } from "react-native";
-import { ListItem, Tile, Icon, Card, Input, Button } from "react-native-elements";
+import {  Tile, Icon, Card, Input, Button } from "react-native-elements";
 import { connect } from "react-redux";
-import { updateProject } from '../redux/actionCreators/projects';
+import { updateProject, deleteProject } from '../redux/actionCreators/projects';
 import Swipeout from "react-native-swipeout";
 
 const mapStateToProps = (state) => {
@@ -10,7 +10,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  updateProject
+  updateProject,
+  deleteProject
 }
 
 class Projects extends Component {
@@ -30,36 +31,20 @@ class Projects extends Component {
   };
 
   render() {
-    const { navigate } = this.props.navigation;
-    const renderProject = ({ item }) => {
-      const projectId = item._id;
-      console.log(`projectId: ${projectId}`);
-      const leftButton = [
-        {
-          text: "Edit",
-          backgroundColor: "#008b8b",
-          textSize: 100,
-          onPress: () => showModal(projectId),
-        },
-      ];
-
-      return (
-        <Swipeout left={leftButton} autoClose={true}>
-          <View>
-            <Tile onPress={() => navigate("Areas", { projectId: item._id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require("./images/balconySinks.jpg")} />
-          </View>
-        </Swipeout>
-      );
-    };
 
     const showModal = (projectId) => {
-      console.log(`projectId: ${projectId}`);
       this.setState(
         {
           modalIndex: projectId,
         },
         () => setProjectState()
       );
+    };
+
+    const hideModal = () => {
+      this.setState({
+        isModalOpen: !this.state.isModalOpen,
+      });
     };
 
     const setProjectState = () => {
@@ -71,27 +56,58 @@ class Projects extends Component {
         projectCounty: filteredProject.county,
         isModalOpen: !this.state.isModalOpen,
       });
-      console.log(`current state: ${this.state.projectName}`)
-    };
-
-    const hideModal = () => {
-      this.setState({
-        isModalOpen: !this.state.isModalOpen,
-      });
     };
 
     const handleSubmit = () => {
       this.props.updateProject(this.state.modalIndex, this.state.projectName, this.state.projectState, this.state.projectCounty)
       hideModal()
+      this.render()
     }
 
-    // render() {
-    //   const { navigate } = this.props.navigation;
-    //   const renderProject = ({ item }) => {
-    //     {console.log(item.imgSrc)}
-    //     const image = item.imgSrc
-    //     return <Tile onPress={() => navigate("Inventory", { projectId: item.id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
-    //   };
+    const { navigate } = this.props.navigation;
+    const renderProject = ({ item }) => {
+      const projectId = item._id;
+      const leftButton = [
+        {
+          text: "Edit",
+          backgroundColor: "#008b8b",
+          textSize: 100,
+          onPress: () => showModal(projectId),
+        },
+      ];
+
+      const rightButton = [
+        {
+          text: "Delete",
+          backgroundColor: 'red',
+          onPress: () => {
+            Alert.alert(
+              'Do you want to delete this project?',
+              `${item.name}\n ${item.county} county, ${item.state}`,
+              [
+                {
+                  text: 'Cancel',
+                  type: 'cancel'
+                },
+                {
+                  text: 'Confirm',
+                  onPress: () => this.props.deleteProject(item._id)
+                }
+            ],
+            {cancelable: false}
+            )
+          }
+        }
+      ]
+
+      return (
+        <Swipeout left={leftButton} right={rightButton} autoClose={true}>
+          <View>
+            <Tile onPress={() => navigate("Areas", { projectId: item._id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require("./images/balconySinks.jpg")} />
+          </View>
+        </Swipeout>
+      );
+    };
 
     const RenderContent = ({ projects }) => {
       if (!projects) {
@@ -180,3 +196,12 @@ const styles = StyleSheet.create({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Projects);
+
+
+// render() {
+    //   const { navigate } = this.props.navigation;
+    //   const renderProject = ({ item }) => {
+    //     {console.log(item.imgSrc)}
+    //     const image = item.imgSrc
+    //     return <Tile onPress={() => navigate("Inventory", { projectId: item.id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
+    //   };
