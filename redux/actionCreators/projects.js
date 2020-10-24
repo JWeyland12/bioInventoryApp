@@ -56,4 +56,25 @@ export const postProject = (projectName, projectState, projectCounty) => dispatc
 export const addProject = project => ({
   type: actionType.POST_PROJECT,
   payload: project
-})
+});
+
+export const updateProject = (projectId, name, state, county) => dispatch => {
+  fetch(baseUrl + 'projects', {
+    method: 'PUT',
+    body: JSON.stringify({_id: projectId, name, state, county}),
+    headers: {'content-type': 'application/json'}
+  })
+  .then(response => {
+    if (response.ok) {
+      return response
+    } else {
+      const err = new Error(`Error ${response.status}: ${response.statusText}`)
+      err.response = response
+      throw error
+    }
+  },
+  err => {throw err}
+  )
+  .then(response => response.json())
+  .then(fetchProjects())
+}
