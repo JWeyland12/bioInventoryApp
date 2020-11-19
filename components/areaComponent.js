@@ -2,10 +2,15 @@ import React, { Component } from "react";
 import { FlatList, View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { ListItem, Icon, Card } from "react-native-elements";
 import { connect } from "react-redux";
+import {fetchAreas} from '../redux/actionCreators/areas';
 
 const mapStateToProps = (state) => {
   return { areas: state.areas };
 };
+
+const mapDispatchToProps = {
+  fetchAreas,
+}
 
 class Areas extends Component {
   constructor(props) {
@@ -17,8 +22,17 @@ class Areas extends Component {
   };
 
   render() {
+
+    componentDidUpdate = () => {
+      this.props.fetchAreas()
+    }
+
+    const { navigate } = this.props.navigation;
     const projectId = this.props.navigation.getParam("projectId");
     const areas = this.props.areas.areas.filter((areas) => areas.project === projectId);
+    // debugger
+
+    
 
     const areasList = ({ item }) => {
       const { navigate } = this.props.navigation;
@@ -43,7 +57,7 @@ class Areas extends Component {
     return (
       <View style={{ flex: 1 }}>
         <RenderAreas areas={areas} />
-        <TouchableOpacity style={styles.TouchableOpacityStyle}>
+        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateArea', {projectId: projectId})}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
       </View>
@@ -84,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps)(Areas);
+export default connect(mapStateToProps, mapDispatchToProps)(Areas);

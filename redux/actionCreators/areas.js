@@ -26,10 +26,10 @@ export const addAreas = areas => ({
   payload: areas
 })
 
-export const postArea = (area, geoRef) => dispatch => {
+export const postArea = (projectId, area, geoRef) => dispatch => {
   fetch(baseUrl + 'areas', {
     method: 'POST',
-    body: JSON.stringify({area, geoRef}),
+    body: JSON.stringify({projectId, area, geoRef}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {
@@ -44,10 +44,11 @@ export const postArea = (area, geoRef) => dispatch => {
   err => {throw err}
   )
   .then(response => response.json())
-  .then(response => dispatch(addArea(response)))
+  .then(response => dispatch(addArea(response)), dispatch(fetchAreas()))
+  .then(response => console.log(`response: ${response}`))
   .catch(error => {
     console.log('post area', error.message)
-    alert(`the ${area} area already exists!`)
+    alert(`the ${area} area could not be created!`)
   })
 }
 

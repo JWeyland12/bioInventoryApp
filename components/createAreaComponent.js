@@ -21,14 +21,17 @@ class CreateArea extends Component {
     title: 'Create New Area'
   }
 
-  handleSubmit = () => {
+  render() {
+  const projectId = this.props.navigation.getParam("projectId");
+
+  const handleSubmit = () => {
     const {navigate} = this.props.navigation;
-    this.props.postArea(this.state.areaName, this.state.areaGeoRef)
-    this.resetForm()
+    this.props.postArea(projectId, this.state.areaName, this.state.areaGeoRef)
+    resetForm()
     navigate('Areas')
   }
 
-  confirmArea = () => {
+  const confirmArea = () => {
     Alert.alert(
       'Do you want to create this area?',
       `${this.state.areaName} \n${this.state.areaGeoRef}`,
@@ -39,21 +42,19 @@ class CreateArea extends Component {
         },
         {
           text: 'Confirm',
-          onPress: () => this.handleSubmit()
+          onPress: () => handleSubmit()
         }
       ],
       {cancelable: false}
     )
   }
 
-  resetForm = () => {
+  const resetForm = () => {
     this.setState({
       areaName: '',
       areaGeoRef: ''
     })
   }
-
-  render() {
     
     
     return (
@@ -86,7 +87,7 @@ class CreateArea extends Component {
             value={this.state.areaGeoRef}
           />
           <View style={{margin: 10}}>
-            <Button style={styles.button} title='Create Area' onPress={() => {this.confirmArea()}}/>
+            <Button style={styles.button} title='Create Area' onPress={() => {confirmArea()}}/>
           </View>
         </View>
       </View>
