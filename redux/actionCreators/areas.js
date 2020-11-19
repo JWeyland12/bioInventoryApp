@@ -21,7 +21,38 @@ export const fetchAreas = () => dispatch => {
   .then(areas => dispatch(addAreas(areas)))
 }
 
-const addAreas = areas => ({
+export const addAreas = areas => ({
   type: actionType.ADD_AREAS,
   payload: areas
 })
+
+export const postArea = (area, geoRef) => dispatch => {
+  fetch(baseUrl + 'areas', {
+    method: 'POST',
+    body: JSON.stringify({area, geoRef}),
+    headers: {'content-type': 'application/json'}
+  })
+  .then(response => {
+    if (response.ok) {
+      return response
+    } else {
+      const err = new Error(`Error ${response.status}: ${response.statusText}`)
+      err.response = response
+      throw err
+    }
+  },
+  err => {throw err}
+  )
+  .then(response => response.json())
+  .then(response => dispatch(addArea(response)))
+  .catch(error => {
+    console.log('post area', error.message)
+    alert(`the ${area} area already exists!`)
+  })
+}
+
+export const addArea = area => ({
+  type: actionType.POST_AREA,
+  paylaod: area
+})
+

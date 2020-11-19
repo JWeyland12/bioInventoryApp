@@ -33,7 +33,7 @@ class CreateProject extends Component {
   confirmProject = () => {
     Alert.alert(
       'Do you want to create this project?',
-      `${this.state.projectName} \n ${this.state.projectCounty} county, ${this.state.projectState}`,
+      `${this.state.projectName} \n${this.state.projectCounty} county, ${this.state.projectState}`,
       [
         {
           text: 'Cancel',
