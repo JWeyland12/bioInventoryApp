@@ -69,7 +69,7 @@ export const updateProject = (projectId, name, state, county) => async dispatch 
     } else {
       const err = new Error(`Error ${response.status}: ${response.statusText}`)
       err.response = response
-      throw error
+      throw err
     }
   },
   err => {throw err}

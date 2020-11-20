@@ -1,42 +1,111 @@
 import React, { Component } from "react";
-import { FlatList, View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { ListItem, Icon, Card } from "react-native-elements";
+import { FlatList, View, TouchableOpacity, Text, StyleSheet, Alert, Modal } from "react-native";
+import { ListItem, Icon, Card, Button, Input } from "react-native-elements";
 import { connect } from "react-redux";
-import {fetchAreas} from '../redux/actionCreators/areas';
+import {updateArea, deleteArea} from '../redux/actionCreators/areas';
+import Swipeout from 'react-native-swipeout';
 
 const mapStateToProps = (state) => {
   return { areas: state.areas };
 };
 
 const mapDispatchToProps = {
-  fetchAreas,
+  updateArea,
+  deleteArea
 }
 
 class Areas extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isModalOpen: false,
+      modalIndex: '',
+      areaName: '',
+      areaGeoRef: '',
+    };
   }
 
   static navigationOptions = {
     title: "Areas",
   };
 
+
   render() {
 
-    componentDidUpdate = () => {
-      render()
-    }
-
+  
     const { navigate } = this.props.navigation;
     const projectId = this.props.navigation.getParam("projectId");
     const areas = this.props.areas.areas.filter((areas) => areas.project === projectId);
-    // debugger
 
-    
+    const showModal = (areaId) => {
+      this.setState(
+        {modalIndex: areaId},
+        () => setAreaState()
+      )
+    }
+
+    const hideModal = () => {
+      this.setState({
+        isModalOpen: !this.state.isModalOpen
+      })
+    }
+
+    const setAreaState = () => {
+      const filteredArea = this.props.areas.areas.find(area => area._id === this.state.modalIndex)
+      this.setState({
+        areaName: filteredArea.area,
+        areaGeoRef: filteredArea.geoRef,
+        isModalOpen: !this.state.isModalOpen
+      })
+    }
+
+    const handleSubmit = () => {
+      this.props.updateArea(this.state.modalIndex, this.state.areaName, this.state.areaGeoRef)
+      hideModal()
+    }
 
     const areasList = ({ item }) => {
       const { navigate } = this.props.navigation;
-      return <ListItem title={item.area} onPress={() => navigate("Trips", { areaId: item._id })} />;
+      const areaId = item._id;
+      const leftButton = [
+        {
+          text: 'Edit',
+          backgroundColor: '#008b8b',
+          onPress: () => showModal(areaId)
+        }
+      ];
+
+      const rightButton = [
+        {
+          text: 'Delete',
+          backgroundColor: 'red',
+          onPress: () => {
+            Alert.alert(
+              'Do you want to delete this area?',
+              `${item.area}`,
+              [
+                {
+                  text: 'Cancel',
+                  type: 'cancel'
+                },
+                {
+                  text: 'Confirm',
+                  onPress: () => this.props.deleteArea(item._id)
+                }
+              ],
+              {cancelable: false}
+            )
+          }
+        }
+      ]
+
+      return (
+        <Swipeout left={leftButton} right={rightButton} autoClose={true}>
+          <View>
+            <ListItem title={item.area} subtitle={item.geoRef} onPress={() => navigate("Trips", { areaId: item._id })} />
+          </View>
+        </Swipeout>
+      )
     };
 
     const RenderAreas = ({ areas }) => {
@@ -60,6 +129,24 @@ class Areas extends Component {
         <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateArea', {projectId: projectId})}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
+        <Modal animationType='fade' transparent={false} visible={this.state.isModalOpen} onRequestClose={() => showModal()}>
+          <View style={{margin:10}}>
+          <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(area) => this.setState({ areaName: area })} value={this.state.areaName} />
+          <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(geoRef) => this.setState({ areaGeoRef: geoRef })} value={this.state.areaGeoRef} />
+          <View style={{ margin: 10 }}>
+              <Button
+                style={styles.button}
+                title="Update Area"
+                onPress={() => {
+                  handleSubmit();
+                }}
+              />
+            </View>
+            <View style={{ margin: 10 }}>
+              <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => hideModal()} />
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }

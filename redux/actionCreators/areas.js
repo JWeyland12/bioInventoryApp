@@ -57,3 +57,52 @@ export const addArea = area => ({
   payload: area
 })
 
+export const updateArea = (areaId, area, geoRef) => async dispatch => {
+  await fetch(baseUrl + 'areas', {
+    method: 'PUT',
+    body: JSON.stringify({_id: areaId, area, geoRef }),
+    headers: {'content-type': 'application/json'}
+  })
+  .then(response => {
+    if (response.ok) {
+      return response
+    } else {
+      const err = new Error(`Error ${response.status}: ${response.statusText}`)
+      err.response = response
+      throw err
+    }
+  },
+  err => {throw err}
+  )
+  .then(response => response.json())
+  .catch(error => {
+    console.log('Update area', error.message)
+    alert(`Area ${area} could not be updated`)
+  })
+  dispatch(fetchAreas())
+}
+
+export const deleteArea = (_id) => async dispatch => {
+  await fetch(baseUrl + 'areas', {
+    method: 'DELETE',
+    body: JSON.stringify({_id}),
+    headers: {'content-type': 'application/json'}
+  })
+  .then(response => {
+    if (response.ok) {
+      return response
+    } else {
+      const err = new Error(`Error ${response.status}: ${response.statusText}`)
+      err.response = response
+      throw err
+    }
+  },
+  err => {throw err}
+  )
+  .then(response => response.json())
+  .catch(error => {
+    console.log('Delete area', error.message)
+    alert(`Area could not be deleted`)
+  })
+  dispatch(fetchAreas())
+}
