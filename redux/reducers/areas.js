@@ -1,3 +1,4 @@
+import { AppState } from 'react-native';
 import * as actionTypes from '../actionTypes';
 
 export const areaRed = (
@@ -10,7 +11,8 @@ export const areaRed = (
     case actionTypes.ADD_AREAS:
       return {...state, areas: action.payload}
     case actionTypes.POST_AREA:
-      return{...state, areas: state.areas.concat(action.payload)}
+      console.log("post area",action.payload)
+      return {...state, areas: state.areas.concat(action.payload)}
     default:
       return state;
   }

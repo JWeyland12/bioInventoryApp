@@ -8,12 +8,15 @@ const mapDispatchToProps = {
   postArea,
 }
 
+
+
 class CreateArea extends Component {
   constructor(props) {
     super(props);
     this.state = {
       areaName: '',
-      areaGeoRef: ''
+      areaGeoRef: '',
+      projectId: this.props.navigation.getParam('projectId')
     };
   }
 
@@ -21,17 +24,17 @@ class CreateArea extends Component {
     title: 'Create New Area'
   }
 
-  render() {
-  const projectId = this.props.navigation.getParam("projectId");
+  // const projectId = this.props.navigation.getParam('projectId')
 
-  const handleSubmit = () => {
+
+  handleSubmit = () => {
     const {navigate} = this.props.navigation;
-    this.props.postArea(projectId, this.state.areaName, this.state.areaGeoRef)
-    resetForm()
+    this.props.postArea(this.state.projectId, this.state.areaName, this.state.areaGeoRef)
+    this.resetForm()
     navigate('Areas')
   }
 
-  const confirmArea = () => {
+  confirmArea = () => {
     Alert.alert(
       'Do you want to create this area?',
       `${this.state.areaName} \n${this.state.areaGeoRef}`,
@@ -42,20 +45,23 @@ class CreateArea extends Component {
         },
         {
           text: 'Confirm',
-          onPress: () => handleSubmit()
+          onPress: () => this.handleSubmit()
         }
       ],
       {cancelable: false}
     )
   }
 
-  const resetForm = () => {
+  resetForm = () => {
     this.setState({
       areaName: '',
       areaGeoRef: ''
     })
   }
-    
+
+  render() {
+  // const projectId = this.props.navigation.getParam("projectId");
+
     
     return (
       <View>
@@ -87,7 +93,7 @@ class CreateArea extends Component {
             value={this.state.areaGeoRef}
           />
           <View style={{margin: 10}}>
-            <Button style={styles.button} title='Create Area' onPress={() => {confirmArea()}}/>
+            <Button style={styles.button} title='Create Area' onPress={() => {this.confirmArea()}}/>
           </View>
         </View>
       </View>

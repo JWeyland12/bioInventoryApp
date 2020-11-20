@@ -44,8 +44,8 @@ export const postArea = (projectId, area, geoRef) => dispatch => {
   err => {throw err}
   )
   .then(response => response.json())
-  .then(response => dispatch(addArea(response)), dispatch(fetchAreas()))
-  .then(response => console.log(`response: ${response}`))
+  .then(area => dispatch(addArea(area)))
+  .then(area => console.log(`response: ${area}`))
   .catch(error => {
     console.log('post area', error.message)
     alert(`the ${area} area could not be created!`)
@@ -54,6 +54,6 @@ export const postArea = (projectId, area, geoRef) => dispatch => {
 
 export const addArea = area => ({
   type: actionType.POST_AREA,
-  paylaod: area
+  payload: area
 })
 

@@ -24,7 +24,7 @@ class Areas extends Component {
   render() {
 
     componentDidUpdate = () => {
-      this.props.fetchAreas()
+      render()
     }
 
     const { navigate } = this.props.navigation;
