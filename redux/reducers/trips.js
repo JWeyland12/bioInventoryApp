@@ -9,6 +9,8 @@ export const tripRed = (
   switch (action.type) {
     case actionTypes.ADD_TRIPS:
       return {...state, trips: action.payload}
+    case actionTypes.POST_TRIP:
+      return {...state, trips: state.trips.concat(action.payload)}
     default:
       return state;
   }

@@ -64,9 +64,10 @@ class AreaSummary extends Component {
       }
     };
 
+    const areaGeoRef = this.props.navigation.getParam('areaGeoRef')
     return (
       <View style={{ flex: 1 }}>
-        <ListItem title={'Geo-reference'} subtitle={'84.428000, -111.548000'}/>
+        <ListItem title={'Geo-reference'} subtitle={areaGeoRef}/>
         <RenderSpecies speciesArr={speciesArr} />
       </View>
     );

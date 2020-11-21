@@ -6,6 +6,7 @@ export const ADD_AREAS = 'ADD_AREAS';
 export const POST_AREA = 'POST_AREA';
 
 export const ADD_TRIPS = 'ADD_TRIPS';
+export const POST_TRIP = 'POST_TRIP';
 
 export const ADD_SPECIES = 'ADD_SPECIES';
 

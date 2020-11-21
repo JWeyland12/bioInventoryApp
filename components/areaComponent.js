@@ -102,7 +102,7 @@ class Areas extends Component {
       return (
         <Swipeout left={leftButton} right={rightButton} autoClose={true}>
           <View>
-            <ListItem title={item.area} subtitle={item.geoRef} onPress={() => navigate("Trips", { areaId: item._id })} />
+            <ListItem title={item.area} subtitle={item.geoRef} onPress={() => navigate("Trips", { areaId: item._id, areaGeoRef: item.geoRef })} />
           </View>
         </Swipeout>
       )
