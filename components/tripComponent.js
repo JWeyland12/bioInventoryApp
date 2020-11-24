@@ -102,7 +102,7 @@ class Trips extends Component {
       return (
         <Swipeout left={leftButton} right={rightButton} autoClose={true}>
           <View>
-            <ListItem title={item.date} onPress={() => navigate("Inventory", { tripId: item._id })} />
+            <ListItem title={item.date} onPress={() => navigate("TripSpecies", { tripId: item._id })} />
           </View>
         </Swipeout>
       )
