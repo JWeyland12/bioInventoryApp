@@ -15,7 +15,7 @@ import { fetchProjects } from "../redux/actionCreators/projects";
 import {fetchAreas} from '../redux/actionCreators/areas';
 import { fetchTrips } from '../redux/actionCreators/trips';
 import { fetchSpecies } from '../redux/actionCreators/species';
-import {Icon} from 'react-native-elements';
+import {Icon, Button} from 'react-native-elements';
 
 const mapDispatchToProps = {
   fetchProjects,
