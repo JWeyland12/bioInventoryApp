@@ -27,7 +27,7 @@ class Projects extends Component {
   }
 
   static navigationOptions = {
-    title: "Projects",
+    title: "Properties",
   };
 
   render() {

@@ -14,9 +14,23 @@ class SpeciesList extends Component {
   }
 
   render() {
+
+    const speciesAlpha = this.props.species.species.sort((a, b) => (a.sciName > b.sciName) ? 1 : -1)
+    // console.log('speciesAlpha', speciesAlpha)
+
+    const renderSpecies = ({item}) => {
+      return (
+        <ListItem title={item.sciName} subtitle={item.comName}/>
+      )
+    }
+
+    const FlatSpeciesList = ({speciesAlpha}) => {
+      console.log('speciesAlpha', speciesAlpha)
+      return <FlatList data={speciesAlpha} renderItem={renderSpecies} keyExtractor={(item) => item._id.toString()}/>
+    }
     return (
-      <View style={{margin: 10}}>
-        <Text>Test View</Text>
+      <View style={{flex: 1}}>
+        <FlatSpeciesList speciesAlpha={speciesAlpha}/>
       </View>
     );
   }

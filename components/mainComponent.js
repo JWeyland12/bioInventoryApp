@@ -34,8 +34,6 @@ const Navigator = createStackNavigator(
     CreateArea: {screen: CreateArea},
     TripSpecies: {screen: TripSpecies},
     SpeciesList: {screen: SpeciesList}
-    // Collection: { screen: Trip },
-    // Info: { screen: Species },
   },
   {
     initialRouteName: "Projects",
