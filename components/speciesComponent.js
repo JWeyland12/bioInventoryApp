@@ -15,8 +15,8 @@ class SpeciesList extends Component {
 
   render() {
 
+    const {navigate} = this.props.navigation
     const speciesAlpha = this.props.species.species.sort((a, b) => (a.sciName > b.sciName) ? 1 : -1)
-    // console.log('speciesAlpha', speciesAlpha)
 
     const renderSpecies = ({item}) => {
       return (
@@ -25,13 +25,12 @@ class SpeciesList extends Component {
     }
 
     const FlatSpeciesList = ({speciesAlpha}) => {
-      console.log('speciesAlpha', speciesAlpha)
       return <FlatList data={speciesAlpha} renderItem={renderSpecies} keyExtractor={(item) => item._id.toString()}/>
     }
     return (
       <View style={{flex: 1}}>
         <FlatSpeciesList speciesAlpha={speciesAlpha}/>
-        <TouchableOpacity style={styles.TouchableOpacityStyle}>
+        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateSpecies')}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
       </View>

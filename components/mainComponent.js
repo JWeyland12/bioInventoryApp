@@ -6,6 +6,7 @@ import Areas from "./areaComponent";
 import AreaSummary from './areaSummaryComponent';
 import CreateProject from './createProjectComponent';
 import CreateArea from './createAreaComponent';
+import CreateSpecies from "./createSpeciesComponent";
 import TripSpecies from './tripSummaryComponent';
 import SpeciesList from './speciesComponent';
 import { createStackNavigator, createBottomTabNavigator, createNavigationContainer } from "react-navigation";
@@ -33,7 +34,7 @@ const Navigator = createStackNavigator(
     CreateProject: {screen: CreateProject},
     CreateArea: {screen: CreateArea},
     TripSpecies: {screen: TripSpecies},
-    SpeciesList: {screen: SpeciesList}
+    SpeciesList: {screen: SpeciesList},
   },
   {
     initialRouteName: "Projects",
@@ -51,7 +52,8 @@ const Navigator = createStackNavigator(
 
 const SpeciesTab = createStackNavigator(
   {
-    SpeciesList: {screen: SpeciesList}
+    SpeciesList: {screen: SpeciesList},
+    CreateSpecies: {screen: CreateSpecies}
   },
   {
     navigationOptions: {

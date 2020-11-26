@@ -10,7 +10,7 @@ const mapStateToProps = state => {
 class TripSpecies extends Component {
 
   static navigationOptions = {
-    title: "Found Species"
+    title: "Species Observed"
   }
 
   
