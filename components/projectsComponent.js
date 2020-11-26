@@ -32,6 +32,8 @@ class Projects extends Component {
 
   render() {
 
+    const alphaProjects = this.props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
+
     const showModal = (projectId) => {
       this.setState(
         {
@@ -126,7 +128,7 @@ class Projects extends Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <RenderContent projects={this.props.projects.projects} />
+        <RenderContent projects={alphaProjects} />
         <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate("CreateProject")}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
