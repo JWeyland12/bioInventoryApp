@@ -9,8 +9,10 @@ import CreateArea from './createAreaComponent';
 import CreateSpecies from "./createSpeciesComponent";
 import TripSpecies from './tripSummaryComponent';
 import SpeciesList from './speciesComponent';
+import SignIn from './signInComponent';
+import SignUp from './signUpComponent';
 import { createStackNavigator, createBottomTabNavigator, createNavigationContainer } from "react-navigation";
-import { View, Platform } from "react-native";
+import { View, Platform, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { fetchProjects } from "../redux/actionCreators/projects";
 import {fetchAreas} from '../redux/actionCreators/areas';
@@ -46,6 +48,11 @@ const Navigator = createStackNavigator(
       headerTitleStyle: {
         color: "#FFF",
       },
+      headerRight: <Icon
+        name='search'
+        type='font-awesome'
+        iconStyle={{margin: 20, color: 'white'}}
+        />,
     },
   }
 );
@@ -61,6 +68,28 @@ const SpeciesTab = createStackNavigator(
         backgroundColor: "#008b8b"
       },
       headerTintColor: "#000",
+      headerTitleStyle: {
+        color: '#FFF'
+      },
+      headerRight: <Icon
+        name='heart'
+        type='font-awesome'
+        />
+    }
+  }
+)
+
+const UsersTab = createStackNavigator(
+  {
+    SignIn: {screen: SignIn},
+    SignUp: {screen: SignUp}
+  },
+  {
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#008b8b'
+      },
+      headerTintColor: '#000',
       headerTitleStyle: {
         color: '#FFF'
       }
@@ -94,6 +123,18 @@ const MyTabs = new createBottomTabNavigator({
       },
     }
   },
+  ScreenThree: {
+    screen: UsersTab,
+    navigationOptions: {
+      tabBarLabel: 'Account',
+      tabBarIcon: () => (
+        <Icon name="user-o" type='font-awesome'/>
+      ),
+      tabBarOptions: {
+        activeTintColor: '#008b8b'
+      }
+    }
+  }
 },
 {
   initialRouteName: 'ScreenTwo',
@@ -127,3 +168,4 @@ componentDidMount() {
 }
 
 export default connect(null, mapDispatchToProps)(Main);
+

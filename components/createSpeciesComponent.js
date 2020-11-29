@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import {View, Alert, StyleSheet} from 'react-native';
 import {Input, Icon, Button} from 'react-native-elements';
+import { postSpeciesFromMaster } from "../redux/actionCreators/species";
+import {connect} from 'react-redux';
+
+const mapDispatchToProps = {
+  postSpeciesFromMaster
+}
 
 class CreateSpecies extends Component {
   constructor(props) {
@@ -17,8 +23,8 @@ class CreateSpecies extends Component {
 
   handleSubmit = () => {
     const {navigate} = this.props.navigation;
-    this.props.postSpecies()
-    resetForm()
+    this.props.postSpeciesFromMaster(this.state.sciName, this.state.comName)
+    this.resetForm()
     navigate('Species List')
   }
 
@@ -33,7 +39,7 @@ class CreateSpecies extends Component {
         },
         {
           text: 'Confirm',
-          onPress: () => handleSubmit()
+          onPress: () => this.handleSubmit()
         }
       ],
       {cancelable: false}
@@ -87,7 +93,7 @@ class CreateSpecies extends Component {
   }
   
 
-export default CreateSpecies;
+export default connect(null, mapDispatchToProps)(CreateSpecies);
 
 const styles = StyleSheet.create({
   margins: {

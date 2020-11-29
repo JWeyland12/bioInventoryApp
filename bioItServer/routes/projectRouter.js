@@ -1,20 +1,42 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const Project = require("../models/projects");
-const Area = require('../models/areas')
+const Area = require('../models/areas');
 const multer = require('multer');
 
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images/projects')
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split('/')[1];
+    console.log('body.name:', req.body)
+    const name = req.obj.name;
+    cb(null, `${name}-project-${Date.now()}.${ext}`)
+  }
+});
+
+const multerFilter = (req, file, cb) => {
+  if (file.originalname.match(/\.(jpg|jpeg)$/)) {
+    cb(null, true)
+  } else {
+    return cb(new Error('You can only upload jpg or jpeg files!'), false)
+  }
+}
+
 const upload = multer({
-  dest: 'public/images'
-})
+  storage: multerStorage,
+  fileFilter: multerFilter
+});
 
 const projectRouter = express.Router();
 
 projectRouter.use(bodyParser.json());
 
+
 projectRouter
   .route("/")
-  .get(upload.single('imageFile'), (req, res, next) => {
+  .get((req, res, next) => {
     Project.find()
       .then((Projects) => {
         res.statusCode = 200;
@@ -23,7 +45,10 @@ projectRouter
       })
       .catch((err) => next(err));
   })
-  .post((req, res, next) => {
+  .post(upload.single('img'), (req, res, next) => {
+    console.log('req.file:', req.file)
+    console.log('req.body', req.body)
+    req.body.img = req.file.buffer
     Project.create(req.body)
       .then((project) => {
         console.log("Project Created", project);

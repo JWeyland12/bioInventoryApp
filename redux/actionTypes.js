@@ -9,4 +9,5 @@ export const ADD_TRIPS = 'ADD_TRIPS';
 export const POST_TRIP = 'POST_TRIP';
 
 export const ADD_SPECIES = 'ADD_SPECIES';
+export const POST_SPECIMEN_FROM_MASTER = 'POST_SPECIMEN_FROM_MASTER';
 
