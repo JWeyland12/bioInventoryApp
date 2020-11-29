@@ -3,6 +3,7 @@ import {View, Alert, StyleSheet} from 'react-native';
 import {Input, Icon, Button} from 'react-native-elements';
 import { postSpeciesFromMaster } from "../redux/actionCreators/species";
 import {connect} from 'react-redux';
+import ImgPicker from './imagePickerComponent';
 
 const mapDispatchToProps = {
   postSpeciesFromMaster
@@ -83,6 +84,7 @@ class CreateSpecies extends Component {
             placeholder='Common Name'
             value={this.state.comName}
           />
+          <ImgPicker />
         </View>
         <View style={{margin: 10}}>
           <Button style={styles.button} title='Create Species' onPress={() => {this.confirmSpecies()}}/>

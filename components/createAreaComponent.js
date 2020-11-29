@@ -3,6 +3,7 @@ import {View, Button, StyleSheet, Alert} from 'react-native';
 import {Input, Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {postArea} from '../redux/actionCreators/areas';
+import ImgPicker from './imagePickerComponent';
 
 const mapDispatchToProps = {
   postArea,
@@ -92,6 +93,7 @@ class CreateArea extends Component {
             placeholder='Geo Reference'
             value={this.state.areaGeoRef}
           />
+          <ImgPicker />
           <View style={{margin: 10}}>
             <Button style={styles.button} title='Create Area' onPress={() => {this.confirmArea()}}/>
           </View>
