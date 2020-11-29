@@ -35,7 +35,7 @@ const ImgPicker = props => {
       quality: 0.75
     });
     setPickedImage(imageGal.uri)
-    props.onImageTaken(pickedImage)
+    props.onImageTaken(imageGal.uri)
   }
 
   const takeImageHandler = async () => {
@@ -49,17 +49,17 @@ const ImgPicker = props => {
       quality: 0.75
     });
     setPickedImage(imageCam.uri)
-    props.onImageTaken(pickedImage)
+    props.onImageTaken(imageCam.uri)
   }
     return (
       <View style={styles.imagePicker}>
-        <View style={styles.imagePreview}>
           {!pickedImage ? (
-            <Text>No image picked yet</Text>
+            <Text style={{margin: 15}}>No image selected yet</Text>
           ) : (
-          <Image style={styles.image} source={{uri: pickedImage}} />
+            <View style={styles.imagePreview}>
+              <Image style={styles.image} source={{uri: pickedImage}} />
+            </View>
           )}
-        </View>
         <View style={styles.imgButtons}>
           <Button style={styles.button} title='Take Image' onPress={takeImageHandler} />
           <View style={{margin: 5}}></View>

@@ -27,10 +27,11 @@ export const addProjects = projects => ({
   payload: projects
 });
 
-export const postProject = (projectName, projectState, projectCounty) => dispatch => {
+export const postProject = (projectName, projectState, projectCounty, img) => dispatch => {
+  console.log('projectName:', img)
   fetch(baseUrl + 'projects', {
     method: 'POST',
-    body: JSON.stringify({name: projectName, state: projectState, county: projectCounty}),
+    body: JSON.stringify({name: projectName, state: projectState, county: projectCounty, img}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {

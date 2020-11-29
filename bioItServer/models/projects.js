@@ -18,7 +18,8 @@ const projectSchema = new Schema (
       required: true
     },
     img: {
-      data: Buffer,
+      type: String,
+      required: true
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,

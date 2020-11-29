@@ -1,4 +1,3 @@
-import { updateProject } from '../actionCreators/projects';
 import * as actionTypes from '../actionTypes';
 
 export const projectRed = (
@@ -11,14 +10,16 @@ export const projectRed = (
     case actionTypes.ADD_PROJECTS:
       return {...state, projects: action.payload}
     case actionTypes.POST_PROJECT:
-        return {...state, projects: state.projects.concat(action.payload)}
-    // case actionTypes.PUT_PROJECT:
+        const newState = {...state, projects: state.projects.concat(action.payload)}
+        return newState.projects.sort((a, b) => {a > b ? 1 : -1})
+    default:
+      return state;
+  }
+}
+
+// case actionTypes.PUT_PROJECT:
     //   console.log(`action.payload: ${action.payload}`)
     //     return {...state, 
     //       projects: state.projects.map(
     //         (project, i) => i === [action.payload._id] ? {project: action.payload} : project
     //       )}
-    default:
-      return state;
-  }
-}

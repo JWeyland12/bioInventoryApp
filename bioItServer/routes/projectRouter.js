@@ -45,10 +45,10 @@ projectRouter
       })
       .catch((err) => next(err));
   })
-  .post(upload.single('img'), (req, res, next) => {
+  .post((req, res, next) => {
     console.log('req.file:', req.file)
     console.log('req.body', req.body)
-    req.body.img = req.file.buffer
+    // req.body.img = req.file.buffer
     Project.create(req.body)
       .then((project) => {
         console.log("Project Created", project);

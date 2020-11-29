@@ -84,7 +84,7 @@ class Projects extends Component {
           onPress: () => {
             Alert.alert(
               'Do you want to delete this project?',
-              `${item.name}\n ${item.county} county, ${item.state}`,
+              `${item.name} \n${item.county} county, ${item.state}`,
               [
                 {
                   text: 'Cancel',
@@ -111,19 +111,21 @@ class Projects extends Component {
     };
 
     const RenderContent = ({ projects }) => {
-      if (!projects) {
-        return (
-          <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
-            <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
-              <Text style={styles.textInCard}>You haven't created any projects yet!</Text>
-              <Text></Text>
-              <Text style={styles.textInCard}>Click the '+' button to get started!</Text>
-            </Card>
-          </View>
-        );
-      } else {
-        return <FlatList data={projects} renderItem={renderProject} keyExtractor={(item) => item._id.toString()} />;
-      }
+      return (
+        <View>
+          {!projects ? (
+              <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
+                <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
+                  <Text style={styles.textInCard}>You haven't created any projects yet!</Text>
+                  <Text></Text>
+                  <Text style={styles.textInCard}>Click the '+' button to get started!</Text>
+                </Card>
+              </View>
+          ) : (
+            <FlatList data={projects} renderItem={renderProject} keyExtractor={(item) => item._id.toString()} />
+          )}
+        </View>
+      )
     };
 
     return (

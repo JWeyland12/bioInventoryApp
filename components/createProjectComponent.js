@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {View, Button, StyleSheet, Alert} from 'react-native';
 import {Input, Icon, Image} from 'react-native-elements';
 import { postProject } from '../redux/actionCreators/projects';
@@ -9,33 +9,31 @@ const mapDispatchToProps = {
   postProject,
 }
 
-class CreateProject extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      projectName: '',
-      projectState: '',
-      projectCounty: '',
-      selectedImage: ''
-    };
-  }
+const CreateProject = props => {
+  const [projectName, setProjectName] = useState('');
+  const [projectState, setProjectState] = useState('');
+  const [projectCounty, setProjectCounty] = useState('');
+  const [selectedImage, setSelectedImage] = useState();
+
+
   
 
-  static navigationOptions = {
-    title: "Create New Project"
+  const imagePickedHandler = imagePath => {
+    setSelectedImage(imagePath)
   }
 
-  handleSubmit = () => {
-    const { navigate } = this.props.navigation;
-    this.props.postProject(this.state.projectName, this.state.projectState, this.state.projectCounty)
-    this.resetForm()
+  const handleSubmit = () => {
+    const { navigate } = props.navigation;
+    console.log(projectName, projectState, projectCounty, selectedImage)
+    props.postProject(projectName, projectState, projectCounty, selectedImage.toString())
+    resetForm()
     navigate('Projects')
   }
 
-  confirmProject = () => {
+  const confirmProject = () => {
     Alert.alert(
       'Do you want to create this project?',
-      `${this.state.projectName} \n${this.state.projectCounty} county, ${this.state.projectState}`,
+      `${projectName} \n${projectCounty} county, ${projectState}`,
       [
         {
           text: 'Cancel',
@@ -43,23 +41,20 @@ class CreateProject extends Component {
         },
         {
           text: 'Confirm',
-          onPress: () => this.handleSubmit(),
+          onPress: () => handleSubmit(),
         }
       ],
       {canceleable: false}
     )
   }
 
-  resetForm = () => {
-    this.setState({
-      projectName: '',
-      projectState: '',
-      projectCounty: ''
-    })
+  const resetForm = () => {
+    setProjectName(''),
+    setProjectState(''),
+    setProjectCounty('')
   }
 
 
-  render() {
     return (
       <View>
         <View style={{margin: 10}}>
@@ -72,9 +67,9 @@ class CreateProject extends Component {
             />
           }
         leftIconContainerStyle={{paddingRight: 10}}
-        onChangeText={project => this.setState({projectName: project})}
+        onChangeText={project => setProjectName(project)}
         placeholder='Project Name'
-        value={this.state.projectName}
+        value={projectName}
       />
       <Input
           style={styles.margin}
@@ -85,9 +80,9 @@ class CreateProject extends Component {
             />
           }
         leftIconContainerStyle={{paddingRight: 10}}
-        onChangeText={state => this.setState({projectState: state})}
+        onChangeText={state => setProjectState(state)}
         placeholder='State'
-        value={this.state.projectState}
+        value={projectState}
       />
       <Input
           style={styles.margin}
@@ -98,26 +93,27 @@ class CreateProject extends Component {
             />
           }
         leftIconContainerStyle={{paddingRight: 10}}
-        onChangeText={county => this.setState({projectCounty: county})}
+        onChangeText={county => setProjectCounty(county)}
         placeholder='County'
-        value={this.state.projectCounty}
+        value={projectCounty}
       />
       <View>
-          {/* <Image source={require('./images/stephensGap.jpg')}/>
-          <Button title="Camera" onPress={this.getImageFromCamera} />
-          <Button title='Gallery' onPress={this.getImageFromGallery}/> */}
-          <ImgPicker onImageTaken={}/>
+          <ImgPicker onImageTaken={imagePickedHandler}/>
         </View>
       <View style={{margin: 10}}>
-        <Button style={styles.button} title='Create Project' onPress={() => {this.confirmProject()}}/>
+        <Button style={styles.button} title='Create Project' onPress={() => {confirmProject()}}/>
       </View>
       </View>
       </View>
     );
-  }
+}
+CreateProject.navigationOptions = {
+  title: "Create New Project"
 }
 
 export default connect(null, mapDispatchToProps)(CreateProject);
+
+
 
 const styles = StyleSheet.create({
   margins: {
