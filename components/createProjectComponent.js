@@ -24,8 +24,7 @@ const CreateProject = props => {
 
   const handleSubmit = () => {
     const { navigate } = props.navigation;
-    console.log(projectName, projectState, projectCounty, selectedImage)
-    props.postProject(projectName, projectState, projectCounty, selectedImage.toString())
+    props.postProject(projectName, projectState, projectCounty, selectedImage)
     resetForm()
     navigate('Projects')
   }

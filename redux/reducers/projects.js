@@ -10,8 +10,7 @@ export const projectRed = (
     case actionTypes.ADD_PROJECTS:
       return {...state, projects: action.payload}
     case actionTypes.POST_PROJECT:
-        const newState = {...state, projects: state.projects.concat(action.payload)}
-        return newState.projects.sort((a, b) => {(a.name > b.name) ? 1 : -1})
+      return {...state, projects: state.projects.concat(action.payload)}
     default:
       return state;
   }

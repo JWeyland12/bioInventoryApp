@@ -1,5 +1,6 @@
 import * as actionType from '../actionTypes';
 import {baseUrl} from '../../shared/baseUrl';
+import * as FileSystem from 'expo-file-system';
 
 export const fetchProjects = () => dispatch => {
   fetch(baseUrl + 'projects')
@@ -27,11 +28,23 @@ export const addProjects = projects => ({
   payload: projects
 });
 
-export const postProject = (projectName, projectState, projectCounty, img) => dispatch => {
-  console.log('projectName:', img)
+export const postProject = (projectName, projectState, projectCounty, img) => async dispatch => {
+  const fileName = img.split('/').pop();
+  const newPath = FileSystem.documentDirectory + fileName;
+  console.log('newPath', newPath)
+  try {
+    await FileSystem.moveAsync({
+      from: img,
+      to: newPath
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+
   fetch(baseUrl + 'projects', {
     method: 'POST',
-    body: JSON.stringify({name: projectName, state: projectState, county: projectCounty, img}),
+    body: JSON.stringify({name: projectName, state: projectState, county: projectCounty, img: newPath.toString()}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {

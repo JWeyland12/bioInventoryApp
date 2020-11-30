@@ -23,8 +23,6 @@ const Projects = props => {
   
 
   
-
-
     const alphaProjects = props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
     const showModal = (projectId) => {

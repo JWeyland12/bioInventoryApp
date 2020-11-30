@@ -1,44 +1,34 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {View, Button, StyleSheet, Alert} from 'react-native';
 import {Input, Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {postArea} from '../redux/actionCreators/areas';
 import ImgPicker from './imagePickerComponent';
+import LocationPicker from './locationPickerComponent';
 
 const mapDispatchToProps = {
   postArea,
 }
 
-
-
-class CreateArea extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      areaName: '',
-      areaGeoRef: '',
-      projectId: this.props.navigation.getParam('projectId')
-    };
-  }
-
-  static navigationOptions = {
-    title: 'Create New Area'
-  }
+const CreateArea = props => {
+  const [areaName, setAreaName] = useState('');
+  const [areaGeoRef, setAreaGeoRef] = useState('');
+  const [projectId] = useState(props.navigation.getParam('projectId'))
 
   // const projectId = this.props.navigation.getParam('projectId')
 
 
-  handleSubmit = () => {
-    const {navigate} = this.props.navigation;
-    this.props.postArea(this.state.projectId, this.state.areaName, this.state.areaGeoRef)
-    this.resetForm()
+  const handleSubmit = () => {
+    const {navigate} = props.navigation;
+    props.postArea(projectId, areaName, areaGeoRef)
+    resetForm()
     navigate('Areas')
   }
 
-  confirmArea = () => {
+  const confirmArea = () => {
     Alert.alert(
       'Do you want to create this area?',
-      `${this.state.areaName} \n${this.state.areaGeoRef}`,
+      `${areaName} \n${areaGeoRef}`,
       [
         {
           text: 'Cancel',
@@ -46,23 +36,25 @@ class CreateArea extends Component {
         },
         {
           text: 'Confirm',
-          onPress: () => this.handleSubmit()
+          onPress: () => handleSubmit()
         }
       ],
       {cancelable: false}
     )
   }
 
-  resetForm = () => {
-    this.setState({
-      areaName: '',
-      areaGeoRef: ''
-    })
+  const resetForm = () => {
+    setAreaName(''),
+    setAreaGeoRef('')
   }
 
-  render() {
-  // const projectId = this.props.navigation.getParam("projectId");
-
+  const locationTakenHandler = (location) => {
+    const geoRef = {}
+    console.log(location)
+    geoRef.lat = location.coords.latitude
+    geoRef.long = location.coords.longitude
+    setAreaGeoRef(`${geoRef.lat}, ${geoRef.long}`)
+  }
     
     return (
       <View>
@@ -76,9 +68,9 @@ class CreateArea extends Component {
               />
             }
             leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={state => this.setState({areaName: state})}
+            onChangeText={state => setAreaName(state)}
             placeholder='Area'
-            value={this.state.areaName}
+            value={areaName}
           />
           <Input
             style={styles.margin}
@@ -89,18 +81,23 @@ class CreateArea extends Component {
               />
             }
             leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={state => this.setState({areaGeoRef: state})}
+            onChangeText={state => setAreaGeoRef(state)}
             placeholder='Geo Reference'
-            value={this.state.areaGeoRef}
+            value={areaGeoRef}
           />
+          <LocationPicker onLocationTaken={locationTakenHandler} />
           <ImgPicker />
           <View style={{margin: 10}}>
-            <Button style={styles.button} title='Create Area' onPress={() => {this.confirmArea()}}/>
+            <Button style={styles.button} title='Create Area' onPress={() => {confirmArea()}}/>
           </View>
         </View>
       </View>
     );
-  }
+}
+
+
+CreateArea.navigationOptions = {
+  title: 'Create New Area'
 }
 
 export default connect(null, mapDispatchToProps)(CreateArea);
