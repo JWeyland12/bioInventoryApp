@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { FlatList, View, StyleSheet, TouchableOpacity, Text, Alert, Modal } from "react-native";
 import {  Tile, Icon, Card, Input, Button } from "react-native-elements";
 import { connect } from "react-redux";
@@ -14,58 +14,43 @@ const mapDispatchToProps = {
   deleteProject
 }
 
-class Projects extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isModalOpen: false,
-      modalIndex: "",
-      projectName: "",
-      projectState: "",
-      projectCounty: "",
-    };
-  }
+const Projects = props => {
+  const [isModalOpen, setModal] = useState(false);
+  const [modalIndex, setModalIndex] = useState('');
+  const [projectName, setProjectName] = useState('');
+  const [projectState, setProjState] = useState('');
+  const [projectCounty, setProjectCounty] = useState('');
+  
 
-  static navigationOptions = {
-    title: "Properties",
-  };
+  
 
-  render() {
 
-    const alphaProjects = this.props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
+    const alphaProjects = props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
     const showModal = (projectId) => {
-      this.setState(
-        {
-          modalIndex: projectId,
-        },
+      setModalIndex(projectId),
         () => setProjectState()
-      );
-    };
+      };
 
     const hideModal = () => {
-      this.setState({
-        isModalOpen: !this.state.isModalOpen,
-      });
-    };
+      setModal(!isModalOpen)
+      };
 
     const setProjectState = () => {
-      const filteredProject = this.props.projects.projects.find((project) => project._id.toString() === this.state.modalIndex.toString());
-      this.setState({
-        projectName: filteredProject.name,
-        projectState: filteredProject.state,
-        projectCounty: filteredProject.county,
-        isModalOpen: !this.state.isModalOpen,
-      });
+      const filteredProject = props.projects.projects.find((project) => project._id.toString() === modalIndex.toString());
+      setProjectName(filteredProject.name),
+      setProjState(filteredProject.state),
+      setProjectCounty(filteredProject.county),
+      setModal(!isModalOpen)
     };
 
     const handleSubmit = () => {
-      this.props.updateProject(this.state.modalIndex, this.state.projectName, this.state.projectState, this.state.projectCounty)
+      props.updateProject(modalIndex, projectName, projectState, projectCounty)
       hideModal()
       this.render()
     }
 
-    const { navigate } = this.props.navigation;
+    const { navigate } = props.navigation;
     const renderProject = ({ item }) => {
       const projectId = item._id;
       const leftButton = [
@@ -92,7 +77,7 @@ class Projects extends Component {
                 },
                 {
                   text: 'Confirm',
-                  onPress: () => this.props.deleteProject(item._id)
+                  onPress: () => props.deleteProject(item._id)
                 }
             ],
             {cancelable: false}
@@ -134,11 +119,11 @@ class Projects extends Component {
         <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate("CreateProject")}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
-        <Modal animationType="fade" transparent={false} visible={this.state.isModalOpen} onRequestClose={() => showModal()}>
+        <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
           <View style={{ margin: 10 }}>
-            <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(project) => this.setState({ projectName: project })} value={this.state.projectName} />
-            <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(state) => this.setState({ projectState: state })} value={this.state.projectState} />
-            <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(county) => this.setState({ projectCounty: county })} value={this.state.projectCounty} />
+            <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(project) => setProjectName(project)} value={projectName} />
+            <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(state) => setProjState(state)} value={projectState} />
+            <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(county) => setProjectCounty(county)} value={projectCounty} />
             <View style={{ margin: 10 }}>
               <Button
                 style={styles.button}
@@ -155,8 +140,11 @@ class Projects extends Component {
         </Modal>
       </View>
     );
-  }
 }
+
+Projects.navigationOptions = {
+  title: "Properties",
+};
 
 const styles = StyleSheet.create({
   TouchableOpacityStyle: {
