@@ -84,6 +84,7 @@ speciesRouter
         if (specimen) {
           specimen.sciName = req.body.sciName;
           specimen.comName = req.body.comName;
+          scecimen.img = req.body.img;
           for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
             console.log("enter loop")
 
@@ -112,6 +113,15 @@ speciesRouter
         }
       })
       .catch((err) => next(err));
-  });
+  })
+  .delete((req, res, next) => {
+    Species.findByIdAndDelete(req.body._id)
+    .then(response => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json')
+      res.json(response)
+    })
+    .catch(err => next(err))
+  })
 
 module.exports = speciesRouter;

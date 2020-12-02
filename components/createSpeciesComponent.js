@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {View, Alert, StyleSheet} from 'react-native';
 import {Input, Icon, Button} from 'react-native-elements';
 import { postSpeciesFromMaster } from "../redux/actionCreators/species";
@@ -12,12 +12,13 @@ const mapDispatchToProps = {
 const CreateSpecies = props => {
   const [sciName, setSciName] = useState('');
   const [comName, setComName] = useState('');
+  const [selectedImage, setSelectedImage] = useState('');
 
   const handleSubmit = () => {
     const {navigate} = props.navigation;
-    props.postSpeciesFromMaster(sciName, comName)
+    props.postSpeciesFromMaster(sciName, comName, selectedImage)
     // resetForm()
-    navigate('Species List')
+    navigate('SpeciesList')
   }
 
   const confirmSpecies = () => {
@@ -36,6 +37,10 @@ const CreateSpecies = props => {
       ],
       {cancelable: false}
     )
+  }
+
+  const imagePickedHandler = imagePath => {
+    setSelectedImage(imagePath)
   }
 
   // const resetForm = () => {
@@ -77,7 +82,7 @@ const CreateSpecies = props => {
         <ImgPicker onImageTaken={imagePickedHandler}/>
       </View>
       <View style={{margin: 10}}>
-        <Button style={styles.button} title='Create Species' onPress={() => {confirmSpecies()}}/>
+        <Button style={styles.button} title='Create Species' onPress={() => confirmSpecies()}/>
       </View>
     </View>
   );

@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOpacity: 10,
   },
-  margins: {
+  margin: {
     paddingTop: 10,
     paddingBottom: 10,
   },
