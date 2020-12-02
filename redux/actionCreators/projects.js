@@ -71,10 +71,22 @@ export const addProject = project => ({
   payload: project
 });
 
-export const updateProject = (projectId, name, state, county) => async dispatch => {
+export const updateProject = (projectId, name, state, county, img) => async dispatch => {
+  const fileName = img.split('/').pop();
+  const newPath = FileSystem.documentDirectory + fileName;
+  console.log('newPath', newPath)
+  try {
+    await FileSystem.moveAsync({
+      from: img,
+      to: newPath
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
   await fetch(baseUrl + 'projects', {
     method: 'PUT',
-    body: JSON.stringify({_id: projectId, name, state, county}),
+    body: JSON.stringify({_id: projectId, name, state, county, img: newPath.toString()}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {

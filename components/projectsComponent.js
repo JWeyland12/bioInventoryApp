@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { FlatList, View, StyleSheet, TouchableOpacity, Text, Alert, Modal } from "react-native";
 import {  Tile, Icon, Card, Input, Button } from "react-native-elements";
 import { connect } from "react-redux";
 import { updateProject, deleteProject } from '../redux/actionCreators/projects';
 import Swipeout from "react-native-swipeout";
+import ImgPicker from './imagePickerComponent';
 
 const mapStateToProps = (state) => {
   return { projects: state.projects };
@@ -20,32 +21,31 @@ const Projects = props => {
   const [projectName, setProjectName] = useState('');
   const [projectState, setProjState] = useState('');
   const [projectCounty, setProjectCounty] = useState('');
-  
+  const [selectedImage, setSelectedImage] = useState();
 
   
     const alphaProjects = props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
-    const showModal = (projectId) => {
-      setModalIndex(projectId),
-        () => setProjectState()
-      };
+      useLayoutEffect(() => {
+        if (modalIndex){
+          setProjectState()
+        }
+      }, [modalIndex])
 
-    const hideModal = () => {
-      setModal(!isModalOpen)
-      };
 
     const setProjectState = () => {
       const filteredProject = props.projects.projects.find((project) => project._id.toString() === modalIndex.toString());
       setProjectName(filteredProject.name),
       setProjState(filteredProject.state),
       setProjectCounty(filteredProject.county),
+      setSelectedImage(filteredProject.img)
       setModal(!isModalOpen)
     };
 
     const handleSubmit = () => {
-      props.updateProject(modalIndex, projectName, projectState, projectCounty)
-      hideModal()
-      this.render()
+      props.updateProject(modalIndex, projectName, projectState, projectCounty, selectedImage)
+      setModal(!isModalOpen)
+      setModalIndex('')
     }
 
     const { navigate } = props.navigation;
@@ -56,7 +56,7 @@ const Projects = props => {
           text: "Edit",
           backgroundColor: "#008b8b",
           textSize: 100,
-          onPress: () => showModal(projectId),
+          onPress: () => setModalIndex(projectId)
         },
       ];
 
@@ -84,14 +84,19 @@ const Projects = props => {
         }
       ]
 
+
       return (
         <Swipeout left={leftButton} right={rightButton} autoClose={true}>
           <View>
-            <Tile onPress={() => navigate("Areas", { projectId: item._id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require("./images/balconySinks.jpg")} />
+            <Tile onPress={() => navigate("Areas", { projectId: item._id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={{uri: item.img}} />
           </View>
         </Swipeout>
       );
     };
+
+    const imagePickedHandler = imagePath => {
+      setSelectedImage(imagePath)
+    }
 
     const RenderContent = ({ projects }) => {
       return (
@@ -117,11 +122,12 @@ const Projects = props => {
         <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate("CreateProject")}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
-        <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
+        <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => setModal(!isModalOpen)}>
           <View style={{ margin: 10 }}>
             <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(project) => setProjectName(project)} value={projectName} />
             <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(state) => setProjState(state)} value={projectState} />
             <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(county) => setProjectCounty(county)} value={projectCounty} />
+            <ImgPicker onImageTaken={imagePickedHandler}/>
             <View style={{ margin: 10 }}>
               <Button
                 style={styles.button}
@@ -132,7 +138,7 @@ const Projects = props => {
               />
             </View>
             <View style={{ margin: 10 }}>
-              <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => hideModal()} />
+              <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => setModal(!isModalOpen)} />
             </View>
           </View>
         </Modal>
