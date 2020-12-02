@@ -52,6 +52,7 @@ const Navigator = createStackNavigator(
         name='search'
         type='font-awesome'
         iconStyle={{margin: 20, color: 'white'}}
+        onPress={() => {}}
         />,
     },
   }
@@ -72,8 +73,10 @@ const SpeciesTab = createStackNavigator(
         color: '#FFF'
       },
       headerRight: <Icon
-        name='heart'
+        name='search'
         type='font-awesome'
+        iconStyle={{margin: 20, color: 'white'}}
+        onPress={() => {}}
         />
     }
   }

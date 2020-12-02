@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {View, FlatList, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { ListItem, Icon } from "react-native-elements";
 import {connect} from 'react-redux';
@@ -7,42 +7,40 @@ const mapStateToProps = state => {
   return {species: state.species}
 }
 
-class SpeciesList extends Component {
+const SpeciesList = props => {
 
-  static navigationOptions = {
-    title: 'Species List'
-  }
 
-  render() {
+  const {navigate} = props.navigation
+  const speciesAlpha = props.species.species.sort((a, b) => (a.sciName > b.sciName) ? 1 : -1)
 
-    const {navigate} = this.props.navigation
-    const speciesAlpha = this.props.species.species.sort((a, b) => (a.sciName > b.sciName) ? 1 : -1)
-
-    const renderSpecies = ({item}) => {
-      return (
-        <ListItem 
-          title={item.sciName} 
-          subtitle={item.comName}
-          leftAvatar={{source: {uri: item.img}, size: 'medium'}}
-          bottomDivider
-          topDivider
-          rightIcon={<Icon name='angle-right' type='font-awesome'/>}
-        />
-      )
-    }
-
-    const FlatSpeciesList = ({speciesAlpha}) => {
-      return <FlatList data={speciesAlpha} renderItem={renderSpecies} keyExtractor={(item) => item._id.toString()}/>
-    }
+  const renderSpecies = ({item}) => {
     return (
-      <View style={{flex: 1}}>
-        <FlatSpeciesList speciesAlpha={speciesAlpha}/>
-        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateSpecies')}>
-          <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
-        </TouchableOpacity>
-      </View>
-    );
+      <ListItem 
+        title={item.sciName} 
+        subtitle={item.comName}
+        leftAvatar={{source: {uri: item.img}, size: 'medium'}}
+        bottomDivider
+        topDivider
+        rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+      />
+    )
   }
+
+  const FlatSpeciesList = ({speciesAlpha}) => {
+    return <FlatList data={speciesAlpha} renderItem={renderSpecies} keyExtractor={(item) => item._id.toString()}/>
+  }
+  return (
+    <View style={{flex: 1}}>
+      <FlatSpeciesList speciesAlpha={speciesAlpha}/>
+      <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateSpecies')}>
+        <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+SpeciesList.navigationOptions = {
+  title: 'Species List'
 }
 
 

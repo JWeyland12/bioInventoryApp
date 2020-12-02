@@ -9,30 +9,21 @@ const mapDispatchToProps = {
   postSpeciesFromMaster
 }
 
-class CreateSpecies extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      sciName: '',
-      comName: '',
-    };
-  }
+const CreateSpecies = props => {
+  const [sciName, setSciName] = useState('');
+  const [comName, setComName] = useState('');
 
-  static navigationOptions = {
-    title: 'Enter Species'
-  }
-
-  handleSubmit = () => {
-    const {navigate} = this.props.navigation;
-    this.props.postSpeciesFromMaster(this.state.sciName, this.state.comName)
-    this.resetForm()
+  const handleSubmit = () => {
+    const {navigate} = props.navigation;
+    props.postSpeciesFromMaster(sciName, comName)
+    // resetForm()
     navigate('Species List')
   }
 
-  confirmSpecies = () => {
+  const confirmSpecies = () => {
     Alert.alert(
       'Do you want to enter this species into the database?',
-      `${this.state.sciName} \n${this.state.comName}`,
+      `${sciName} \n${comName}`,
       [
         {
           text: 'Cancel',
@@ -40,60 +31,61 @@ class CreateSpecies extends Component {
         },
         {
           text: 'Confirm',
-          onPress: () => this.handleSubmit()
+          onPress: () => handleSubmit()
         }
       ],
       {cancelable: false}
     )
   }
 
-  resetForm = () => {
-    this.setState({
-      sciName: '',
-      comName: ''
-    })
-  }
+  // const resetForm = () => {
+  //   this.setState({
+  //     sciName: '',
+  //     comName: ''
+  //   })
+  // }
 
-  render() {
-    return (
-      <View style={{flex: 1}}>
-        <View style={{margin: 10}}>
-          <Input
-            style={styles.margin}
-            leftIcon={
-              <Icon
-                name='angle-right'
-                type='font-awesome'
-              />
-            }
-            leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={sciName => this.setState({sciName: sciName})}
-            placeholder='Scientific Name'
-            value={this.state.sciName}
-          />
-          <Input
-            style={styles.margin}
-            leftIcon={
-              <Icon
-                name='angle-right'
-                type='font-awesome'
-              />
-            }
-            leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={comName => this.setState({comName: comName})}
-            placeholder='Common Name'
-            value={this.state.comName}
-          />
-          <ImgPicker onImageTaken={imagePickedHandler}/>
-        </View>
-        <View style={{margin: 10}}>
-          <Button style={styles.button} title='Create Species' onPress={() => {this.confirmSpecies()}}/>
-        </View>
+  return (
+    <View style={{flex: 1}}>
+      <View style={{margin: 10}}>
+        <Input
+          style={styles.margin}
+          leftIcon={
+            <Icon
+              name='angle-right'
+              type='font-awesome'
+            />
+          }
+          leftIconContainerStyle={{paddingRight: 10}}
+          onChangeText={sciName => setSciName(sciName)}
+          placeholder='Scientific Name'
+          value={sciName}
+        />
+        <Input
+          style={styles.margin}
+          leftIcon={
+            <Icon
+              name='angle-right'
+              type='font-awesome'
+            />
+          }
+          leftIconContainerStyle={{paddingRight: 10}}
+          onChangeText={comName => setComName(comName)}
+          placeholder='Common Name'
+          value={comName}
+        />
+        <ImgPicker onImageTaken={imagePickedHandler}/>
       </View>
-    );
-  };
+      <View style={{margin: 10}}>
+        <Button style={styles.button} title='Create Species' onPress={() => {confirmSpecies()}}/>
+      </View>
+    </View>
+  );
+}
+
+  CreateSpecies.navigationOptions = {
+    title: 'Enter Species'
   }
-  
 
 export default connect(null, mapDispatchToProps)(CreateSpecies);
 
