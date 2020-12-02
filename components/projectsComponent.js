@@ -98,6 +98,12 @@ const Projects = props => {
       setSelectedImage(imagePath)
     }
 
+    const showModal = () => {
+      setModal(!isModalOpen)
+      setModalIndex('')
+      console.log(modalIndex)
+    }
+
     const RenderContent = ({ projects }) => {
       return (
         <View>
@@ -122,7 +128,7 @@ const Projects = props => {
         <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate("CreateProject")}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
-        <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => setModal(!isModalOpen)}>
+        <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
           <View style={{ margin: 10 }}>
             <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(project) => setProjectName(project)} value={projectName} />
             <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(state) => setProjState(state)} value={projectState} />
@@ -138,7 +144,7 @@ const Projects = props => {
               />
             </View>
             <View style={{ margin: 10 }}>
-              <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => setModal(!isModalOpen)} />
+              <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => showModal()} />
             </View>
           </View>
         </Modal>

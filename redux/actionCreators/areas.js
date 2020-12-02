@@ -1,5 +1,7 @@
 import * as actionType from '../actionTypes';
 import {baseUrl} from '../../shared/baseUrl';
+import * as FileSystem from 'expo-file-system';
+
 
 export const fetchAreas = () => dispatch => {
   fetch(baseUrl + 'areas')
@@ -26,10 +28,22 @@ export const addAreas = areas => ({
   payload: areas
 })
 
-export const postArea = (projectId, area, geoRef) => dispatch => {
+export const postArea = (projectId, area, geoRef, img) => async dispatch => {
+  const fileName = img.split('/').pop();
+  const newPath = FileSystem.documentDirectory + fileName;
+  console.log('newPath', newPath)
+  try {
+    await FileSystem.moveAsync({
+      from: img,
+      to: newPath
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
   fetch(baseUrl + 'areas', {
     method: 'POST',
-    body: JSON.stringify({projectId, area, geoRef}),
+    body: JSON.stringify({projectId, area, geoRef, img: newPath}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {
@@ -57,10 +71,22 @@ export const addArea = area => ({
   payload: area
 })
 
-export const updateArea = (areaId, area, geoRef) => async dispatch => {
+export const updateArea = (areaId, area, geoRef, img) => async dispatch => {
+  const fileName = img.split('/').pop();
+  const newPath = FileSystem.documentDirectory + fileName;
+  console.log('newPath', newPath)
+  try {
+    await FileSystem.moveAsync({
+      from: img,
+      to: newPath
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
   await fetch(baseUrl + 'areas', {
     method: 'PUT',
-    body: JSON.stringify({_id: areaId, area, geoRef }),
+    body: JSON.stringify({_id: areaId, area, geoRef, img: newPath }),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {

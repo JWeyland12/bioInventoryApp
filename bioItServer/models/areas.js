@@ -10,9 +10,13 @@ const areaSchema = new Schema (
     },
     geoRef: {
       type: String,
-      // required: true
+      required: true
     },
-    project: String
+    project: String,
+    img: {
+      type: String,
+      required: true
+    }
   },
   {
     timestamps: true

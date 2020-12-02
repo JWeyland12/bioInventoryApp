@@ -84,7 +84,7 @@ class CreateSpecies extends Component {
             placeholder='Common Name'
             value={this.state.comName}
           />
-          <ImgPicker />
+          <ImgPicker onImageTaken={imagePickedHandler}/>
         </View>
         <View style={{margin: 10}}>
           <Button style={styles.button} title='Create Species' onPress={() => {this.confirmSpecies()}}/>

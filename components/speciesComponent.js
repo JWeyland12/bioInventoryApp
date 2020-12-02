@@ -20,7 +20,14 @@ class SpeciesList extends Component {
 
     const renderSpecies = ({item}) => {
       return (
-        <ListItem title={item.sciName} subtitle={item.comName}/>
+        <ListItem 
+          title={item.sciName} 
+          subtitle={item.comName}
+          leftAvatar={{source: {uri: item.img}, size: 'medium'}}
+          bottomDivider
+          topDivider
+          rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+        />
       )
     }
 

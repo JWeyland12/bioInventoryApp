@@ -13,14 +13,15 @@ const mapDispatchToProps = {
 const CreateArea = props => {
   const [areaName, setAreaName] = useState('');
   const [areaGeoRef, setAreaGeoRef] = useState('');
-  const [projectId] = useState(props.navigation.getParam('projectId'))
+  const [projectId] = useState(props.navigation.getParam('projectId'));
+  const [selectedImage, setSelectedImage] = useState('');
 
   // const projectId = this.props.navigation.getParam('projectId')
 
 
   const handleSubmit = () => {
     const {navigate} = props.navigation;
-    props.postArea(projectId, areaName, areaGeoRef)
+    props.postArea(projectId, areaName, areaGeoRef, selectedImage)
     resetForm()
     navigate('Areas')
   }
@@ -55,6 +56,10 @@ const CreateArea = props => {
     geoRef.long = location.coords.longitude
     setAreaGeoRef(`${geoRef.lat}, ${geoRef.long}`)
   }
+
+  const imagePickedHandler = imagePath => {
+    setSelectedImage(imagePath)
+  }
     
     return (
       <View>
@@ -86,7 +91,7 @@ const CreateArea = props => {
             value={areaGeoRef}
           />
           <LocationPicker onLocationTaken={locationTakenHandler} />
-          <ImgPicker />
+          <ImgPicker onImageTaken={imagePickedHandler}/>
           <View style={{margin: 10}}>
             <Button style={styles.button} title='Create Area' onPress={() => {confirmArea()}}/>
           </View>
