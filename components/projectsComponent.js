@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect } from "react";
 import { FlatList, View, StyleSheet, TouchableOpacity, Text, Alert, Modal } from "react-native";
-import {  Tile, Icon, Card, Input, Button } from "react-native-elements";
+import {  Tile, Icon, Card, Input, Button,Divider } from "react-native-elements";
 import { connect } from "react-redux";
 import { updateProject, deleteProject } from '../redux/actionCreators/projects';
 import Swipeout from "react-native-swipeout";
@@ -88,7 +88,13 @@ const Projects = props => {
       return (
         <Swipeout left={leftButton} right={rightButton} autoClose={true}>
           <View>
-            <Tile onPress={() => navigate("Areas", { projectId: item._id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={{uri: item.img}} />
+            <Tile 
+              onPress={() => navigate("Areas", { projectId: item._id })} 
+              featured title={item.name} 
+              caption={`${item.county} county, ${item.state}`} 
+              imageSrc={{uri: item.img}}
+            />
+            {/* <Divider style={{borderBottomWidth: 1, borderBottomColor: 'grey'}} /> */}
           </View>
         </Swipeout>
       );

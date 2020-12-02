@@ -102,7 +102,14 @@ class Trips extends Component {
       return (
         <Swipeout left={leftButton} right={rightButton} autoClose={true}>
           <View>
-            <ListItem title={item.date} onPress={() => navigate("TripSpecies", { tripId: item._id })} />
+            <ListItem 
+            title={item.date} 
+            onPress={() => navigate("TripSpecies", { tripId: item._id })} 
+            topDivider
+            bottomDivider
+            containerStyle={{height: 75}}
+            rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+          />
           </View>
         </Swipeout>
       )
@@ -130,7 +137,13 @@ class Trips extends Component {
     return (
       <View style={{ flex: 1 }}>
         {/* add area photo as avatar */}
-        <ListItem title={'Area Summary'} onPress={() => navigate('AreaSummary', {areaId: areaId, areaGeoRef: areaGeoRef})}/>
+        <ListItem 
+          title={'Area Summary'} 
+          onPress={() => navigate('AreaSummary', {areaId: areaId, areaGeoRef: areaGeoRef})}
+          bottomDivider
+          containerStyle={{height: 75}}
+          rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+        />
         <RenderTrips trips={trips} />
         <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => this.props.postTrip(areaId)}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
