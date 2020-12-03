@@ -1,10 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, createContext, useContext} from 'react';
 import {View, Button, Text, StyleSheet, Image, Alert} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 
 const ImgPicker = props => {
   const [pickedImage, setPickedImage] = useState();
+  
+  (async function updateImageHandler() {
+    const updateImage = await props.updateImage
+    if (updateImage) {
+      setPickedImage(updateImage)
+    }
+  })()
+
+  console.log('ip', props.updateImage)
 
   const verifyCameraPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.CAMERA);

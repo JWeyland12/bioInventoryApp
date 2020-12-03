@@ -43,8 +43,9 @@ const Areas = props => {
 
   const setAreaState = () => {
     const filteredArea = props.areas.areas.find(area => area._id === modalIndex)
-      setAreaName(filteredArea.area),
-      setAreaGeoRef(filteredArea.geoRef),
+      setAreaName(filteredArea.area);
+      setAreaGeoRef(filteredArea.geoRef);
+      setSelectedImage(filteredArea.img)
       setModal(!isModalOpen)
   }
 
@@ -141,7 +142,7 @@ const Areas = props => {
         <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(area) => setAreaName(area)} value={areaName} />
         <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(geoRef) => setAreaGeoRef(geoRef)} value={areaGeoRef} />
         <LocationPicker onLocationTaken={locationTakenHandler} />
-        <ImgPicker onImageTaken={imagePickedHandler} />
+        <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage} />
         <View style={{ margin: 10 }}>
             <Button
               style={styles.button}

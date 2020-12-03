@@ -123,7 +123,7 @@ class Trips extends Component {
             <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
               <Text style={styles.textInCard}>You haven't created any trips yet!</Text>
               <Text></Text>
-              <Text style={styles.textInCard}>Click the '+' button to get started!</Text>
+              <Text style={styles.textInCard}>Click the '+' button to add a trip!</Text>
             </Card>
           </View>
         );

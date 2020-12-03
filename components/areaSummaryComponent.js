@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, FlatList, StyleSheet, Text } from "react-native";
-import { ListItem, Card } from "react-native-elements";
+import { ListItem, Card, Icon } from "react-native-elements";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state) => {
@@ -47,7 +47,14 @@ class AreaSummary extends Component {
 
     const speciesList = ({ item }) => {
       // add species photo
-      return <ListItem title={item.sciName} subtitle={`${item.comName} - Total: ${item.total}`}/>;
+      return <ListItem 
+              title={item.sciName} 
+              subtitle={`${item.comName} - Total: ${item.total}`}
+              topDivider
+              bottomDivider
+              leftAvatar={{source: {uri: item.img}, size: 'large'}}
+              rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+            />;
     };
 
     const RenderSpecies = ({ speciesArr }) => {
@@ -67,7 +74,7 @@ class AreaSummary extends Component {
     const areaGeoRef = this.props.navigation.getParam('areaGeoRef')
     return (
       <View style={{ flex: 1 }}>
-        <ListItem title={'Geo-reference'} subtitle={areaGeoRef}/>
+        <ListItem title={'Geo-reference'} subtitle={areaGeoRef} rightIcon={<Icon name='angle-right' type='font-awesome'/>} containerStyle={{height: 100}}/>
         <RenderSpecies speciesArr={speciesArr} />
       </View>
     );

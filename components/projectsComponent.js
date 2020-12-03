@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect } from "react";
-import { FlatList, View, StyleSheet, TouchableOpacity, Text, Alert, Modal } from "react-native";
-import {  Tile, Icon, Card, Input, Button,Divider } from "react-native-elements";
+import { ScrollView, FlatList, View, StyleSheet, TouchableOpacity, Text, Alert, Modal } from "react-native";
+import {  Tile, Icon, Card, Input, Button } from "react-native-elements";
 import { connect } from "react-redux";
 import { updateProject, deleteProject } from '../redux/actionCreators/projects';
 import Swipeout from "react-native-swipeout";
@@ -23,6 +23,7 @@ const Projects = props => {
   const [projectCounty, setProjectCounty] = useState('');
   const [selectedImage, setSelectedImage] = useState();
 
+
   
     const alphaProjects = props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
@@ -41,6 +42,7 @@ const Projects = props => {
       setSelectedImage(filteredProject.img)
       setModal(!isModalOpen)
     };
+    console.log('pc', selectedImage)
 
     const handleSubmit = () => {
       props.updateProject(modalIndex, projectName, projectState, projectCounty, selectedImage)
@@ -130,8 +132,10 @@ const Projects = props => {
 
     return (
       <View style={{ flex: 1 }}>
-        <RenderContent projects={alphaProjects} />
-        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate("CreateProject")}>
+        <ScrollView>
+          <RenderContent projects={alphaProjects} />
+        </ScrollView>
+        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateProject')}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
         <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
@@ -139,7 +143,7 @@ const Projects = props => {
             <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(project) => setProjectName(project)} value={projectName} />
             <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(state) => setProjState(state)} value={projectState} />
             <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(county) => setProjectCounty(county)} value={projectCounty} />
-            <ImgPicker onImageTaken={imagePickedHandler}/>
+            <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage}/>
             <View style={{ margin: 10 }}>
               <Button
                 style={styles.button}

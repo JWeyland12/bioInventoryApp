@@ -79,40 +79,16 @@ speciesRouter
       .catch((err) => next(err));
   })
   .put((req, res, next) => {
-    Species.findById(req.body._id)
-      .then((specimen) => {
-        if (specimen) {
-          specimen.sciName = req.body.sciName;
-          specimen.comName = req.body.comName;
-          scecimen.img = req.body.img;
-          for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
-            console.log("enter loop")
-
-            if (specimen.tripArr[i]._id.toString() === req.body.tripObj._id.toString()) {
-              specimen.tripArr[i].tripRef = req.body.tripObj.tripRef;
-              specimen.tripArr[i].total = req.body.tripObj.total;
-              // break;
-            } else {
-              console.log(specimen.tripArr[i]._id);
-              console.log(req.body.tripObj._id);
-              console.log("you didn't enter the if block, try again");
-            }
-          }
-          specimen
-            .save()
-            .then((specimen) => {
-              res.statusCode = 200;
-              res.setHeader("Content-Type", "application/json");
-              res.json(specimen);
-            })
-            .catch((err) => next(err));
-        } else {
-          const err = new Error(`${specimen} does not exist!`);
-          err.statusCode = 404;
-          return next(err);
-        }
+    // updated from the master list - not reassigning tripArr references
+    if (!req.body.tripArr) {
+      Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
+      .then(specimen => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(specimen)
       })
-      .catch((err) => next(err));
+      .catch(err => next(err))
+    }
   })
   .delete((req, res, next) => {
     Species.findByIdAndDelete(req.body._id)
@@ -125,3 +101,40 @@ speciesRouter
   })
 
 module.exports = speciesRouter;
+
+
+// Species.findById(req.body._id)
+//       .then((specimen) => {
+//         if (specimen && !req.body.tripArr) {
+//           specimen.sciName = req.body.sciName;
+//           specimen.comName = req.body.comName;
+//           scecimen.img = req.body.img;
+//           for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
+//             console.log("enter loop")
+
+//             if (specimen.tripArr[i]._id.toString() === req.body.tripArr._id.toString()) {
+//               specimen.tripArr[i].tripRef = req.body.tripArr.tripRef;
+//               specimen.tripArr[i].total = req.body.tripArr.total;
+//               break;
+//             } else {
+//               console.log(specimen.tripArr[i]._id);
+//               console.log(req.body.tripArr._id);
+//               console.log("you didn't enter the if block, try again");
+//             }
+//           }
+//           specimen
+//             .save()
+//             .then((specimen) => {
+//               res.statusCode = 200;
+//               res.setHeader("Content-Type", "application/json");
+//               res.json(specimen);
+//             })
+//             .catch((err) => next(err));
+//         } else {
+//           const err = new Error(`${specimen} does not exist!`);
+//           err.statusCode = 404;
+//           return next(err);
+//         }
+//       })
+//       .catch((err) => next(err));
+//   })

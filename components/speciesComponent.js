@@ -34,8 +34,9 @@ const SpeciesList = props => {
   const setSpeciesState = () => {
     const findSpecies = props.species.species.find(species => species._id.toString() === modalIndex.toString())
     setSciName(findSpecies.sciName);
-    setComName(findSpecies.comName)
-    setModal(!isModalOpen)
+    setComName(findSpecies.comName);
+    setSelectedImage(findSpecies.img);
+    setModal(!isModalOpen);
   }
 
   const showModal = () => {
@@ -127,7 +128,7 @@ const SpeciesList = props => {
             onChangeText={(text) => setComName(text)}
             value={comName}
           />
-          <ImgPicker onImageTaken={imagePickedHandler} />
+          <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage} />
           <View style={{margin: 10}}>
             <Button
               style={styles.button}
