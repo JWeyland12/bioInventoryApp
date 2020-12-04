@@ -55,10 +55,12 @@ class TripSpecies extends Component {
       }
     }
 
+    const {navigate} = this.props.navigation
+
     return (
       <View style={{flex: 1}}>
         <RenderSpecies speciesArr={speciesArr}/>
-        <TouchableOpacity style={styles.TouchableOpacityStyle}>
+        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateTripSpecies')}>
           <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
         </TouchableOpacity>
       </View>
