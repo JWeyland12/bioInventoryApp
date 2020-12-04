@@ -31,9 +31,12 @@ class Trips extends Component {
   };
 
   render() {
+    const projectId = this.props.navigation.getParam('projectId');
     const areaId = this.props.navigation.getParam("areaId");
     const areaGeoRef = this.props.navigation.getParam('areaGeoRef')
     const trips = this.props.trips.trips.filter((trips) => trips.areaId === areaId);
+    const { navigate } = this.props.navigation;
+
 
     const showModal = (projectId) => {
       this.setState(
@@ -104,7 +107,7 @@ class Trips extends Component {
           <View>
             <ListItem 
             title={item.date} 
-            onPress={() => navigate("TripSpecies", { tripId: item._id })} 
+            onPress={() => navigate("TripSpecies", {  projectId: projectId, areaId: areaId, tripId: item._id })} 
             topDivider
             bottomDivider
             containerStyle={{height: 75}}
@@ -132,7 +135,6 @@ class Trips extends Component {
       }
     };
 
-    const { navigate } = this.props.navigation
 
     return (
       <View style={{ flex: 1 }}>

@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useContext } from "react";
 import { ScrollView, FlatList, View, StyleSheet, TouchableOpacity, Text, Alert, Modal } from "react-native";
 import {  Tile, Icon, Card, Input, Button } from "react-native-elements";
 import { connect } from "react-redux";
@@ -22,144 +22,140 @@ const Projects = props => {
   const [projectState, setProjState] = useState('');
   const [projectCounty, setProjectCounty] = useState('');
   const [selectedImage, setSelectedImage] = useState();
-
-
   
-    const alphaProjects = props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
+  const alphaProjects = props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
-      useLayoutEffect(() => {
-        if (modalIndex){
-          setProjectState()
+    useLayoutEffect(() => {
+      if (modalIndex){
+        setProjectState()
+      }
+    }, [modalIndex])
+
+  const setProjectState = () => {
+    const filteredProject = props.projects.projects.find((project) => project._id.toString() === modalIndex.toString());
+    setProjectName(filteredProject.name),
+    setProjState(filteredProject.state),
+    setProjectCounty(filteredProject.county),
+    setSelectedImage(filteredProject.img)
+    setModal(!isModalOpen)
+  };
+  console.log('pc', selectedImage)
+
+  const handleSubmit = () => {
+    props.updateProject(modalIndex, projectName, projectState, projectCounty, selectedImage)
+    setModal(!isModalOpen)
+    setModalIndex('')
+  }
+
+  const { navigate } = props.navigation;
+  const renderProject = ({ item }) => {
+    const projectId = item._id;
+    const leftButton = [
+      {
+        text: "Edit",
+        backgroundColor: "#008b8b",
+        textSize: 100,
+        onPress: () => setModalIndex(projectId)
+      },
+    ];
+
+    const rightButton = [
+      {
+        text: "Delete",
+        backgroundColor: 'red',
+        onPress: () => {
+          Alert.alert(
+            'Do you want to delete this project?',
+            `${item.name} \n${item.county} county, ${item.state}`,
+            [
+              {
+                text: 'Cancel',
+                type: 'cancel'
+              },
+              {
+                text: 'Confirm',
+                onPress: () => props.deleteProject(item._id)
+              }
+          ],
+          {cancelable: false}
+          )
         }
-      }, [modalIndex])
-
-
-    const setProjectState = () => {
-      const filteredProject = props.projects.projects.find((project) => project._id.toString() === modalIndex.toString());
-      setProjectName(filteredProject.name),
-      setProjState(filteredProject.state),
-      setProjectCounty(filteredProject.county),
-      setSelectedImage(filteredProject.img)
-      setModal(!isModalOpen)
-    };
-    console.log('pc', selectedImage)
-
-    const handleSubmit = () => {
-      props.updateProject(modalIndex, projectName, projectState, projectCounty, selectedImage)
-      setModal(!isModalOpen)
-      setModalIndex('')
-    }
-
-    const { navigate } = props.navigation;
-    const renderProject = ({ item }) => {
-      const projectId = item._id;
-      const leftButton = [
-        {
-          text: "Edit",
-          backgroundColor: "#008b8b",
-          textSize: 100,
-          onPress: () => setModalIndex(projectId)
-        },
-      ];
-
-      const rightButton = [
-        {
-          text: "Delete",
-          backgroundColor: 'red',
-          onPress: () => {
-            Alert.alert(
-              'Do you want to delete this project?',
-              `${item.name} \n${item.county} county, ${item.state}`,
-              [
-                {
-                  text: 'Cancel',
-                  type: 'cancel'
-                },
-                {
-                  text: 'Confirm',
-                  onPress: () => props.deleteProject(item._id)
-                }
-            ],
-            {cancelable: false}
-            )
-          }
-        }
-      ]
-
-
-      return (
-        <Swipeout left={leftButton} right={rightButton} autoClose={true}>
-          <View>
-            <Tile 
-              onPress={() => navigate("Areas", { projectId: item._id })} 
-              featured title={item.name} 
-              caption={`${item.county} county, ${item.state}`} 
-              imageSrc={{uri: item.img}}
-            />
-            {/* <Divider style={{borderBottomWidth: 1, borderBottomColor: 'grey'}} /> */}
-          </View>
-        </Swipeout>
-      );
-    };
-
-    const imagePickedHandler = imagePath => {
-      setSelectedImage(imagePath)
-    }
-
-    const showModal = () => {
-      setModal(!isModalOpen)
-      setModalIndex('')
-      console.log(modalIndex)
-    }
-
-    const RenderContent = ({ projects }) => {
-      return (
-        <View>
-          {!projects ? (
-              <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
-                <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
-                  <Text style={styles.textInCard}>You haven't created any projects yet!</Text>
-                  <Text></Text>
-                  <Text style={styles.textInCard}>Click the '+' button to get started!</Text>
-                </Card>
-              </View>
-          ) : (
-            <FlatList data={projects} renderItem={renderProject} keyExtractor={(item) => item._id.toString()} />
-          )}
-        </View>
-      )
-    };
+      }
+    ]
 
     return (
-      <View style={{ flex: 1 }}>
-        <ScrollView>
-          <RenderContent projects={alphaProjects} />
-        </ScrollView>
-        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateProject')}>
-          <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
-        </TouchableOpacity>
-        <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
-          <View style={{ margin: 10 }}>
-            <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(project) => setProjectName(project)} value={projectName} />
-            <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(state) => setProjState(state)} value={projectState} />
-            <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(county) => setProjectCounty(county)} value={projectCounty} />
-            <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage}/>
-            <View style={{ margin: 10 }}>
-              <Button
-                style={styles.button}
-                title="Update Project"
-                onPress={() => {
-                  handleSubmit();
-                }}
-              />
-            </View>
-            <View style={{ margin: 10 }}>
-              <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => showModal()} />
-            </View>
-          </View>
-        </Modal>
-      </View>
+      <Swipeout left={leftButton} right={rightButton} autoClose={true}>
+        <View>
+          <Tile 
+            onPress={() => navigate("Areas", { projectId: item._id })} 
+            featured title={item.name} 
+            caption={`${item.county} county, ${item.state}`} 
+            imageSrc={{uri: item.img}}
+          />
+          {/* <Divider style={{borderBottomWidth: 1, borderBottomColor: 'grey'}} /> */}
+        </View>
+      </Swipeout>
     );
+  };
+
+  const imagePickedHandler = imagePath => {
+    setSelectedImage(imagePath)
+  }
+
+  const showModal = () => {
+    setModal(!isModalOpen)
+    setModalIndex('')
+    console.log(modalIndex)
+  }
+
+  const RenderContent = ({ projects }) => {
+    return (
+      <View>
+        {!projects ? (
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
+              <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
+                <Text style={styles.textInCard}>You haven't created any projects yet!</Text>
+                <Text></Text>
+                <Text style={styles.textInCard}>Click the '+' button to get started!</Text>
+              </Card>
+            </View>
+        ) : (
+          <FlatList data={projects} renderItem={renderProject} keyExtractor={(item) => item._id.toString()} />
+        )}
+      </View>
+    )
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <ScrollView>
+        <RenderContent projects={alphaProjects} />
+      </ScrollView>
+      <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateProject')}>
+        <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
+      </TouchableOpacity>
+      <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
+        <View style={{ margin: 10 }}>
+          <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(project) => setProjectName(project)} value={projectName} />
+          <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(state) => setProjState(state)} value={projectState} />
+          <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(county) => setProjectCounty(county)} value={projectCounty} />
+          <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage}/>
+          <View style={{ margin: 10 }}>
+            <Button
+              style={styles.button}
+              title="Update Project"
+              onPress={() => {
+                handleSubmit();
+              }}
+            />
+          </View>
+          <View style={{ margin: 10 }}>
+            <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => showModal()} />
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
 }
 
 Projects.navigationOptions = {

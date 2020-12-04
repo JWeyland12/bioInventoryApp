@@ -22,13 +22,9 @@ const Areas = props => {
   const [areaName, setAreaName] = useState('');
   const [areaGeoRef, setAreaGeoRef] = useState('')
   const [selectedImage, setSelectedImage] = useState('')
-
   const { navigate } = props.navigation;
   const projectId = props.navigation.getParam("projectId");
   const areas = props.areas.areas.filter((areas) => areas.project === projectId);
-
-  const showModal = (areaId) => {
-  }
 
   useLayoutEffect(() => {
     if(modalIndex) {
@@ -95,7 +91,7 @@ const Areas = props => {
           <ListItem title={item.area} 
             subtitle={item.geoRef} 
             leftAvatar={{ source: {uri: item.img}, size: 'large'}} 
-            onPress={() => navigate("Trips", { areaId: item._id, areaGeoRef: item.geoRef })} 
+            onPress={() => navigate("Trips", { areaId: item._id, areaGeoRef: item.geoRef, projectId: projectId })} 
             bottomDivider topDivider
             rightIcon={<Icon name='angle-right' type='font-awesome'/>}
           />

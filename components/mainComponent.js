@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, createContext, useEffect } from "react";
 import Projects from "./projectsComponent";
 import Trips from "./tripComponent";
 import Species from "./speciesCardComponent";
@@ -12,6 +12,7 @@ import TripSpecies from './tripSummaryComponent';
 import SpeciesList from './speciesComponent';
 import SignIn from './signInComponent';
 import SignUp from './signUpComponent';
+import Search from './searchComponent';
 import { createStackNavigator, createBottomTabNavigator, createNavigationContainer } from "react-navigation";
 import { View, Platform, StyleSheet } from "react-native";
 import { connect } from "react-redux";
@@ -38,7 +39,9 @@ const Navigator = createStackNavigator(
     CreateArea: {screen: CreateArea},
     TripSpecies: {screen: TripSpecies},
     SpeciesList: {screen: SpeciesList},
-    CreateTripSpecies: {screen: CreateTripSpecies}
+    CreateTripSpecies: {screen: CreateTripSpecies},
+    CreateSpecies: {screen: CreateSpecies},
+    Search: {screen: Search}
   },
   {
     initialRouteName: "Projects",
@@ -154,22 +157,21 @@ const MyTabs = new createBottomTabNavigator({
   }
 })
 
-class Main extends Component {
+const Main = props => {
+  
 
-componentDidMount() {
-  this.props.fetchProjects();
-  this.props.fetchAreas();
-  this.props.fetchTrips();
-  this.props.fetchSpecies();
-}
+useEffect(() => {
+  props.fetchProjects();
+  props.fetchAreas();
+  props.fetchTrips();
+  props.fetchSpecies();
+})
 
-  render() {
-    return (
-      <View style={{ flex: 1, paddingTop: Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight }}>
-        <MyTabs />
-      </View>
-    );
-  }
+  return (
+    <View style={{ flex: 1, paddingTop: Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight }}>
+      <MyTabs />
+    </View>
+  );
 }
 
 export default connect(null, mapDispatchToProps)(Main);

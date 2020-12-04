@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import {Input, Icon, SearchBar, Button} from 'react-native-elements';
@@ -11,30 +11,22 @@ const mapStateToProps = state => {
 
 
 const CreateTripSpecies = (props) => {
-  const [sciName, setSciName] = useState('');
-  const [comName, setComName] = useState('');
-
+  const projectId = props.navigation.getParam('projectId');
+  const areaId = props.navigation.getParam('AreaId');
+  const tripId = props.navigation.getParam('tripId');
+  const {navigate} = props.navigation;
+  const idObject = {projectId, areaId, tripId}
 
   return (
     <View style={{flex: 1}}>
       <View style={styles.inputView}>
-        <Input 
-          leftIcon={<Icon name="angle-right" type="font-awesome" />} 
-          leftIconContainerStyle={{ paddingRight: 10 }} 
-          onChangeText={text => setSciName(text)}
-          value={sciName}
-          placeholder={'Scientific Name'}
-        />
-        <Input 
-          leftIcon={<Icon name="angle-right" type="font-awesome" />} 
-          leftIconContainerStyle={{ paddingRight: 10 }} 
-          onChangeText={text => setComName(text)}
-          value={comName}
-          placeholder={'Common Name'}
-        />
+        <Text style={{fontSize: 20}}>- OR -</Text>
+      </View>
+      <View style={{marginHorizontal: 50}}>
+        <Button title={'Enter New Species'} onPress={() => navigate('CreateSpecies', {idObject: idObject})} />
       </View>
       <TouchableOpacity style={styles.TouchableOpacityStyle}>
-        <Search listType={'Species'} masterList={props.species.species} setSciName={setSciName} setComName={setComName}/>
+        <Search listType={'Species'} masterList={props.species.species} navigate={navigate} idObject={idObject} />
       </TouchableOpacity>
     </View>
   );
@@ -59,6 +51,24 @@ const styles = StyleSheet.create({
     maxHeight: '100%',
   },
   inputView: {
-    marginTop: 75
+    marginTop: 75,
+    margin: 10,
+    justifyContent: 'center',
+    flexDirection: 'row'
   }
 })
+
+{/* <Input 
+          leftIcon={<Icon name="angle-right" type="font-awesome" />} 
+          leftIconContainerStyle={{ paddingRight: 10 }} 
+          onChangeText={text => setSciName(text)}
+          value={sciName}
+          placeholder={'Scientific Name'}
+        />
+        <Input 
+          leftIcon={<Icon name="angle-right" type="font-awesome" />} 
+          leftIconContainerStyle={{ paddingRight: 10 }} 
+          onChangeText={text => setComName(text)}
+          value={comName}
+          placeholder={'Common Name'}
+        /> */}

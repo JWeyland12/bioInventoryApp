@@ -7,6 +7,8 @@ const Search = (props) => {
   const [searchText, setSearchText] = useState('');
   const [filteredList, setFilteredList] = useState([]);
   const [listType, setListType] = useState('');
+  const idObject = props.idObject
+  const navigate = props.navigate;
 
   (async function setState () {
     if(!searchText && props.masterList && props.listType) {
@@ -35,18 +37,13 @@ const Search = (props) => {
       <ListItem 
       title={item.sciName}
       subtitle={item.comName}
-      onPress={({item}) => setSpecies(item)}
+      onPress={() => navigate('CreateSpecies', {specimen: item, idObject: idObject})}
       leftAvatar={{ source: {uri: item.img}}}
       topDivider
       bottomDivider
       rightIcon={<Icon name='angle-right' type='font-awesome'/>}
     />
     )
-  }
-
-  const setSpecies = (props, {item}) => {
-    props.setSciName(item.sciName)
-    props.setComName(item.comName)
   }
 
   return (
@@ -70,7 +67,6 @@ const Search = (props) => {
     </View>
   );
 };
-
 
 export default Search;
 

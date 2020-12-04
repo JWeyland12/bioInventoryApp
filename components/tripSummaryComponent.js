@@ -7,65 +7,60 @@ const mapStateToProps = state => {
   return { species: state.species }
 }
 
-class TripSpecies extends Component {
+const TripSpecies = props => {
+  const projectId = props.navigation.getParam('projectId');
+  const areaId = props.navigation.getParam('areaId');
+  const tripId = props.navigation.getParam('tripId');
+  const {navigate} = props.navigation;
+  const speciesArr = [];
 
-  static navigationOptions = {
-    title: "Species Observed"
+  const speciesFil = props.species.species.forEach((s) => {
+    s.tripArr.forEach((t) => {
+      if (t.tripRef === tripId) {
+        if (!speciesArr.includes(s)) {
+          speciesArr.push(s);
+        }
+      }
+    });
+  });
+
+  const tripSpeciesList = ({item}) => {
+    return (
+      <View>
+        <ListItem title={item.sciName} subtitle={`${item.comName} - Total: ${item.total}`}/>
+      </View>
+    )
   }
 
-  
-
-  render() {
-
-    const tripId = this.props.navigation.getParam('tripId');
-    console.log('tripId', tripId)
-    const speciesArr = [];
-    const speciesFil = this.props.species.species.forEach((s) => {
-      s.tripArr.forEach((t) => {
-        if (t.tripRef === tripId) {
-          if (!speciesArr.includes(s)) {
-            speciesArr.push(s);
-          }
-        }
-      });
-    });
-    console.log('speciesArr', speciesArr)
-    const tripSpeciesList = ({item}) => {
+  const RenderSpecies = ({speciesArr}) => {
+    if (speciesArr.length !== 0) {
+      return <FlatList data={speciesArr} renderItem={tripSpeciesList} keyExtractor={item => item._id.toString()}/>
+    } else {
       return (
-        <View>
-          <ListItem title={item.sciName} subtitle={`${item.comName} - Total: ${item.total}`}/>
+        <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
+          <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
+            <Text style={styles.textInCard}>You haven't found any species yet!</Text>
+            <Text></Text>
+            <Text style={styles.textInCard}>Click the '+' button to get started!</Text>
+          </Card>
         </View>
       )
     }
-
-    const RenderSpecies = ({speciesArr}) => {
-      console.log('species', speciesArr)
-      if (speciesArr.length !== 0) {
-        return <FlatList data={speciesArr} renderItem={tripSpeciesList} keyExtractor={item => item._id.toString()}/>
-      } else {
-        return (
-          <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
-            <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
-              <Text style={styles.textInCard}>You haven't found any species yet!</Text>
-              <Text></Text>
-              <Text style={styles.textInCard}>Click the '+' button to get started!</Text>
-            </Card>
-          </View>
-        )
-      }
-    }
-
-    const {navigate} = this.props.navigation
-
-    return (
-      <View style={{flex: 1}}>
-        <RenderSpecies speciesArr={speciesArr}/>
-        <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateTripSpecies')}>
-          <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
-        </TouchableOpacity>
-      </View>
-    );
   }
+
+
+  return (
+    <View style={{flex: 1}}>
+      <RenderSpecies speciesArr={speciesArr}/>
+      <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateTripSpecies', {projectId: projectId, areaId: areaId, tripId: tripId})}>
+        <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+TripSpecies.navigationOptions = {
+  title: "Species Observed"
 }
 
 const styles = StyleSheet.create({
