@@ -17,8 +17,6 @@ const CreateSpecies = props => {
   const [selectedImage, setSelectedImage] = useState('');
   let [total, setTotal] = useState(1)
 
-  console.log(total)
-
   useEffect(() => {
     if(specimen) {
       speciesStateHandler()
@@ -34,13 +32,16 @@ const CreateSpecies = props => {
     setSelectedImage(img)
   }
 
-  console.log('then this', selectedImage)
-
   const handleSubmit = () => {
     const {navigate} = props.navigation;
-    props.postSpeciesFromMaster(sciName, comName, selectedImage)
-    // resetForm()
-    navigate('SpeciesList')
+    if (!specimen) {
+    {!idObject ? props.postSpeciesFromMaster(sciName, comName, selectedImage)
+      : props.postSpeciesFromTrip(sciName, comName, selectedImage, {...idObject, total: total})}
+    {!idObject ? navigate('SpeciesList') : navigate('TripSpecies', {tripId: idObject.tripId})}
+    } else {
+      props.updateSpeciesTripArr({_id: specimen._id, ...idObject, total: total})
+      navigate('TripSpecies', {tripId: idObject.tripId})
+    }
   }
 
   const confirmSpecies = () => {
@@ -99,13 +100,23 @@ const CreateSpecies = props => {
             />
             <ImgPicker onImageTaken={imagePickedHandler}/>
           </View>
+          {idObject ?
+          (<View style={{alignItems: 'center'}}>
+            <View style={styles.countButtons}>
+              <Icon name='minus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total - 1)}/>
+              <Text style={{fontSize: 30, fontWeight: 'bold', marginHorizontal: 15}}>{total}</Text>
+              <Icon name='plus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total + 1)}/>
+            </View>
+          </View>
+          ) : (
+            null
+          )}
           <View style={{margin: 10}}>
             <Button style={styles.button} title='Create Species' onPress={() => confirmSpecies()}/>
           </View>
         </View>
       ) : (
         <View style={{margin: 10, alignItems: 'center'}}>
-          {console.log('this', selectedImage)}
           <View style={styles.imageContainer} >
             <Image style={styles.image} source={{uri: selectedImage}}/>
           </View>
@@ -115,9 +126,9 @@ const CreateSpecies = props => {
             <Text style={{fontSize: 15}}>Total</Text>
           </View>
             <View style={styles.countButtons}>
-              <Icon name='minus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total--)}/>
+              <Icon name='minus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total - 1)}/>
               <Text style={{fontSize: 30, fontWeight: 'bold', marginHorizontal: 15}}>{total}</Text>
-              <Icon name='plus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total++)}/>
+              <Icon name='plus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total + 1)}/>
             </View>
           <View style={{marginVertical: 15}}>
             <Button title={'Submit Observation'} onPress={() => {}}/>
