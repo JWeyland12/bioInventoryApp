@@ -24,7 +24,7 @@ const Search = (props) => {
     setSearchText(text)
     if (text) {
       const newData = masterList.filter(item => {
-        const itemData = (item.sciName) ? item.sciName.toUpperCase() : ''.toUpperCase()
+        const itemData = (item.comName) ? item.comName.toUpperCase() : ''.toUpperCase()
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       })
@@ -35,8 +35,8 @@ const Search = (props) => {
   const renderList = ({item}) => {
     return (
       <ListItem 
-      title={item.sciName}
-      subtitle={item.comName}
+      title={item.comName}
+      subtitle={item.sciName}
       onPress={() => navigate('CreateSpecies', {specimen: item, idObject: idObject})}
       leftAvatar={{ source: {uri: item.img}}}
       topDivider

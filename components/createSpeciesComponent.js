@@ -110,9 +110,9 @@ const CreateSpecies = props => {
                 />
               }
               leftIconContainerStyle={{paddingRight: 10}}
-              onChangeText={sciName => setSciName(sciName)}
-              placeholder='Scientific Name'
-              value={sciName}
+              onChangeText={comName => setComName(comName)}
+              placeholder='Common Name'
+              value={comName}
             />
             <Input
               style={styles.margin}
@@ -123,9 +123,9 @@ const CreateSpecies = props => {
                 />
               }
               leftIconContainerStyle={{paddingRight: 10}}
-              onChangeText={comName => setComName(comName)}
-              placeholder='Common Name'
-              value={comName}
+              onChangeText={sciName => setSciName(sciName)}
+              placeholder='Scientific Name'
+              value={sciName}
             />
             <ImgPicker onImageTaken={imagePickedHandler}/>
           </View>
@@ -150,8 +150,8 @@ const CreateSpecies = props => {
             <Image style={styles.image} source={{uri: selectedImage}}/>
           </View>
           <View style={{alignItems: 'center'}}>
-            <Text style={styles.textStyle}>{sciName}</Text>
             <Text style={styles.textStyle}>{comName}</Text>
+            <Text style={styles.textStyle}>{sciName}</Text>
             <Text style={{fontSize: 15}}>Total</Text>
           </View>
             <View style={styles.countButtons}>

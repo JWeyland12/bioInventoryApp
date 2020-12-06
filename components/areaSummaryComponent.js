@@ -30,7 +30,7 @@ class AreaSummary extends Component {
       });
     });
 
-    speciesArr = speciesArr.sort((a, b) => (a.name > b.name) ? 1 : -1)
+    speciesArr = speciesArr.sort((a, b) => (a.comName > b.comName) ? 1 : -1)
 
 
     const speciesList = ({ item }) => {
@@ -48,8 +48,8 @@ class AreaSummary extends Component {
         return total
       }
       return <ListItem 
-              title={item.sciName} 
-              subtitle={`${item.comName} - Total: ${totalCount(item)}`}
+              title={item.comName} 
+              subtitle={`${item.sciName} - Total: ${totalCount(item)}`}
               topDivider
               bottomDivider
               leftAvatar={{source: {uri: item.img}, size: 'large'}}

@@ -23,7 +23,7 @@ const SpeciesList = props => {
   const [selectedImage, setSelectedImage] = useState('');
 
   const {navigate} = props.navigation
-  const speciesAlpha = props.species.species.sort((a, b) => (a.sciName > b.sciName) ? 1 : -1)
+  const speciesAlpha = props.species.species.sort((a, b) => (a.comName > b.comName) ? 1 : -1)
 
   useLayoutEffect(() => {
     if (modalIndex) {
@@ -91,8 +91,8 @@ const SpeciesList = props => {
       <Swipeout left={leftButton} right={rightButton} autoClose={true}>
         <View>
           <ListItem 
-            title={item.sciName} 
-            subtitle={item.comName}
+            title={item.comName} 
+            subtitle={item.sciName}
             leftAvatar={{source: {uri: item.img}, size: 'medium'}}
             bottomDivider
             topDivider
