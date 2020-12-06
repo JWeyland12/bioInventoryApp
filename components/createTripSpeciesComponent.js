@@ -12,7 +12,7 @@ const mapStateToProps = state => {
 
 const CreateTripSpecies = (props) => {
   const projectId = props.navigation.getParam('projectId');
-  const areaId = props.navigation.getParam('AreaId');
+  const areaId = props.navigation.getParam('areaId');
   const tripId = props.navigation.getParam('tripId');
   const {navigate} = props.navigation;
   const idObject = {projectId, areaId, tripId}

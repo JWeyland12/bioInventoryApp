@@ -18,11 +18,11 @@ class AreaSummary extends Component {
   render() {
     const areaId = this.props.navigation.getParam("areaId");
     const species = this.props.species.species;
-    const speciesArr = [];
+    let speciesArr = [];
 
     const speciesFil = species.forEach((s) => {
       s.tripArr.forEach((t) => {
-        if (t.areaRef === areaId) {
+        if (t.areaId === areaId) {
           if (!speciesArr.includes(s)) {
             speciesArr.push(s);
           }
@@ -30,26 +30,26 @@ class AreaSummary extends Component {
       });
     });
 
-    const speciesTotal = (speciesArr) =>
-      speciesArr.forEach((s) => {
-        const totalArr = s.tripArr.map((r) => {
-          if (r.areaRef === areaId) {
-            return r.total;
-          }
-        });
-        const total = totalArr.reduce((a, b) => {
-          return a + b;
-        }, 0);
-        s.total = total;
-      });
+    speciesArr = speciesArr.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
-    speciesTotal(speciesArr);
 
     const speciesList = ({ item }) => {
       // add species photo
+      const totalCount = item => {
+        const totalsArr = []
+        for (let i = 0; i <= item.tripArr.length - 1; i++) {
+          if (item.tripArr[i].areaId === areaId) {
+            totalsArr.push(item.tripArr[i].total)
+          }
+        }
+        const total = totalsArr.reduce((a, b) => {
+          return a + b;
+        }, 0)
+        return total
+      }
       return <ListItem 
               title={item.sciName} 
-              subtitle={`${item.comName} - Total: ${item.total}`}
+              subtitle={`${item.comName} - Total: ${totalCount(item)}`}
               topDivider
               bottomDivider
               leftAvatar={{source: {uri: item.img}, size: 'large'}}

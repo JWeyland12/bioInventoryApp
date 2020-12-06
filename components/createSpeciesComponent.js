@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {View, Alert, StyleSheet, Text} from 'react-native';
 import {Input, Icon, Button, Image} from 'react-native-elements';
-import { postSpeciesFromMaster } from "../redux/actionCreators/species";
+import { postSpeciesFromTrip, updateSpeciesObservation, postSpeciesFromMaster } from "../redux/actionCreators/species";
 import {connect} from 'react-redux';
 import ImgPicker from './imagePickerComponent';
 
 const mapDispatchToProps = {
-  postSpeciesFromMaster
+  postSpeciesFromTrip,
+  postSpeciesFromMaster,
+  updateSpeciesObservation
 }
 
 const CreateSpecies = props => {
@@ -15,11 +17,19 @@ const CreateSpecies = props => {
   const idObject = props.navigation.getParam('idObject');
   const [specimen, setSpecimen] = useState(props.navigation.getParam('specimen'));
   const [selectedImage, setSelectedImage] = useState('');
-  let [total, setTotal] = useState(1)
+  let [total, setTotal] = useState(1);
+  const [doesTripExist, setDoesTripExist] = useState(false)
+  const {navigate} = props.navigation;
+  idObject.total = total
 
   useEffect(() => {
     if(specimen) {
       speciesStateHandler()
+      for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
+        if (specimen.tripArr[i].tripId === idObject.tripId) {
+          setDoesTripExist(true)
+        }
+      }
     } else {
       setSpecimen('')
     }
@@ -32,14 +42,33 @@ const CreateSpecies = props => {
     setSelectedImage(img)
   }
 
+  (function () {
+    if (doesTripExist) {
+      setDoesTripExist(false);
+      Alert.alert(
+        'Species already observed on this trip!',
+        'Edit species from trip to add details',
+        [
+          {
+            text: 'Ok', 
+            onPress: () => navigate('TripSpecies', {tripId: idObject.tripId})
+          }
+        ],
+        {cancelable: false}
+      )
+    }
+  })()
+  console.log('doesTripExist', doesTripExist)
+
   const handleSubmit = () => {
-    const {navigate} = props.navigation;
     if (!specimen) {
+      // create new species from trip or masterList
     {!idObject ? props.postSpeciesFromMaster(sciName, comName, selectedImage)
-      : props.postSpeciesFromTrip(sciName, comName, selectedImage, {...idObject, total: total})}
+      : props.postSpeciesFromTrip(sciName, comName, selectedImage, idObject)}
     {!idObject ? navigate('SpeciesList') : navigate('TripSpecies', {tripId: idObject.tripId})}
     } else {
-      props.updateSpeciesTripArr({_id: specimen._id, ...idObject, total: total})
+      // observing a species - submitting a tripObj to the species
+      props.updateSpeciesObservation({_id: specimen._id}, idObject)
       navigate('TripSpecies', {tripId: idObject.tripId})
     }
   }
@@ -131,7 +160,7 @@ const CreateSpecies = props => {
               <Icon name='plus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total + 1)}/>
             </View>
           <View style={{marginVertical: 15}}>
-            <Button title={'Submit Observation'} onPress={() => {}}/>
+            <Button title={'Submit Observation'} onPress={() => handleSubmit()}/>
           </View>
         </View>
       )}

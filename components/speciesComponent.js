@@ -4,14 +4,14 @@ import { ListItem, Icon, Input, Button } from "react-native-elements";
 import {connect} from 'react-redux';
 import Swipeout from 'react-native-swipeout';
 import ImgPicker from './imagePickerComponent';
-import {updateSpeciesFromMaster, deleteSpeciesFromMaster} from '../redux/actionCreators/species'
+import {updateSpecies, deleteSpeciesFromMaster} from '../redux/actionCreators/species'
 
 const mapStateToProps = state => {
   return {species: state.species}
 }
 
 const mapDispatchToProps = {
-  updateSpeciesFromMaster,
+  updateSpecies,
   deleteSpeciesFromMaster
 }
 
@@ -45,7 +45,7 @@ const SpeciesList = props => {
   };
 
   const handleSubmit = () => {
-    props.updateSpeciesFromMaster(modalIndex, sciName, comName, selectedImage);
+    props.updateSpecies(modalIndex, sciName, comName, selectedImage);
     setModal(!isModalOpen)
     setModalIndex('')
   }

@@ -12,6 +12,7 @@ const speciesSchema = new Schema(
     comName: {
       type: String,
       required: true,
+      unique: true
     },
     img: {
       type: String,
@@ -23,24 +24,19 @@ const speciesSchema = new Schema(
     // },
     tripArr: [
       {
-        tripRef: {
+        tripId: {
           type: String,
-          required: true,
-          unique: true
         },
-        areaRef: {
+        areaId: {
           type: String,
-          required: true
         },
-        projRef: {
+        projectId: {
           type: String,
-          required: true
         },
         total: {
           type: Number,
-          required: true
-        }
-      }
+        },
+      },
     ],
   },
   {

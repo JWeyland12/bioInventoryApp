@@ -12,11 +12,11 @@ const TripSpecies = props => {
   const areaId = props.navigation.getParam('areaId');
   const tripId = props.navigation.getParam('tripId');
   const {navigate} = props.navigation;
-  const speciesArr = [];
+  let speciesArr = [];
 
   const speciesFil = props.species.species.forEach((s) => {
     s.tripArr.forEach((t) => {
-      if (t.tripRef === tripId) {
+      if (t.tripId === tripId) {
         if (!speciesArr.includes(s)) {
           speciesArr.push(s);
         }
@@ -24,10 +24,29 @@ const TripSpecies = props => {
     });
   });
 
+  speciesArr = speciesArr.sort((a, b) => (a.name > b.name) ? 1 : -1)
+
   const tripSpeciesList = ({item}) => {
+    const totalCount = (item) => {
+      let total
+      for (let i = 0; i <= item.tripArr.length - 1; i++) {
+        if (item.tripArr[i].tripId === tripId) {
+          total = item.tripArr[i].total
+        }
+      }
+      return total
+    }
     return (
       <View>
-        <ListItem title={item.sciName} subtitle={`${item.comName} - Total: ${item.total}`}/>
+        <ListItem 
+          title={item.sciName} 
+          subtitle={`${item.comName} - Total: ${totalCount(item)}`}
+          topDivider
+          bottomDivider
+          leftAvatar={{source: {uri: item.img}, size: 'large'}}
+          rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+          
+        />
       </View>
     )
   }
