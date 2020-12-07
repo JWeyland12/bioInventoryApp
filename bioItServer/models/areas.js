@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const areaSchema = new Schema (
   {
+    user: {
+      type: String,
+      required: true
+    },
     area: {
       type: String,
       required: true,

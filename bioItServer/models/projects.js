@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const projectSchema = new Schema (
   {
+    user: {
+      type: String,
+      required: true
+    },
     name: {
       type: String,
       required: true,

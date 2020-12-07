@@ -4,6 +4,10 @@ const Schema = mongoose.Schema
 
 const speciesSchema = new Schema(
   {
+    user: {
+      type: String,
+      required: true
+    },
     sciName: {
       type: String,
       required: true,

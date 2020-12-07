@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const Project = require("../models/projects");
 const Area = require('../models/areas');
 const multer = require('multer');
+const auth = require('../middleware/auth');
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -36,8 +37,11 @@ projectRouter.use(bodyParser.json());
 
 projectRouter
   .route("/")
-  .get((req, res, next) => {
-    Project.find()
+  .get(auth, async (req, res, next) => {
+    console.log(req.user.id)
+    const user = await req.user.id
+    console.log(user)
+    Project.find({user: user})
       .then((Projects) => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
@@ -45,10 +49,9 @@ projectRouter
       })
       .catch((err) => next(err));
   })
-  .post((req, res, next) => {
-    console.log('req.file:', req.file)
-    console.log('req.body', req.body)
+  .post(auth, (req, res, next) => {
     // req.body.img = req.file.buffer
+    req.body.user = req.user.id
     Project.create(req.body)
       .then((project) => {
         console.log("Project Created", project);
