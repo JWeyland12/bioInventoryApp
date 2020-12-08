@@ -2,14 +2,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const Trip = require("../models/trips");
 const Species = require('../models/species');
+const auth = require('../middleware/auth');
 
 const tripRouter = express.Router();
 tripRouter.use(bodyParser.json());
 
 tripRouter
 .route('/')
-.get((req, res, next) => {
-  Trip.find()
+.get(auth, (req, res, next) => {
+  Trip.find({user: req.user.id})
   .then(trips => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json')
@@ -17,7 +18,8 @@ tripRouter
   })
   .catch(err => next(err))
 })
-.post((req, res, next) => {
+.post(auth, (req, res, next) => {
+  req.body.user = req.user.id
   if (req.body.areaId) {
     req.body.area = req.body.areaId
     Trip.create(req.body)

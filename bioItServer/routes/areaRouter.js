@@ -1,14 +1,15 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const Area = require('../models/areas')
+const auth = require('../middleware/auth')
 
 const areaRouter = express.Router()
 areaRouter.use(bodyParser.json())
 
 areaRouter
 .route('/')
-.get((req, res, next) => {
-  Area.find()
+.get(auth, (req, res, next) => {
+  Area.find({user: req.user.id})
   .then(areas => {
     res.statusCode = 200;
     res.setHeader("Content-Type", 'application/json')
@@ -17,7 +18,8 @@ areaRouter
   .catch(err => next(err))
 })
 
-.post((req, res, next) => {
+.post(auth, (req, res, next) => {
+  req.body.user = req.user.id
   if (req.body.projectId) {
     req.body.project = req.body.projectId
   Area.create(req.body)

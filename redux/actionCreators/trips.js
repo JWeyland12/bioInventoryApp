@@ -1,8 +1,10 @@
 import * as actionType from "../actionTypes";
 import { baseUrl } from "../../shared/baseUrl";
 
-export const fetchTrips = () => (dispatch) => {
-  fetch(baseUrl + "trips")
+export const fetchTrips = (token) => (dispatch) => {
+  fetch(baseUrl + "trips", {
+    headers: {'x-auth-token': token}
+  })
     .then(
       (response) => {
         if (response.ok) {
@@ -27,13 +29,13 @@ export const addTrips = trips => ({
   payload: trips
 })
 
-export const postTrip = (areaId) => dispatch => {
+export const postTrip = (areaId, token) => dispatch => {
   const date = new Date().toDateString()
   console.log('date', date)
   fetch(baseUrl + 'trips', {
     method: 'POST',
     body: JSON.stringify({areaId, date}),
-    headers: {'content-type': 'application/json'}
+    headers: {'content-type': 'application/json', 'x-auth-token': token}
   })
   .then(response => {
     if (response.ok) {
@@ -59,7 +61,7 @@ export const addTrip = trip => ({
   payload: trip
 });
 
-export const updateTrip = (_id, date) => async dispatch => {
+export const updateTrip = (_id, date, token) => async dispatch => {
   await fetch(baseUrl + 'trips', {
     method: 'PUT',
     body: JSON.stringify({_id, date}),
@@ -81,10 +83,10 @@ export const updateTrip = (_id, date) => async dispatch => {
       console.log('Update trip', error.message)
       alert(`Trip ${date} could not be updated.`)
   })
-  dispatch(fetchTrips())
+  dispatch(fetchTrips(token))
 }
 
-export const deleteTrip = (_id) => async dispatch => {
+export const deleteTrip = (_id, token) => async dispatch => {
   await fetch(baseUrl + 'trips', {
     method: 'DELETE',
     body: JSON.stringify({_id}),
@@ -106,5 +108,5 @@ export const deleteTrip = (_id) => async dispatch => {
     console.log('Delete trip', error.message)
     alert(`Trip could not be deleted`)
   })
-  dispatch(fetchTrips())
+  dispatch(fetchTrips(token))
 }

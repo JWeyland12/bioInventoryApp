@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {View, Button, StyleSheet, Alert} from 'react-native';
 import {Input, Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
