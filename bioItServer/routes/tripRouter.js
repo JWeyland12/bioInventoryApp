@@ -50,7 +50,7 @@ tripRouter
     .then(species => {
       for (let i = species.length-1; i>=0; i--) {
         for (let j = species[i].tripArr.length-1; j>=0; j--) {
-          if (species[i].tripArr[j].tripRef.toString() === req.body._id.toString()) {
+          if (species[i].tripArr[j].tripId.toString() === req.body._id.toString()) {
             species[i].tripArr[j].remove()
             species[i].save()
           }

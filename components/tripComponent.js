@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useLayoutEffect } from "react";
 import { View, FlatList, TouchableOpacity, StyleSheet, Text, Alert, Modal } from "react-native";
 import { ListItem, Icon, Card, Input, Button } from "react-native-elements";
 import { connect } from "react-redux";
@@ -29,22 +29,29 @@ const Trips = props => {
   const trips = props.trips.trips.filter((trips) => trips.areaId === areaId);
   const { navigate } = props.navigation;
 
+  useLayoutEffect(() => {
+    if (modalIndex) {
+      setTripState()
+    }
+  }, [modalIndex])
 
-  const showModal = (tripId) => {
-    setModalIndex(tripId),
-      () => setTripState()
+  const showModal = () => {
+    setIsModalOpen(!isModalOpen)
+    setModalIndex('')
+    console.log(modalIndex)
   };
 
 
   const setTripState = () => {
-    const filteredTrip = props.trips.trips.find((trip) => trip._id.toString() === state.modalIndex.toString());
+    const filteredTrip = props.trips.trips.find((trip) => trip._id.toString() === modalIndex.toString());
     setTripDate(filteredTrip.date)
     setIsModalOpen(!isModalOpen)
   };
 
   const handleSubmit = () => {
     props.updateTrip(modalIndex, tripDate, user.token)
-    setIsModalOpen(false)
+    setIsModalOpen(!isModalOpen)
+    setModalIndex('')
   }
 
   const tripList = ({ item }) => {
@@ -55,7 +62,7 @@ const Trips = props => {
         text: "Edit",
         backgroundColor: "#008b8b",
         textSize: 100,
-        onPress: () => showModal(tripId),
+        onPress: () => setModalIndex(tripId),
       },
     ];
 
@@ -143,7 +150,7 @@ const Trips = props => {
             />
           </View>
           <View style={{ margin: 10 }}>
-            <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => setIsModalOpen(false)} />
+            <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => showModal()} />
           </View>
         </View>
       </Modal>

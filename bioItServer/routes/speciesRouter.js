@@ -30,7 +30,7 @@ speciesRouter
     })
     .catch(err => next(err))
   })
-  .put((req, res, next) => {
+  .put(async (req, res, next) => {
     // updated from the master list - not reassigning tripArr references
     if (!req.body.tripObj) {
       Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
@@ -42,12 +42,17 @@ speciesRouter
       .catch(err => next(err))
     } else {
       //species observed from a trip
-      Species.findByIdAndUpdate( req.body._id, { $set: req.body }, {new: true})
-      .then(specimen => {
+      try{
+        const specimen = await Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
+        console.log('specimen', specimen)
+        if(!specimen) {
+          res.status(400);
+          res.send('Specimen not in database')
+        }
+
         if (!req.body.tripObj._id) {
-        specimen.tripArr.push(req.body.tripObj)
+          specimen.tripArr.push(req.body.tripObj)
         } else {
-          //species count in trip updated
           for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
             if (req.body.tripObj._id.toString() === specimen.tripArr[i]._id.toString()) {
               specimen.tripArr[i].total = req.body.tripObj.total
@@ -55,13 +60,12 @@ speciesRouter
           }
         }
         specimen.save()
-      .then(specimen => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json')
-        res.json(specimen)
-      })
-      .catch(err => next(err))
-      })
+        res.send(specimen)
+      } catch(err){
+        err => next(err)
+      }
     }
   })
   .delete((req, res, next) => {
@@ -175,3 +179,27 @@ module.exports = speciesRouter;
 //   })
 //   .catch((err) => next(err));
 // })
+
+// const specimen = await Species.findByIdAndUpdate({_id: req.body._id}, { $set: req.body }, {new: true})
+//       console.log(req.body._id)
+//       console.log('specimen', specimen)
+//       .then(specimen => {
+//         if (!req.body.tripObj._id) {
+//         specimen.tripArr.push(req.body.tripObj)
+//         } else {
+//           //species count in trip updated
+//           for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
+//             if (req.body.tripObj._id.toString() === specimen.tripArr[i]._id.toString()) {
+//               specimen.tripArr[i].total = req.body.tripObj.total
+//             }
+//           }
+//         }
+//         specimen.save()
+//       .then(specimen => {
+//         res.statusCode = 200;
+//         res.setHeader('Content-Type', 'application/json')
+//         res.json(specimen)
+//       })
+//       .catch(err => next(err))
+//       })
+//     }

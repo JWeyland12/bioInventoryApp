@@ -6,7 +6,6 @@ const speciesSchema = new Schema(
   {
     user: {
       type: String,
-      required: true
     },
     sciName: {
       type: String,

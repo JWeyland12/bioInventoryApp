@@ -143,15 +143,16 @@ export const updateSpecies = (_id, sciName, comName, img) => async dispatch => {
   dispatch(fetchSpecies())
 }
 
-export const updateSpeciesObservation = (_id, tripObj) => async dispatch => {
-  console.log('hit here')
+export const updateSpeciesObservation = (specimen, tripObj) => async dispatch => {
+  console.log('dispatched')
   await fetch(baseUrl + 'species', {
     method: 'PUT',
-    body: JSON.stringify({_id, tripObj}),
+    body: JSON.stringify({_id: specimen._id, tripObj}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {
     if (response.ok) {
+      console.log('ok response')
       return response
     } else {
       const err = new Error(`Error ${response.status}: ${response.statusText}`)
@@ -164,7 +165,7 @@ export const updateSpeciesObservation = (_id, tripObj) => async dispatch => {
   .then(response => response.json())
   .catch(error => {
     console.log('Update species', error.message)
-    alert(`Species ${sciName} - ${comName} could not be updated`)
+    alert(`Species ${specimen.sciName} - ${specimen.comName} could not be updated`)
   })
   dispatch(fetchSpecies())
 }

@@ -11,6 +11,8 @@ export const tripRed = (
       return {...state, trips: action.payload}
     case actionTypes.POST_TRIP:
       return {...state, trips: state.trips.concat(action.payload)}
+    case actionTypes.LOG_OUT:
+      return {trips: []}
     default:
       return state;
   }

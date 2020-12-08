@@ -22,6 +22,8 @@ const CreateSpecies = props => {
   const {navigate} = props.navigation;
   idObject.total = total
 
+  console.log('specimen', specimen)
+
   useEffect(() => {
     if(specimen) {
       speciesStateHandler()
@@ -68,7 +70,7 @@ const CreateSpecies = props => {
     {!idObject ? navigate('SpeciesList') : navigate('TripSpecies', {tripId: idObject.tripId})}
     } else {
       // observing a species - submitting a tripObj to the species
-      props.updateSpeciesObservation({_id: specimen._id}, idObject)
+      props.updateSpeciesObservation(specimen, idObject)
       navigate('TripSpecies', {tripId: idObject.tripId})
     }
   }
