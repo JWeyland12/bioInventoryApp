@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {View, Button, StyleSheet, Alert} from 'react-native';
 import {Input, Icon, Image} from 'react-native-elements';
 import { postProject } from '../redux/actionCreators/projects';
 import {connect} from 'react-redux';
 import ImgPicker from './imagePickerComponent';
+import { UserContext } from './userContextComponent';
 
 const mapDispatchToProps = {
   postProject,
@@ -14,9 +15,10 @@ const CreateProject = props => {
   const [projectState, setProjectState] = useState('');
   const [projectCounty, setProjectCounty] = useState('');
   const [selectedImage, setSelectedImage] = useState();
+  const {value} = useContext(UserContext)
+  const [user, setUser] = value
 
-
-  
+  console.log('user1', user)
 
   const imagePickedHandler = imagePath => {
     setSelectedImage(imagePath)
@@ -24,7 +26,7 @@ const CreateProject = props => {
 
   const handleSubmit = () => {
     const { navigate } = props.navigation;
-    props.postProject(projectName, projectState, projectCounty, selectedImage)
+    props.postProject(projectName, projectState, projectCounty, selectedImage, user.token)
     resetForm()
     navigate('Projects')
   }

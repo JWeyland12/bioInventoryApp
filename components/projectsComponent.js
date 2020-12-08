@@ -5,9 +5,10 @@ import { connect } from "react-redux";
 import { updateProject, deleteProject } from '../redux/actionCreators/projects';
 import Swipeout from "react-native-swipeout";
 import ImgPicker from './imagePickerComponent';
+import {UserContext} from './userContextComponent';
 
 const mapStateToProps = (state) => {
-  return { projects: state.projects };
+  return { projects: state.projects, user: state.user };
 };
 
 const mapDispatchToProps = {
@@ -22,6 +23,8 @@ const Projects = props => {
   const [projectState, setProjState] = useState('');
   const [projectCounty, setProjectCounty] = useState('');
   const [selectedImage, setSelectedImage] = useState();
+  const {value} = useContext(UserContext)
+  const [user, setUser] = value
   
   const alphaProjects = props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
@@ -42,7 +45,7 @@ const Projects = props => {
   console.log('pc', selectedImage)
 
   const handleSubmit = () => {
-    props.updateProject(modalIndex, projectName, projectState, projectCounty, selectedImage)
+    props.updateProject(modalIndex, projectName, projectState, projectCounty, selectedImage, user.token)
     setModal(!isModalOpen)
     setModalIndex('')
   }
@@ -74,7 +77,7 @@ const Projects = props => {
               },
               {
                 text: 'Confirm',
-                onPress: () => props.deleteProject(item._id)
+                onPress: () => props.deleteProject(item._id, user.token)
               }
           ],
           {cancelable: false}

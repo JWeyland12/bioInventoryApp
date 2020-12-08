@@ -2,8 +2,10 @@ import * as actionType from '../actionTypes';
 import {baseUrl} from '../../shared/baseUrl';
 import * as FileSystem from 'expo-file-system';
 
-export const fetchProjects = () => dispatch => {
-  fetch(baseUrl + 'projects')
+export const fetchProjects = (token) => dispatch => {
+  fetch(baseUrl + 'projects', {
+    headers: {'x-auth-token': token}
+  })
   .then(
     response => {
       if (response.ok) {
@@ -28,7 +30,7 @@ export const addProjects = projects => ({
   payload: projects
 });
 
-export const postProject = (projectName, projectState, projectCounty, img) => async dispatch => {
+export const postProject = (projectName, projectState, projectCounty, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -45,7 +47,7 @@ export const postProject = (projectName, projectState, projectCounty, img) => as
   fetch(baseUrl + 'projects', {
     method: 'POST',
     body: JSON.stringify({name: projectName, state: projectState, county: projectCounty, img: newPath.toString()}),
-    headers: {'content-type': 'application/json'}
+    headers: {'content-type': 'application/json', 'x-auth-token': token}
   })
   .then(response => {
     if (response.ok) {
@@ -71,7 +73,7 @@ export const addProject = project => ({
   payload: project
 });
 
-export const updateProject = (projectId, name, state, county, img) => async dispatch => {
+export const updateProject = (projectId, name, state, county, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -105,10 +107,10 @@ export const updateProject = (projectId, name, state, county, img) => async disp
       console.log('Update project', error.message)
       alert(`Project ${name} could not be updated.`)
   })
-  dispatch(fetchProjects())
+  dispatch(fetchProjects(token))
 }
 
-export const deleteProject = (_id) => async dispatch => {
+export const deleteProject = (_id, token) => async dispatch => {
   await fetch(baseUrl + 'projects', {
     method: 'DELETE',
     body: JSON.stringify({_id}),
@@ -130,5 +132,5 @@ export const deleteProject = (_id) => async dispatch => {
     console.log('Delete project', error.message)
     alert(`Project could not be deleted`)
   })
-  dispatch(fetchProjects())
+  dispatch(fetchProjects(token))
 }

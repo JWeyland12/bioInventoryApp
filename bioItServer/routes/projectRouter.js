@@ -37,11 +37,11 @@ projectRouter.use(bodyParser.json());
 
 projectRouter
   .route("/")
-  .get( async (req, res, next) => {
+  .get(auth, (req, res, next) => {
     // console.log(req.user.id)
     // const user = await req.user.id
     // console.log(user)
-    Project.find()
+    Project.find({user: req.user.id})
       .then((Projects) => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
@@ -49,9 +49,10 @@ projectRouter
       })
       .catch((err) => next(err));
   })
-  .post( (req, res, next) => {
+  .post(auth, (req, res, next) => {
     // req.body.img = req.file.buffer
-    // req.body.user = req.user.id
+    console.log(req.user)
+    req.body.user = req.user.id
     Project.create(req.body)
       .then((project) => {
         console.log("Project Created", project);

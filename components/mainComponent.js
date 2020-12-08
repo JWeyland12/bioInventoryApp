@@ -1,4 +1,4 @@
-import React, { Component, useState, createContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Projects from "./projectsComponent";
 import Trips from "./tripComponent";
 import Species from "./speciesCardComponent";
@@ -22,6 +22,7 @@ import {fetchAreas} from '../redux/actionCreators/areas';
 import { fetchTrips } from '../redux/actionCreators/trips';
 import { fetchSpecies } from '../redux/actionCreators/species';
 import {Icon, Button} from 'react-native-elements';
+import {UserContext} from './userContextComponent';
 
 const mapDispatchToProps = {
   fetchProjects,
@@ -180,14 +181,27 @@ const mapStateToProps = state => {
 
 const Main = props => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const userContext = createContext(false)
+  const {value} = useContext(UserContext)
+  const [user, setUser] = value
+
+  console.log('user', user)
 
 useEffect(() => {
-  props.fetchProjects();
-  props.fetchAreas();
-  props.fetchTrips();
-  props.fetchSpecies();
+  if(props.user.token) {
+    props.fetchProjects(props.user.token);
+    props.fetchAreas(props.user.token);
+    props.fetchTrips(props.user.token);
+    props.fetchSpecies(props.user.token);
+    setUser(props.user)
+    setIsLoggedIn(true)
+  } else {
+    setIsLoggedIn(false)
+  }
 })
+
+
+
+console.log('isLoggedIn', isLoggedIn)
 
   return (
     <View style={{ flex: 1, paddingTop: Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight }}>

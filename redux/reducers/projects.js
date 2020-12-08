@@ -11,6 +11,8 @@ export const projectRed = (
       return {...state, projects: action.payload}
     case actionTypes.POST_PROJECT:
       return {...state, projects: state.projects.concat(action.payload)}
+    case actionTypes.LOG_OUT:
+      return {projects: []}
     default:
       return state;
   }
