@@ -8,7 +8,7 @@ import ImgPicker from './imagePickerComponent';
 import {UserContext} from './userContextComponent';
 
 const mapStateToProps = (state) => {
-  return { projects: state.projects, user: state.user };
+  return { projects: state.projects };
 };
 
 const mapDispatchToProps = {
@@ -23,8 +23,10 @@ const Projects = props => {
   const [projectState, setProjState] = useState('');
   const [projectCounty, setProjectCounty] = useState('');
   const [selectedImage, setSelectedImage] = useState();
-  const {value} = useContext(UserContext)
-  const [user, setUser] = value
+  const {value} = useContext(UserContext);
+  const [user, setUser] = value;
+
+  console.log('projects', props.projects.projects)
   
   const alphaProjects = props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
@@ -111,10 +113,10 @@ const Projects = props => {
     console.log(modalIndex)
   }
 
-  const RenderContent = ({ projects }) => {
+  const RenderContent = ( {projects} ) => {
     return (
       <View>
-        {!projects ? (
+        {!projects.length ? (
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
               <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
                 <Text style={styles.textInCard}>You haven't created any projects yet!</Text>

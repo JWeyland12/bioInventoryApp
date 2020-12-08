@@ -13,6 +13,8 @@ export const areaRed = (
     case actionTypes.POST_AREA:
       console.log("post area",action.payload)
       return {...state, areas: state.areas.concat(action.payload)}
+    case actionTypes.LOG_OUT: 
+    return {areas: []}
     default:
       return state;
   }

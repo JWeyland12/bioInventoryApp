@@ -3,8 +3,10 @@ import {baseUrl} from '../../shared/baseUrl';
 import * as FileSystem from 'expo-file-system';
 
 
-export const fetchAreas = () => dispatch => {
-  fetch(baseUrl + 'areas')
+export const fetchAreas = (token) => dispatch => {
+  fetch(baseUrl + 'areas', {
+    headers: {'x-auth-token': token}
+  })
   .then(response => {
     if (response.ok) {
       return response;
@@ -28,7 +30,7 @@ export const addAreas = areas => ({
   payload: areas
 })
 
-export const postArea = (projectId, area, geoRef, img) => async dispatch => {
+export const postArea = (projectId, area, geoRef, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -44,7 +46,7 @@ export const postArea = (projectId, area, geoRef, img) => async dispatch => {
   fetch(baseUrl + 'areas', {
     method: 'POST',
     body: JSON.stringify({projectId, area, geoRef, img: newPath}),
-    headers: {'content-type': 'application/json'}
+    headers: {'content-type': 'application/json', 'x-auth-token': token}
   })
   .then(response => {
     if (response.ok) {
@@ -71,7 +73,7 @@ export const addArea = area => ({
   payload: area
 })
 
-export const updateArea = (areaId, area, geoRef, img) => async dispatch => {
+export const updateArea = (areaId, area, geoRef, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -105,10 +107,10 @@ export const updateArea = (areaId, area, geoRef, img) => async dispatch => {
     console.log('Update area', error.message)
     alert(`Area ${area} could not be updated`)
   })
-  dispatch(fetchAreas())
+  dispatch(fetchAreas(token))
 }
 
-export const deleteArea = (_id) => async dispatch => {
+export const deleteArea = (_id, token) => async dispatch => {
   await fetch(baseUrl + 'areas', {
     method: 'DELETE',
     body: JSON.stringify({_id}),
@@ -130,5 +132,5 @@ export const deleteArea = (_id) => async dispatch => {
     console.log('Delete area', error.message)
     alert(`Area could not be deleted`)
   })
-  dispatch(fetchAreas())
+  dispatch(fetchAreas(token))
 }

@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {postArea} from '../redux/actionCreators/areas';
 import ImgPicker from './imagePickerComponent';
 import LocationPicker from './locationPickerComponent';
+import {UserContext} from './userContextComponent';
 
 const mapDispatchToProps = {
   postArea,
@@ -15,13 +16,15 @@ const CreateArea = props => {
   const [areaGeoRef, setAreaGeoRef] = useState('');
   const [projectId] = useState(props.navigation.getParam('projectId'));
   const [selectedImage, setSelectedImage] = useState('');
+  const {value} = useContext(UserContext);
+  const [user, setUser] = value;
 
   // const projectId = this.props.navigation.getParam('projectId')
 
 
   const handleSubmit = () => {
     const {navigate} = props.navigation;
-    props.postArea(projectId, areaName, areaGeoRef, selectedImage)
+    props.postArea(projectId, areaName, areaGeoRef, selectedImage, user.token)
     resetForm()
     navigate('Areas')
   }

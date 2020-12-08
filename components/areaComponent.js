@@ -6,6 +6,7 @@ import {updateArea, deleteArea} from '../redux/actionCreators/areas';
 import Swipeout from 'react-native-swipeout';
 import ImgPicker from './imagePickerComponent';
 import LocationPicker from './locationPickerComponent';
+import {UserContext} from './userContextComponent';
 
 const mapStateToProps = (state) => {
   return { areas: state.areas };
@@ -22,6 +23,8 @@ const Areas = props => {
   const [areaName, setAreaName] = useState('');
   const [areaGeoRef, setAreaGeoRef] = useState('')
   const [selectedImage, setSelectedImage] = useState('')
+  const {value} = useContext(UserContext);
+  const [user, setUser] = value;
   const { navigate } = props.navigation;
   const projectId = props.navigation.getParam("projectId");
   const areas = props.areas.areas.filter((areas) => areas.project === projectId);
@@ -46,7 +49,7 @@ const Areas = props => {
   }
 
   const handleSubmit = () => {
-    props.updateArea(modalIndex, areaName, areaGeoRef, selectedImage)
+    props.updateArea(modalIndex, areaName, areaGeoRef, selectedImage, user.token)
     hideModal()
   }
 
@@ -76,7 +79,7 @@ const Areas = props => {
               },
               {
                 text: 'Confirm',
-                onPress: () => props.deleteArea(item._id)
+                onPress: () => props.deleteArea(item._id, user.token)
               }
             ],
             {cancelable: false}

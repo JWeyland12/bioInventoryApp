@@ -11,7 +11,6 @@ const projectSchema = new Schema (
     name: {
       type: String,
       required: true,
-      unique: true
     },
     state: {
       type: String,
@@ -24,10 +23,6 @@ const projectSchema = new Schema (
     img: {
       type: String,
       required: true
-    },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
     },
   },
   {
