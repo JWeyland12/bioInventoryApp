@@ -12,6 +12,7 @@ import TripSpecies from './tripSummaryComponent';
 import SpeciesList from './speciesComponent';
 import SignIn from './signInComponent';
 import SignUp from './signUpComponent';
+import Profile from './profileComponent';
 import Search from './searchComponent';
 import { createStackNavigator, createBottomTabNavigator, createNavigationContainer } from "react-navigation";
 import { View, Platform, StyleSheet } from "react-native";
@@ -89,8 +90,7 @@ const SpeciesTab = createStackNavigator(
 
 const UsersTab = createStackNavigator(
   {
-    SignIn: {screen: SignIn},
-    SignUp: {screen: SignUp}
+    Profile: {screen: Profile},
   },
   {
     navigationOptions: {
@@ -103,6 +103,23 @@ const UsersTab = createStackNavigator(
       }
     }
   }
+)
+
+const Auth = new createStackNavigator({
+  SignIn: {screen: SignIn},
+  SignUp: {screen: SignUp}
+},
+{
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: '#008b8b'
+    },
+    headerTintColor: '#000',
+    headerTitleStyle: {
+      color: '#FFF'
+    }
+  }
+}
 )
 
 const MyTabs = new createBottomTabNavigator({
@@ -158,7 +175,8 @@ const MyTabs = new createBottomTabNavigator({
 })
 
 const Main = props => {
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const userContext = createContext(false)
 
 useEffect(() => {
   props.fetchProjects();
@@ -169,7 +187,7 @@ useEffect(() => {
 
   return (
     <View style={{ flex: 1, paddingTop: Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight }}>
-      <MyTabs />
+      {!isLoggedIn ? <Auth /> : <MyTabs />}
     </View>
   );
 }

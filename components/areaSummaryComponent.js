@@ -49,7 +49,7 @@ class AreaSummary extends Component {
       }
       return <ListItem 
               title={item.comName} 
-              subtitle={`${item.sciName} - Total: ${totalCount(item)}`}
+              subtitle={`${item.sciName} - Area Total: ${totalCount(item)}`}
               topDivider
               bottomDivider
               leftAvatar={{source: {uri: item.img}, size: 'large'}}

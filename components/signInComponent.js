@@ -1,15 +1,70 @@
-import React, { Component } from 'react';
-import {View, Text} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, ScrollView, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {Input, Button} from 'react-native-elements';
+import {connect} from 'react-redux';
 
+const mapDispatchToProps = {
 
-class SignIn extends Component {
-  render() {
-    return (
-      <View style={{flex: 1}}>
-        <Text>Test Sign In</Text>
-      </View>
-    );
-  }
 }
 
-export default SignIn;
+
+const SignIn = props => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const {navigate} = props.navigation
+
+  return (
+    <View style={{flex: 1}}>
+      <View style={styles.signInContatiner}>
+        <Text style={{fontSize: 30, fontWeight: 'bold', textDecorationLine: 'underline'}}>Sign In</Text>
+      </View>
+      <View style={styles.margin}>
+        <Input 
+          style={styles.margin}
+          onChangeText={text => setEmail(text)}
+          placeholder='Email'
+          value={email}
+        />
+        <Input
+          style={styles.margin}
+          onChangeText={text => setPassword(text)}
+          placeholder='Password'
+          value={password}
+          secureTextEntry={true}
+            />
+      </View>
+      <View style={styles.button}>
+        <Button title={'Sign In'} onPress={() => {}}/>
+      </View>
+      <View style={styles.registerButton}>
+        <Button title={'Register'} onPress={() => navigate('SignUp')}/>
+      </View>
+    </View>
+  );
+}
+
+SignIn.navigationOptions = {
+  title: 'Sign In'
+}
+
+const styles = StyleSheet.create({
+  signInContatiner: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginTop: 30
+  },
+  margin: {
+    marginTop: 20,
+    marginHorizontal: 60
+  },
+  button: {
+    marginHorizontal: 100,
+    marginTop: 30
+  },
+  registerButton: {
+    marginHorizontal: 100,
+    marginTop: 10
+  }
+});
+
+export default connect(null, mapDispatchToProps)(SignIn);
