@@ -1,10 +1,10 @@
 import * as actionTypes from '../actionTypes';
-import {baseUrl} from '../../shared/baseUrl'
+import {baseUrl} from '../../shared/baseUrl';
 
-export const signIn = (email, password) => async dispatch => {
-  fetch(baseUrl + 'users/signin', {
+export const signIn = (email, password) => dispatch => {
+  fetch(baseUrl + 'users/login', {
     method: 'POST',
-    body: JSON.stringify(email, password),
+    body: JSON.stringify({email, password}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {
@@ -21,6 +21,7 @@ export const signIn = (email, password) => async dispatch => {
   .then(response => response.json())
   .then(response => dispatch(addToken(response)))
   .catch(error => {
+    console.log('why here')
     console.log('SignIn', error.message)
     alert(`Server Error`)
   })
@@ -31,10 +32,10 @@ export const addToken = user => ({
   payload: user
 })
 
-export const register = (name, userName, email, password) => dispatch => {
-  fetch(baseUrl + 'users', {
+export const register = (name, userName, email, password) => async dispatch => {
+  await fetch(baseUrl + 'users/register', {
     method: 'POST',
-    body: JSON.stringify(name, userName, email, password),
+    body: JSON.stringify({name, userName, email, password}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {
@@ -49,7 +50,7 @@ export const register = (name, userName, email, password) => dispatch => {
   err => {throw err}
   )
   .then(response => response.json())
-  .then(response => dispatch(addToken(response)))
+  // .then(response => dispatch(addToken(response)))
   .catch(error => {
     console.log('SignUp', error.message)
     alert(`Server Error`)

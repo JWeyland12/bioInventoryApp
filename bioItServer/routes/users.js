@@ -14,7 +14,7 @@ usersRouter.use(bodyParser.json())
 
 /* GET users listing. */
 usersRouter
-.route('/')
+.route('/register')
 .post([
   check('name', 'Name is required').not().isEmpty(),
   check('userName', 'User Name is required').not().isEmpty(),
@@ -85,6 +85,7 @@ usersRouter
   check('password', 'Password is required')
     .exists()
 ], async (req, res, next) => {
+  console.log('req', req.body)
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array()})
@@ -93,13 +94,17 @@ usersRouter
   const {email, password} = req.body
   
   try {
+    console.log('here')
+    console.log(email)
     let user = await User.findOne({email})
+    console.log(user)
 
     if(!user) {
       return res.status(400).json({ errors: [ { msg: 'Invalid email or password' }]})
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log(isMatch)
 
     if(!isMatch) {
       return res.status(400).json({ errors: [ { msg: 'Invalid email or password' }]})
@@ -115,12 +120,19 @@ usersRouter
       payload, 
       config.get('jwtSecret'),
       (err, token) => {
-        if(err) throw err;
+        if(err) {
+          console.log('this fail')
+          throw err;
+        }
+        console.log(token, user)
+        res.status(200)
         res.json({token, user})
+        console.log('sent')
       }
     );
   } catch(err){
     console.error(err.message)
+    console.log('fail')
     res.status(500).send('Server error')
   }
 });

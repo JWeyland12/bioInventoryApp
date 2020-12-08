@@ -174,6 +174,10 @@ const MyTabs = new createBottomTabNavigator({
   }
 })
 
+const mapStateToProps = state => {
+  return {user: state.user}
+}
+
 const Main = props => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const userContext = createContext(false)
@@ -192,5 +196,5 @@ useEffect(() => {
   );
 }
 
-export default connect(null, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
 

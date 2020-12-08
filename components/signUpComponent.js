@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Button, Input} from 'react-native-elements';
+import {connect} from 'react-redux';
+import {register} from '../redux/actionCreators/auth';
+
+const mapDispatchToProps = {
+  register
+}
 
 
 const SignUp = props => {
@@ -43,7 +49,7 @@ const SignUp = props => {
             />
       </View>
       <View style={styles.button}>
-        <Button title={'Register'} onPress={() => {}}/>
+        <Button title={'Register'} onPress={() => props.register(name, userName, email, password)}/>
       </View>
     </View>
   );
@@ -73,4 +79,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignUp;
+export default connect(null, mapDispatchToProps)(SignUp);

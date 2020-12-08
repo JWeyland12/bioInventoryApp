@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, KeyboardAvoidingView} from 'react-native';
 import {Input, Button} from 'react-native-elements';
+import {signIn} from '../redux/actionCreators/auth'
 import {connect} from 'react-redux';
 
 const mapDispatchToProps = {
-
+  signIn
 }
 
 
@@ -12,6 +13,9 @@ const SignIn = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const {navigate} = props.navigation
+
+  console.log(email)
+  console.log(password)
 
   return (
     <View style={{flex: 1}}>
@@ -34,7 +38,7 @@ const SignIn = props => {
             />
       </View>
       <View style={styles.button}>
-        <Button title={'Sign In'} onPress={() => {}}/>
+        <Button title={'Sign In'} onPress={() => props.signIn(email, password)}/>
       </View>
       <View style={styles.registerButton}>
         <Button title={'Register'} onPress={() => navigate('SignUp')}/>
