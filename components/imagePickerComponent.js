@@ -1,10 +1,17 @@
-import React, {useState, createContext, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Button, Text, StyleSheet, Image, Alert} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 
 const ImgPicker = props => {
   const [pickedImage, setPickedImage] = useState();
+  const [registerUser, setRegisterUser] = useState(false);
+
+  useEffect(() => {
+    if(props.register === true) {
+      setRegisterUser(true)
+    }
+  });
   
   (async function updateImageHandler() {
     const updateImage = await props.updateImage
@@ -12,8 +19,6 @@ const ImgPicker = props => {
       setPickedImage(updateImage)
     }
   })()
-
-  console.log('ip', props.updateImage)
 
   const verifyCameraPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.CAMERA);
@@ -55,7 +60,7 @@ const ImgPicker = props => {
     const imageCam = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [1,1],
-      quality: 0.75
+      quality: 0.75,
     });
     setPickedImage(imageCam.uri)
     props.onImageTaken(imageCam.uri)
@@ -63,10 +68,10 @@ const ImgPicker = props => {
     return (
       <View style={styles.imagePicker}>
           {!pickedImage ? (
-            <Text style={{margin: 15}}>No image selected yet</Text>
+            <Text style={{margin: 15}}>{!registerUser ? 'No image selected yet' : 'No avatar selected yet'}</Text>
           ) : (
-            <View style={styles.imagePreview}>
-              <Image style={styles.image} source={{uri: pickedImage}} />
+            <View style={!registerUser ? styles.imagePreview : styles.registerImageContainer}>
+              <Image style={!registerUser ? styles.image : styles.registerImage} source={{uri: pickedImage}} />
             </View>
           )}
         <View style={styles.imgButtons}>
@@ -104,5 +109,20 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#008b8b'
+  }, 
+  registerImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 125,
+    borderWidth: 5,
+    borderColor: '#008b8b',
+  },
+  registerImageContainer: {
+    borderRadius: 125,
+    overflow: 'hidden',
+    height: 200,
+    width: 200,
+    marginVertical: 10,
+    alignSelf: 'center'
   }
 })

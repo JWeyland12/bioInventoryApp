@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config')
 const { check, validationResult } = require('express-validator')
+const auth = require('../middleware/auth')
 
 usersRouter.use(bodyParser.json())
 
@@ -27,7 +28,7 @@ usersRouter
     return res.status(400).json({ errors: errors.array()})
   }
 
-  const {name, userName, email, password} = req.body
+  const {name, userName, email, password, avatar} = req.body
   
   try {
     let user = await User.findOne({email})
@@ -35,12 +36,6 @@ usersRouter
     if(user) {
       return res.status(400).json({ errors: [ { msg: 'User already exists' }]})
     }
-
-    const avatar = gravatar.url(email, {
-      s: '200',
-      r: 'pg',
-      d: 'mm'
-    })
 
     user = new User({
       name,
@@ -65,10 +60,10 @@ usersRouter
     jwt.sign(
       payload, 
       config.get('jwtSecret'),
-      { expiresIn: '365d'},
       (err, token) => {
         if(err) throw err;
-        res.json({token})
+        res.status(200)
+        res.json({token, user})
       }
     );
   } catch(err){
@@ -136,5 +131,34 @@ usersRouter
     res.status(500).send('Server error')
   }
 });
+
+usersRouter
+.route('/')
+.put(auth, async (req, res, next) => {
+  try {
+    
+    const user = await User.findByIdAndUpdate(req.user.id, { $set: req.body }, { new: true })
+    
+    if (!user) {
+      res.status(400)
+      res.send({msg: 'User does not exist in the database'})
+    }
+
+    if (req.body.password) {
+    const salt = await bcrypt.genSalt(10);
+
+    user.password = await bcrypt.hash(req.body.password, salt);
+
+    user.save();
+    }
+
+    res.status(200)
+    res.setHeader('Content-Type', 'application/json')
+    res.json(user)
+  } catch(err) {
+    console.log(err.message)
+    res.status(500).send('Server Error')
+  }
+})
 
 module.exports = usersRouter;

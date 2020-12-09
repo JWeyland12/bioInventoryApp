@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, ScrollView, Text, StyleSheet} from 'react-native';
 import {Button, Input} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {register} from '../redux/actionCreators/auth';
+import ImgPicker from './imagePickerComponent';
 
 const mapDispatchToProps = {
   register
@@ -14,14 +15,22 @@ const SignUp = props => {
   const [password, setPassword] = useState('');
   const [userName, setUserName] = useState('');
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('');
   const {navigate} = props.navigation
 
+  const imagePickedHandler = imagePath => {
+    setAvatar(imagePath)
+  }
+
   return (
-    <View style={{flex: 1}}>
+    <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.signInContatiner}>
         <Text style={{fontSize: 30, fontWeight: 'bold', textDecorationLine: 'underline'}}>Register</Text>
       </View>
       <View style={styles.margin}>
+      <View style={styles.image}>
+        <ImgPicker register={true} onImageTaken={imagePickedHandler}/>
+      </View>
       <Input 
           style={styles.margin}
           onChangeText={text => setName(text)}
@@ -49,9 +58,9 @@ const SignUp = props => {
             />
       </View>
       <View style={styles.button}>
-        <Button title={'Register'} onPress={() => props.register(name, userName, email, password)}/>
+        <Button title={'Register'} onPress={() => props.register(name, userName, email, password, avatar)}/>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -75,7 +84,11 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     marginHorizontal: 100,
-    marginTop: 10
+    marginTop: 10,
+    marginBottom: 40
+  }, 
+  image: {
+    marginBottom: 20
   }
 });
 

@@ -20,9 +20,10 @@ const CreateSpecies = props => {
   let [total, setTotal] = useState(1);
   const [doesTripExist, setDoesTripExist] = useState(false)
   const {navigate} = props.navigation;
-  idObject.total = total
-
-  console.log('specimen', specimen)
+  
+  if(idObject) {
+    idObject.total = total
+  }
 
   useEffect(() => {
     if(specimen) {
@@ -99,7 +100,7 @@ const CreateSpecies = props => {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: 'whitesmoke'}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       {!specimen ? (
         <View>
           <View style={{margin: 10}}>

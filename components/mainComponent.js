@@ -171,7 +171,7 @@ const MyTabs = new createBottomTabNavigator({
     headerTintColor: '#000',
     headerTitleStyle: {
       color: '#FFF'
-    }
+    },
   }
 })
 
@@ -197,7 +197,7 @@ useEffect(() => {
   } else {
     setIsLoggedIn(false)
   }
-})
+}, [props.user.user])
 
 
 

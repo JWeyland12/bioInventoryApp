@@ -132,7 +132,7 @@ const Projects = props => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <ScrollView>
         <RenderContent projects={alphaProjects} />
       </ScrollView>

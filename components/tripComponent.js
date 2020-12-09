@@ -124,7 +124,7 @@ const Trips = props => {
 
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       {/* add area photo as avatar */}
       <ListItem 
         title={'Area Summary'} 
