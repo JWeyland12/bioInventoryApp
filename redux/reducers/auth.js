@@ -9,15 +9,16 @@ export const userReducer = (
 ) => {
   switch (action.type) {
     case actionTypes.SIGN_IN:
+      console.log('which')
       return {...state, token: action.payload.token, user: action.payload.user}
     case actionTypes.LOG_OUT:
-      console.log('here')
+      console.log('one')
       return {token: action.payload, user: {}}
     case actionTypes.UPDATE_USER:
-      console.log('image updated')
-      return {user: action.payload}
+      console.log('is')
+      return {...state, user: action.payload}
     default:
-      console.log('payload', action.payload)
+      console.log('it', action.payload)
       return state
   }
 }
