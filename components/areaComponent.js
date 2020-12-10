@@ -21,7 +21,10 @@ const Areas = props => {
   const [isModalOpen, setModal] = useState(false);
   const [modalIndex, setModalIndex] = useState('');
   const [areaName, setAreaName] = useState('');
-  const [areaGeoRef, setAreaGeoRef] = useState('')
+  const [areaGeoRef, setAreaGeoRef] = useState('');
+  const [altitude, setAltitude] = useState('');
+  const [accuracy, setAccuracy] = useState('');
+  const [karst, setKarst] = useState('');
   const [selectedImage, setSelectedImage] = useState('')
   const {value} = useContext(UserContext);
   const [user, setUser] = value;
@@ -44,12 +47,15 @@ const Areas = props => {
     const filteredArea = props.areas.areas.find(area => area._id === modalIndex)
       setAreaName(filteredArea.area);
       setAreaGeoRef(filteredArea.geoRef);
-      setSelectedImage(filteredArea.img)
+      setSelectedImage(filteredArea.img);
+      setAltitude(filteredArea.altitude);
+      setAccuracy(filteredArea.accuracy);
+      setKarst(filteredArea.karst)
       setModal(!isModalOpen)
   }
 
   const handleSubmit = () => {
-    props.updateArea(modalIndex, areaName, areaGeoRef, selectedImage, user.token)
+    props.updateArea(modalIndex, areaName, areaGeoRef, altitude, accuracy, karst, selectedImage, user.token)
     hideModal()
   }
 
@@ -92,7 +98,8 @@ const Areas = props => {
       <Swipeout left={leftButton} right={rightButton} autoClose={true}>
         <View>
           <ListItem title={item.area} 
-            subtitle={item.geoRef} 
+            titleStyle={{fontSize: 20}}
+            subtitle={`${item.karst} limestone`} 
             leftAvatar={{ source: {uri: item.img}, size: 'large'}} 
             onPress={() => navigate("Trips", { areaId: item._id, areaGeoRef: item.geoRef, projectId: projectId })} 
             bottomDivider topDivider
@@ -109,6 +116,8 @@ const Areas = props => {
     geoRef.lat = location.coords.latitude
     geoRef.long = location.coords.longitude
     setAreaGeoRef(`${geoRef.lat}, ${geoRef.long}`)
+    setAltitude(`${location.coords.altitude.toString()}m`)
+    setAccuracy(`${location.coords.accuracy.toString()}m`)
   }
 
   const imagePickedHandler = imagePath => {
@@ -140,6 +149,35 @@ const Areas = props => {
         <View style={{margin:10}}>
         <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(area) => setAreaName(area)} value={areaName} />
         <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(geoRef) => setAreaGeoRef(geoRef)} value={areaGeoRef} />
+        <Input
+          style={styles.margin}
+          leftIcon={
+            <Icon
+              name='angle-right'
+              type='font-awesome'
+            />
+          }
+          leftIconContainerStyle={{paddingRight: 10}}
+          onChangeText={state => setAltitude(state)}
+          placeholder='Altitude'
+          value={altitude}
+        />
+        <Input
+          style={styles.margin}
+          leftIcon={
+            <Icon
+              name='angle-right'
+              type='font-awesome'
+            />
+          }
+          leftIconContainerStyle={{paddingRight: 10}}
+          onChangeText={state => setKarst(state)}
+          placeholder='Limestone'
+          value={karst}
+        />
+        <View style={{alignItems: 'center', marginVertical: 10}}>
+          <Text>Accuracy: {accuracy}</Text>
+        </View>
         <LocationPicker onLocationTaken={locationTakenHandler} />
         <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage} />
         <View style={{ margin: 10 }}>

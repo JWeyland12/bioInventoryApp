@@ -30,7 +30,7 @@ export const addAreas = areas => ({
   payload: areas
 })
 
-export const postArea = (projectId, area, geoRef, img, token) => async dispatch => {
+export const postArea = (projectId, area, geoRef, altitide, accuracy, karst, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -45,7 +45,7 @@ export const postArea = (projectId, area, geoRef, img, token) => async dispatch 
   }
   fetch(baseUrl + 'areas', {
     method: 'POST',
-    body: JSON.stringify({projectId, area, geoRef, img: newPath}),
+    body: JSON.stringify({projectId, area, geoRef, altitide, accuracy, karst, img: newPath}),
     headers: {'content-type': 'application/json', 'x-auth-token': token}
   })
   .then(response => {
@@ -73,7 +73,7 @@ export const addArea = area => ({
   payload: area
 })
 
-export const updateArea = (areaId, area, geoRef, img, token) => async dispatch => {
+export const updateArea = (areaId, area, geoRef, altitude, accuracy, karst, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -88,7 +88,7 @@ export const updateArea = (areaId, area, geoRef, img, token) => async dispatch =
   }
   await fetch(baseUrl + 'areas', {
     method: 'PUT',
-    body: JSON.stringify({_id: areaId, area, geoRef, img: newPath }),
+    body: JSON.stringify({_id: areaId, area, geoRef, altitude, accuracy, karst, img: newPath }),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {

@@ -18,6 +18,7 @@ class AreaSummary extends Component {
   render() {
     const areaId = this.props.navigation.getParam("areaId");
     const species = this.props.species.species;
+    const {navigate} = this.props.navigation
     let speciesArr = [];
 
     const speciesFil = species.forEach((s) => {
@@ -71,10 +72,17 @@ class AreaSummary extends Component {
       }
     };
 
-    const areaGeoRef = this.props.navigation.getParam('areaGeoRef')
+    // const areaGeoRef = this.props.navigation.getParam('areaGeoRef')
     return (
-      <View style={{ flex: 1 }}>
-        <ListItem title={'Geo-reference'} subtitle={areaGeoRef} rightIcon={<Icon name='angle-right' type='font-awesome'/>} containerStyle={{height: 100}}/>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <ListItem 
+          title={'Area Information'} 
+          titleStyle={{fontSize: 20}} 
+          rightIcon={<Icon name='angle-right' type='font-awesome'/>} 
+          containerStyle={{height: 75}}
+          bottomDivider
+          onPress={() => navigate('AreaInformation', {areaId: areaId})}
+        />
         <RenderSpecies speciesArr={speciesArr} />
       </View>
     );

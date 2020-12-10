@@ -28,7 +28,7 @@ const LocationPicker = props => {
         accuracy: 5
       });
       console.log(location)
-      setPickedLocation({lat: location.coords.latitude, lgn: location.coords.longitude})
+      // setPickedLocation({lat: location.coords.latitude, lgn: location.coords.longitude})
       props.onLocationTaken(location)
     } catch (err) {
       Alert.alert('Could not determine location, please try again', [{text: Okay}])

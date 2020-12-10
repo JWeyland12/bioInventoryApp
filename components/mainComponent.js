@@ -4,6 +4,7 @@ import Trips from "./tripComponent";
 import Species from "./speciesCardComponent";
 import Areas from "./areaComponent";
 import AreaSummary from './areaSummaryComponent';
+import AreaInformation from './areaInformationComponent';
 import CreateProject from './createProjectComponent';
 import CreateArea from './createAreaComponent';
 import CreateSpecies from "./createSpeciesComponent";
@@ -43,7 +44,8 @@ const Navigator = createStackNavigator(
     SpeciesList: {screen: SpeciesList},
     CreateTripSpecies: {screen: CreateTripSpecies},
     CreateSpecies: {screen: CreateSpecies},
-    Search: {screen: Search}
+    Search: {screen: Search},
+    AreaInformation: {screen: AreaInformation}
   },
   {
     initialRouteName: "Projects",

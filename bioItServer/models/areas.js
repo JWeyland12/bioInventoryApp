@@ -16,6 +16,9 @@ const areaSchema = new Schema (
       type: String,
       required: true
     },
+    altitude: String,
+    accuracy: String,
+    karst: String,
     project: String,
     img: {
       type: String,

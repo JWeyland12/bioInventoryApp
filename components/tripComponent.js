@@ -94,6 +94,7 @@ const Trips = props => {
         <View>
           <ListItem 
           title={item.date} 
+          titleStyle={{fontSize: 20}}
           onPress={() => navigate("TripSpecies", {  projectId: projectId, areaId: areaId, tripId: item._id })} 
           topDivider
           bottomDivider
@@ -128,6 +129,7 @@ const Trips = props => {
       {/* add area photo as avatar */}
       <ListItem 
         title={'Area Summary'} 
+        titleStyle={{fontSize: 20}}
         onPress={() => navigate('AreaSummary', {areaId: areaId, areaGeoRef: areaGeoRef})}
         bottomDivider
         containerStyle={{height: 75}}
