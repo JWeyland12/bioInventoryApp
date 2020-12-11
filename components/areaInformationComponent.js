@@ -5,7 +5,9 @@ import {connect} from 'react-redux';
 
 const mapStateToProps = state => {
   return {
-    areas: state.areas
+    areas: state.areas,
+    trips: state.trips,
+    species: state.species
   }
 }
 
@@ -16,13 +18,30 @@ const AreaInformation = (props) => {
   const [accuracy, setAccuracy] = useState('');
   const [karst, setKarst] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
-  const [areaId, setAreaId] = useState(props.navigation.getParam('areaId'))
+  const [areaId, setAreaId] = useState(props.navigation.getParam('areaId'));
 
-  console.log('area', area)
+  const numberOfTrips = props.trips.trips.filter(trip => trip.areaId.toString() === areaId.toString()).length;
+
+  const numberOfSpecies = [];
+
+
+  (function() {
+    props.species.species.forEach(s => {
+      s.tripArr.forEach(t => {
+        if(t.areaId.toString() === areaId.toString()) {
+          const speciesInArea = s.sciName
+          console.log('sa', numberOfSpecies[speciesInArea])
+          if(numberOfSpecies.indexOf(speciesInArea) === -1) {
+            numberOfSpecies.push(s.sciName)
+          }
+        }
+      })
+    })
+  })()
+
 
   useEffect(() => {
     const selectedArea = props.areas.areas.filter(area => area._id.toString() === areaId.toString())
-    console.log('selectedArea', selectedArea[0])
     setArea(selectedArea[0].area)
     setAreaGeoRef(selectedArea[0].geoRef)
     setAltitude(selectedArea[0].altitude)
@@ -56,6 +75,14 @@ const AreaInformation = (props) => {
           <View style={styles.information}>
             <Text style={{fontSize: 25}}>Location Accuracy</Text>
             <Text style={{fontSize: 20}}>{accuracy}</Text>
+          </View>
+          <View style={styles.information}>
+            <Text style={{fontSize: 25}}>Trips to this area</Text>
+            <Text style={{fontSize: 20}}>{numberOfTrips}</Text>
+          </View>
+          <View style={styles.information}>
+            <Text style={{fontSize: 25}}>Species found in this area</Text>
+            <Text style={{fontSize: 20}}>{numberOfSpecies.length}</Text>
           </View>
         </View>
       
