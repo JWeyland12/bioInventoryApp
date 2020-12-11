@@ -50,7 +50,7 @@ const AreaInformation = (props) => {
             <Text style={{fontSize: 20}}>{areaGeoRef}</Text>
           </View>
           <View style={styles.information}>
-            <Text style={{fontSize: 25}}>Altitude</Text>
+            <Text style={{fontSize: 25}}>Elevation</Text>
             <Text style={{fontSize: 20}}>{altitude}</Text>
           </View>
           <View style={styles.information}>

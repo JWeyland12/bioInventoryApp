@@ -116,8 +116,13 @@ const Areas = props => {
     geoRef.lat = location.coords.latitude
     geoRef.long = location.coords.longitude
     setAreaGeoRef(`${geoRef.lat}, ${geoRef.long}`)
-    setAltitude(`${location.coords.altitude.toString()}m`)
-    setAccuracy(`${location.coords.accuracy.toString()}m`)
+    setAltitude(`${metersToFeet(location.coords.altitude).toString()}ft`)
+    setAccuracy(`${metersToFeet(location.coords.accuracy).toString()}ft`)
+  }
+
+  const metersToFeet = meters => {
+    const feet = meters * 3.281
+    return parseInt(feet)
   }
 
   const imagePickedHandler = imagePath => {
@@ -159,7 +164,7 @@ const Areas = props => {
           }
           leftIconContainerStyle={{paddingRight: 10}}
           onChangeText={state => setAltitude(state)}
-          placeholder='Altitude'
+          placeholder='Elevation'
           value={altitude}
         />
         <Input

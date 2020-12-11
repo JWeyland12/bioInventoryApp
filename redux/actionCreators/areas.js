@@ -30,7 +30,7 @@ export const addAreas = areas => ({
   payload: areas
 })
 
-export const postArea = (projectId, area, geoRef, altitide, accuracy, karst, img, token) => async dispatch => {
+export const postArea = (projectId, area, geoRef, altitude, accuracy, karst, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -45,7 +45,7 @@ export const postArea = (projectId, area, geoRef, altitide, accuracy, karst, img
   }
   fetch(baseUrl + 'areas', {
     method: 'POST',
-    body: JSON.stringify({projectId, area, geoRef, altitide, accuracy, karst, img: newPath}),
+    body: JSON.stringify({projectId, area, geoRef, altitude, accuracy, karst, img: newPath}),
     headers: {'content-type': 'application/json', 'x-auth-token': token}
   })
   .then(response => {
