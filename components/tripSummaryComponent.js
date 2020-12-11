@@ -24,7 +24,7 @@ const TripSpecies = props => {
     });
   });
 
-  speciesArr = speciesArr.sort((a, b) => (a.comName > b.comName) ? 1 : -1)
+  speciesArr = speciesArr.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1)
 
   const tripSpeciesList = ({item}) => {
     const totalCount = (item) => {

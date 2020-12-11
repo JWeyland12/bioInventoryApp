@@ -28,7 +28,7 @@ const Projects = props => {
 
   console.log('projects', props.projects.projects)
   
-  const alphaProjects = props.projects.projects.sort((a, b) => (a.name > b.name) ? 1 : -1)
+  const alphaProjects = props.projects.projects.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase()) ? 1 : -1)
 
     useLayoutEffect(() => {
       if (modalIndex){

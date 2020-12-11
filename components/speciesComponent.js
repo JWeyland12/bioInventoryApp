@@ -23,7 +23,7 @@ const SpeciesList = props => {
   const [selectedImage, setSelectedImage] = useState('');
 
   const {navigate} = props.navigation
-  const speciesAlpha = props.species.species.sort((a, b) => (a.comName > b.comName) ? 1 : -1)
+  const speciesAlpha = props.species.species.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1)
 
   useLayoutEffect(() => {
     if (modalIndex) {
