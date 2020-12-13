@@ -143,11 +143,25 @@ export const updateSpecies = (_id, sciName, comName, img) => async dispatch => {
   dispatch(fetchSpecies())
 }
 
-export const updateSpeciesObservation = (specimen, tripObj) => async dispatch => {
-  console.log('dispatched')
+export const updateSpeciesObservation = (specimen, tripObj, img) => async dispatch => {
+  const fsImage = async img => {
+    const fileName = img.split('/').pop();
+    const newPath = FileSystem.documentDirectory + fileName;
+    try {
+      await FileSystem.moveAsync({
+        from: img,
+        to: newPath
+      });
+      console.log('newPath', newPath)
+      return newPath
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
   await fetch(baseUrl + 'species', {
     method: 'PUT',
-    body: JSON.stringify({_id: specimen._id, tripObj}),
+    body: JSON.stringify({_id: specimen._id, tripObj, uri: !img ? null : fsImage(img)}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {

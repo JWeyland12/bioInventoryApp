@@ -39,6 +39,13 @@ const speciesSchema = new Schema(
         total: {
           type: Number,
         },
+        images: [
+          {
+            uri: {
+              type: String,
+            }
+          }
+        ]
       },
     ],
   },

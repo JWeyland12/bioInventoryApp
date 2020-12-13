@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import Projects from "./projectsComponent";
 import Trips from "./tripComponent";
-import Species from "./speciesCardComponent";
 import Areas from "./areaComponent";
 import AreaSummary from './areaSummaryComponent';
 import AreaInformation from './areaInformationComponent';
+import SpeciesInfo from './speciesInfoComponent';
 import CreateProject from './createProjectComponent';
 import CreateArea from './createAreaComponent';
 import CreateSpecies from "./createSpeciesComponent";
@@ -45,7 +45,8 @@ const Navigator = createStackNavigator(
     CreateTripSpecies: {screen: CreateTripSpecies},
     CreateSpecies: {screen: CreateSpecies},
     Search: {screen: Search},
-    AreaInformation: {screen: AreaInformation}
+    AreaInformation: {screen: AreaInformation},
+    SpeciesInfo: {screen: SpeciesInfo}
   },
   {
     initialRouteName: "Projects",

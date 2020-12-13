@@ -157,11 +157,11 @@ const CreateSpecies = props => {
             <Text style={styles.textStyle}>{sciName}</Text>
             <Text style={{fontSize: 15}}>Total</Text>
           </View>
-            <View style={styles.countButtons}>
-              <Icon name='minus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total - 1)}/>
-              <Text style={{fontSize: 30, fontWeight: 'bold', marginHorizontal: 15}}>{total}</Text>
-              <Icon name='plus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total + 1)}/>
-            </View>
+          <View style={styles.countButtons}>
+            <Icon name='minus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total - 1)}/>
+            <Text style={{fontSize: 30, fontWeight: 'bold', marginHorizontal: 15}}>{total}</Text>
+            <Icon name='plus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total + 1)}/>
+          </View>
           <View style={{marginVertical: 15}}>
             <Button title={'Submit Observation'} onPress={() => handleSubmit()}/>
           </View>
