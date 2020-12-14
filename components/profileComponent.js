@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, ScrollView, Text, StyleSheet, Alert} from 'react-native';
+import {View, ScrollView, Text, StyleSheet, Alert, ToastAndroid} from 'react-native';
 import {Image, Button, Icon, Input} from 'react-native-elements';
 import {logOut} from '../redux/actionCreators/auth';
 import {connect} from 'react-redux';
@@ -41,6 +41,7 @@ const Profile = (props) => {
   }, [user])
 
   const updateInfoHandler = (info, cb) => {
+    ToastAndroid.show('Account Updated', ToastAndroid.SHORT, ToastAndroid.BOTTOM, ToastAndroid.CENTER)
     if(!password) {
       cb(false)
       props.updateUser(userObj.token, info)
@@ -54,6 +55,12 @@ const Profile = (props) => {
         [{text: 'Ok'}]
       )
     }
+  }
+
+  const cancelUpdate = (info, cb, closeUpdtae) => {
+    cb(info)
+    closeUpdtae(false)
+    setConfirmPassword('')
   }
 
   const imagePickedHandler = imgPath => {
@@ -78,7 +85,7 @@ const Profile = (props) => {
         <ImgPicker register={true} onImageTaken={imagePickedHandler} />
         <View style={{alignItems: 'center'}}>
           <Text style={{color: '#008b8b', fontWeight: 'bold'}} onPress={() => updateInfoHandler({avatar: selectedImage}, setUpdateAvatar)}>Save</Text>
-          <Text style={{color: '#008b8b', fontWeight: 'bold'}} onPress={() => setUpdateAvatar(!setUpdateAvatar)}>Cancel</Text>
+          <Text style={{color: '#008b8b', fontWeight: 'bold'}} onPress={() => setUpdateAvatar(!updateAvatar)}>Cancel</Text>
         </View>
       </View>
       )}
@@ -103,7 +110,7 @@ const Profile = (props) => {
               >
               Save{'    '}
               </Text>
-              <Text style={styles.updateButton} onPress={() => setUpdateName(!updateName)}>Cancel</Text>
+              <Text style={styles.updateButton} onPress={() => cancelUpdate(user.name, setName, setUpdateName)}>Cancel</Text>
             </View>
           </View>
           ) : (
@@ -133,7 +140,7 @@ const Profile = (props) => {
               >
               Save{'    '}
               </Text>
-              <Text style={styles.updateButton} onPress={() => setUpdateEmail(!updateEmail)}>Cancel</Text>
+              <Text style={styles.updateButton} onPress={() => cancelUpdate(user.email, setEmail, setUpdateEmail)}>Cancel</Text>
             </View>
           </View>
           ) : (
@@ -171,7 +178,7 @@ const Profile = (props) => {
               >
               Save{'    '}
               </Text>
-              <Text style={styles.updateButton} onPress={() => setUpdatePassword(!updatePassword)}>Cancel</Text>
+              <Text style={styles.updateButton} onPress={() => cancelUpdate('', setPassword, setUpdatePassword)}>Cancel</Text>
             </View>
           </View>
           ) : (
