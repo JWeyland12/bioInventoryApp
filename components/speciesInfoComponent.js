@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, StyleSheet, ToastAndroid} from 'react-native';
-import {Image, Icon, Button} from 'react-native-elements';
-import {updateSpeciesObservation} from '../redux/actionCreators/species';
+import {ScrollView, View, Text, StyleSheet, ToastAndroid, FlatList} from 'react-native';
+import {Image, Icon, Button, ListItem} from 'react-native-elements';
+import {updateSpeciesObservation, updateSpeciesNote} from '../redux/actionCreators/species';
 import {connect} from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import Notes from './noteComponent';
 
 const mapStateToProps = state => {
   return {
@@ -13,7 +14,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  updateSpeciesObservation
+  updateSpeciesObservation,
+  updateSpeciesNote
 }
 
 const SpeciesInfo = (props) => {
@@ -22,11 +24,14 @@ const SpeciesInfo = (props) => {
   const speciesId = props.navigation.getParam('speciesId');
   const [total, setTotal] = useState(tripArrId.total);
   const [totalChanged, setTotalChanged] = useState(false);
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState([]);
+  const [note, setNote] = useState('')
 
   console.log('specimen', specimen)
   console.log('tripArrId', tripArrId)
   console.log('images', images)
+  console.log('note', note)
+  console.log('notes', tripArrId.notes)
 
   useEffect(() => {
     if(speciesId) {
@@ -98,7 +103,33 @@ const SpeciesInfo = (props) => {
   }
 
   const Images = () => {
-    return images.map(image => <Image source={{uri: image.uri}} style={styles.images} />)
+    return images.map(image => <Image source={{uri: image.uri}} style={styles.images} key={image._id} />)
+  }
+
+  const noteTakenHandler = (input) => {
+    setNote(input)
+  }
+
+  const submitNoteHandler = () => {
+    setNote('')
+    props.updateSpeciesNote(specimen, tripArrId, note)
+  }
+
+  const renderNotes = ({item}) => {
+    return (
+      <View style={styles.listItemContainer}>
+        <ListItem 
+          title={item.date}
+          subtitle={`${item.note.slice(0, 30)}...`}
+          topDivider
+          bottomDivider
+          rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+          borderRadius={10}
+          borderWidth={1}
+          borderColor={'gray'}
+        />
+      </View>
+    )
   }
 
   return (
@@ -112,34 +143,42 @@ const SpeciesInfo = (props) => {
       <View style={styles.information}>
         <Text style={{fontSize: 20}}>{specimen.sciName}</Text>
       </View>
-      <View style={styles.information}>
-        {!tripArrId ? null :
-        (<View style={styles.information}>
-          <Text style={{fontSize: 25}}>Total</Text>
-          <View style={styles.countButtons}>
-            <Icon name='minus' type='font-awesome' size={20} raised reverseColor color='grey' onPress={() => setTotal(total - 1)}/>
-            <Text style={{fontSize: 25, marginHorizontal: 15}}>{total}</Text>
-            <Icon name='plus' type='font-awesome' size={20} raised reverseColor color='grey' onPress={() => setTotal(total + 1)}/>
-          </View>
-          {!totalChanged ? null : (<Text style={{color: '#008b8b', fontWeight: 'bold'}} onPress={() => updateTotalHandler()}>Save</Text>)}
-        </View>)}
-        <View style={styles.information}>
-          <Text style={{fontSize: 25}}>Rank</Text>
-          <Text style={{fontSize: 20}}>placeHolder</Text>
+      {!tripArrId ? null :
+      (<View style={styles.information}>
+        <Text style={{fontSize: 25}}>Total</Text>
+        <View style={styles.countButtons}>
+          <Icon name='minus' type='font-awesome' size={20} raised reverseColor color='grey' onPress={() => setTotal(total - 1)}/>
+          <Text style={{fontSize: 25, marginHorizontal: 15}}>{total}</Text>
+          <Icon name='plus' type='font-awesome' size={20} raised reverseColor color='grey' onPress={() => setTotal(total + 1)}/>
         </View>
-        <View style={styles.information}>
-          <Text style={{fontSize: 25}}>Observation Images</Text>
-          {!images.length ? 
-          (<Text style={{fontSize: 20}}>No images</Text>) :
-          (<View style={styles.imagesContainer}>
-            <Images />
-            {/* {images.map(image => <Image source={{uri: image.uri}} style={styles.images} />)} */}
-          </View>)}
-          <View style={{flexDirection: 'row', marginTop: 20}}>
-            <Button title={'Take Picture'} onPress={takeImageHandler} />
-            <View style={{margin: 5}}></View>
-            <Button title={'Add Images'} onPress={pickImageHandler} />
-          </View>
+        {!totalChanged ? null : (<Text style={{color: '#008b8b', fontWeight: 'bold'}} onPress={() => updateTotalHandler()}>Save</Text>)}
+      </View>)}
+      <View style={styles.information}>
+        <Text style={{fontSize: 25}}>Rank</Text>
+        <Text style={{fontSize: 20}}>placeHolder</Text>
+      </View>
+      <View style={styles.information}>
+        <Text style={{fontSize: 25}}>Notes</Text>
+      </View>
+      <View style={{width: '100%', marginBottom: 10}}>
+        {!tripArrId.notes ? null : (<FlatList data={tripArrId.notes} renderItem={renderNotes} keyExtractor={item => item._id.toString()}/>)}
+      </View>
+      <Notes onNoteTaken={noteTakenHandler} value={note}/>
+      <View style={styles.noteButton}>
+        <Button title={'Create Note'} onPress={() => submitNoteHandler()}/>
+      </View>
+      <View style={styles.information}>
+        <Text style={{fontSize: 25}}>Observation Images</Text>
+        {!images.length ? 
+        (<Text style={{fontSize: 20}}>No images</Text>) :
+        (<View style={styles.imagesContainer}>
+          <Images />
+          {/* {images.map(image => <Image source={{uri: image.uri}} style={styles.images} />)} */}
+        </View>)}
+        <View style={{flexDirection: 'row', marginTop: 20}}>
+          <Button title={'Take Picture'} onPress={takeImageHandler} />
+          <View style={{margin: 5}}></View>
+          <Button title={'Add Images'} onPress={pickImageHandler} />
         </View>
       </View>
     </ScrollView>
@@ -184,6 +223,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     marginTop: 10
+  },
+  noteButton: {
+    alignItems: 'center',
+    marginTop: 20
+  },
+  listItemContainer: {
+    marginHorizontal: 30
   }
 })
 

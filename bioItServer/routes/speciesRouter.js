@@ -31,7 +31,6 @@ speciesRouter
     .catch(err => next(err))
   })
   .put(async (req, res, next) => {
-    console.log('body', req.body.uri)
     // updated from the master list - not reassigning tripArr references
     if (!req.body.tripObj) {
       Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
@@ -45,28 +44,23 @@ speciesRouter
       //species observed from a trip
       try{
         const specimen = await Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
-        console.log('specimen', specimen)
         if(!specimen) {
           res.status(400);
           res.send('Specimen not in database')
         }
-
         if (!req.body.tripObj._id) {
           specimen.tripArr.push(req.body.tripObj)
         } else {
-          console.log('here', req.body.tripObj._id)
+          //species count updated in a trip
           for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
-            console.log('enter for loop')
-            console.log('specimen tripArr Id', specimen.tripArr[i]._id)
             if (req.body.tripObj._id.toString() === specimen.tripArr[i]._id.toString()) {
-              console.log('enter if block')
               specimen.tripArr[i].total = req.body.tripObj.total
               if (req.body.uri) {
-                console.log('the final block')
+                //add species images from a trip
                 specimen.tripArr[i].images.push(req.body.uri)
-                console.log('images', req.body.uri.toString())
+              } if (req.body.note) {
+                specimen.tripArr[i].notes.push(req.body.note)
               }
-              console.log('specimen uri', specimen.tripArr[i].images)
             }
           }
         }

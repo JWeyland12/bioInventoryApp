@@ -45,6 +45,16 @@ const speciesSchema = new Schema(
               type: String,
             }
           }
+        ], 
+        notes: [
+          {
+            note: {
+              type: String,
+            },
+            date: {
+              type: String,
+            }
+          }
         ]
       },
     ],

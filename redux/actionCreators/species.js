@@ -199,6 +199,28 @@ export const updateSpeciesObservation = (specimen, tripObj, img) => async dispat
   }
 }
 
+export const updateSpeciesNote = (specimen, tripObj, note) => async dispatch => {
+  try {
+    const date = await new Date().toDateString()
+    const response = await fetch(baseUrl + 'species', {
+      method: 'PUT',
+      body: JSON.stringify({_id: specimen._id, tripObj, note: {note, date}}),
+      headers: {'content-type': 'application/json'}
+    });
+
+    if(!response.ok) {
+      const err = new Error(`${response.msg}`)
+      throw err
+    }
+
+    response.json()
+    dispatch(fetchSpecies())
+  } catch(err) {
+    console.log('Add species note', err);
+    alert('Note could not be added')
+  }
+}
+
 export const deleteSpeciesFromMaster = (_id) => async dispatch => {
   await fetch(baseUrl + 'species', {
     method: 'DELETE',
