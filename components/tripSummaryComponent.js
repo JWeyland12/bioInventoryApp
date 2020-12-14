@@ -42,7 +42,8 @@ const TripSpecies = props => {
       let tripArrId
       for (let i = 0; i <= item.tripArr.length - 1; i++) {
         if(item.tripArr[i].tripId.toString() === tripId.toString() && item.tripArr[i].areaId.toString() === areaId.toString() && item.tripArr[i].projectId.toString() === projectId.toString()){
-          tripArrId = item.tripArr[i]._id
+          console.log('tripArr', item.tripArr[i])
+          tripArrId = item.tripArr[i]
         }
       }
       return tripArrId
@@ -56,7 +57,7 @@ const TripSpecies = props => {
           bottomDivider
           leftAvatar={{source: {uri: item.img}, size: 'large'}}
           rightIcon={<Icon name='angle-right' type='font-awesome'/>}
-          onPress={() => navigate('SpeciesInfo', {speciesId: item._id, tripArrId: {...idObject, _id: findTripArrId(item), total: totalCount(item)} })}
+          onPress={() => navigate('SpeciesInfo', {speciesId: item._id, tripArrId: findTripArrId(item) })}
         />
       </View>
     )

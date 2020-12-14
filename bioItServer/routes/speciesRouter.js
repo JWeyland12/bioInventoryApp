@@ -51,20 +51,19 @@ speciesRouter
           res.send('Specimen not in database')
         }
 
-        if (!req.body.tripObj.tripObj._id) {
+        if (!req.body.tripObj._id) {
           specimen.tripArr.push(req.body.tripObj)
         } else {
           console.log('here', req.body.tripObj._id)
           for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
             console.log('enter for loop')
             console.log('specimen tripArr Id', specimen.tripArr[i]._id)
-            if (req.body.tripObj.tripObj._id.toString() === specimen.tripArr[i]._id.toString()) {
+            if (req.body.tripObj._id.toString() === specimen.tripArr[i]._id.toString()) {
               console.log('enter if block')
-              if(req.body.tripObj.tripObj.total) {
-                specimen.tripArr[i].total = req.body.tripObj.tripObj.total
-              } else if (req.body.uri) {
+              specimen.tripArr[i].total = req.body.tripObj.total
+              if (req.body.uri) {
                 console.log('the final block')
-                specimen.tripArr[i].images.push(req.body.uri.img)
+                specimen.tripArr[i].images.push(req.body.uri)
                 console.log('images', req.body.uri.toString())
               }
               console.log('specimen uri', specimen.tripArr[i].images)

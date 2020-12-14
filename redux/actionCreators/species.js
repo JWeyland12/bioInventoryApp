@@ -144,44 +144,59 @@ export const updateSpecies = (_id, sciName, comName, img) => async dispatch => {
 }
 
 export const updateSpeciesObservation = (specimen, tripObj, img) => async dispatch => {
-  const fsImage = async img => {
+  if (img) {
     const fileName = img.split('/').pop();
     const newPath = FileSystem.documentDirectory + fileName;
+    console.log('newPath', newPath)
     try {
       await FileSystem.moveAsync({
         from: img,
         to: newPath
       });
-      console.log('newPath', newPath)
-      return newPath
+      const response = await fetch(baseUrl + 'species', {
+        method: 'PUT',
+        body: JSON.stringify({_id: specimen._id, tripObj: tripObj, uri: {uri: newPath}}),
+        headers: {'content-type': 'application/json'}
+      })
+
+      if (!response.ok) {
+        const err = new Error(`Error ${response.message}`)
+        err.response = response
+        throw err
+      }
+
+      response.json()
+      dispatch(fetchSpecies())
     } catch (err) {
-      console.log(err);
+      console.log('Update Species', err);
+      alert(`Species image could not be added`)
       throw err;
     }
+  } else {
+    await fetch(baseUrl + 'species', {
+      method: 'PUT',
+      body: JSON.stringify({_id: specimen._id, tripObj}),
+      headers: {'content-type': 'application/json'}
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('ok response')
+        return response
+      } else {
+        const err = new Error(`Error ${response.status}: ${response.statusText}`)
+        err.response = response
+        throw err
+      }
+    },
+    err => {throw err}
+    )
+    .then(response => response.json())
+    .catch(error => {
+      console.log('Update species', error.message)
+      alert(`Species ${specimen.sciName} - ${specimen.comName} could not be updated`)
+    })
+    dispatch(fetchSpecies())
   }
-  await fetch(baseUrl + 'species', {
-    method: 'PUT',
-    body: JSON.stringify({_id: specimen._id, tripObj, uri: !img ? null : fsImage(img)}),
-    headers: {'content-type': 'application/json'}
-  })
-  .then(response => {
-    if (response.ok) {
-      console.log('ok response')
-      return response
-    } else {
-      const err = new Error(`Error ${response.status}: ${response.statusText}`)
-      err.response = response
-      throw err
-    }
-  },
-  err => {throw err}
-  )
-  .then(response => response.json())
-  .catch(error => {
-    console.log('Update species', error.message)
-    alert(`Species ${specimen.sciName} - ${specimen.comName} could not be updated`)
-  })
-  dispatch(fetchSpecies())
 }
 
 export const deleteSpeciesFromMaster = (_id) => async dispatch => {

@@ -21,14 +21,17 @@ const SpeciesInfo = (props) => {
   const tripArrId = props.navigation.getParam('tripArrId');
   const speciesId = props.navigation.getParam('speciesId');
   const [total, setTotal] = useState(tripArrId.total);
-  const [totalChanged, setTotalChanged] = useState(false)
+  const [totalChanged, setTotalChanged] = useState(false);
+  const [images, setImages] = useState([])
 
   console.log('specimen', specimen)
   console.log('tripArrId', tripArrId)
+  console.log('images', images)
 
   useEffect(() => {
     if(speciesId) {
       setSpecimen(props.species.species.filter(item => item._id.toString() === speciesId.toString())[0])
+      setImages(tripArrId.images)
     }
     if (total !== tripArrId.total) {
       if(!totalChanged) {
@@ -40,14 +43,12 @@ const SpeciesInfo = (props) => {
   console.log('total', total)
   console.log('tripTotal', tripArrId.total)
 
-  
-
   const updateTotalHandler = () => {
     console.log('fired')
     ToastAndroid.show('Total saved', ToastAndroid.SHORT, ToastAndroid.TOP, ToastAndroid.CENTER)
     tripArrId.total = total
     setTotalChanged(false)
-    props.updateSpeciesObservation(specimen, {tripObj: {...tripArrId, total: total}})
+    props.updateSpeciesObservation(specimen, tripArrId)
   }
 
   const verifyCameraPermissions = async () => {
@@ -76,10 +77,10 @@ const SpeciesInfo = (props) => {
     const imageGal = await ImagePicker.launchImageLibraryAsync({
       // allowsMultipleSelection,
       aspect: [1,1],
-      quality: 0.75
+      quality: 0.75,
+      allowsEditing: true
     });
-    let img = imageGal.uri
-    props.updateSpeciesObservation(specimen, tripArrId, img)
+    props.updateSpeciesObservation(specimen, tripArrId, imageGal.uri)
   }
 
   const takeImageHandler = async () => {
@@ -90,9 +91,14 @@ const SpeciesInfo = (props) => {
     const imageCam = await ImagePicker.launchCameraAsync({
       aspect: [1,1],
       quality: 0.75,
+      allowsEditing: true
     });
     // tripArrId.images.push(imageCam.uri)
     props.updateSpeciesObservation(specimen, tripArrId, imageCam.uri)
+  }
+
+  const Images = () => {
+    return images.map(image => <Image source={{uri: image.uri}} style={styles.images} />)
   }
 
   return (
@@ -123,13 +129,13 @@ const SpeciesInfo = (props) => {
         </View>
         <View style={styles.information}>
           <Text style={{fontSize: 25}}>Observation Images</Text>
-          <Text style={{fontSize: 20}}>placeHolder</Text>
-          <View>
-            {/* {imageArr.forEach(image => {
-              <Image source={{uri: image.uri}} />
-            })} */}
-          </View>
-          <View style={{flexDirection: 'row'}}>
+          {!images.length ? 
+          (<Text style={{fontSize: 20}}>No images</Text>) :
+          (<View style={styles.imagesContainer}>
+            <Images />
+            {/* {images.map(image => <Image source={{uri: image.uri}} style={styles.images} />)} */}
+          </View>)}
+          <View style={{flexDirection: 'row', marginTop: 20}}>
             <Button title={'Take Picture'} onPress={takeImageHandler} />
             <View style={{margin: 5}}></View>
             <Button title={'Add Images'} onPress={pickImageHandler} />
@@ -166,6 +172,18 @@ const styles = StyleSheet.create({
   countButtons: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  images: {
+    width: 100,
+    height: 100,
+    borderWidth: 1,
+    borderColor: 'whitesmoke'
+  },
+  imagesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginTop: 10
   }
 })
 
