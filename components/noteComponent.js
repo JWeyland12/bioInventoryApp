@@ -6,7 +6,7 @@ const Notes = (props) => {
   const [input, setInput] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('#f8f8ff');
   const [borderColor, setBorderColor] = useState('gray');
-  const [borderWidth, setBorderWidth] = useState()
+  const [borderWidth, setBorderWidth] = useState(1)
 
   const onFocusHandler = () => {
     setBackgroundColor('#fff')

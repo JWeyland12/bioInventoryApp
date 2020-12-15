@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, StyleSheet, ToastAndroid, FlatList} from 'react-native';
+import {ScrollView, View, Text, StyleSheet, ToastAndroid, FlatList, TouchableOpacity} from 'react-native';
 import {Image, Icon, Button, ListItem} from 'react-native-elements';
 import {updateSpeciesObservation, updateSpeciesNote} from '../redux/actionCreators/species';
 import {connect} from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import Notes from './noteComponent';
+import NoteModal from './noteModalComponent';
 
 const mapStateToProps = state => {
   return {
@@ -25,13 +26,10 @@ const SpeciesInfo = (props) => {
   const [total, setTotal] = useState(tripArrId.total);
   const [totalChanged, setTotalChanged] = useState(false);
   const [images, setImages] = useState([]);
-  const [note, setNote] = useState('')
-
-  console.log('specimen', specimen)
-  console.log('tripArrId', tripArrId)
-  console.log('images', images)
-  console.log('note', note)
-  console.log('notes', tripArrId.notes)
+  const [note, setNote] = useState('');
+  const [viewNote, setViewNote] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalNote, setModalNote] = useState('')
 
   useEffect(() => {
     if(speciesId) {
@@ -44,9 +42,6 @@ const SpeciesInfo = (props) => {
       } 
     }
   })
-
-  console.log('total', total)
-  console.log('tripTotal', tripArrId.total)
 
   const updateTotalHandler = () => {
     console.log('fired')
@@ -115,6 +110,11 @@ const SpeciesInfo = (props) => {
     props.updateSpeciesNote(specimen, tripArrId, note)
   }
 
+  const showNote = (note) => {
+    setNote(note)
+    setViewNote(true)
+  }
+
   const renderNotes = ({item}) => {
     return (
       <View style={styles.listItemContainer}>
@@ -127,13 +127,25 @@ const SpeciesInfo = (props) => {
           borderRadius={10}
           borderWidth={1}
           borderColor={'gray'}
+          onPress={() => showModal(item.note)}
         />
       </View>
     )
   }
 
+  const showModal = (note) => {
+    setIsModalOpen(!isModalOpen)
+    setModalNote(note)
+  }
+
+  const hideModal = () => {
+    setIsModalOpen(!isModalOpen)
+    setModalNote('')
+  }
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}} contentContainerStyle={{alignItems: 'center'}}>
+      <NoteModal isModalOpen={isModalOpen} note={modalNote} hideModal={hideModal}/>
       <View style={{marginTop: 30}}>
         <Text style={{fontSize: 30, fontFamily: 'monospace'}}>{specimen.comName}</Text>
       </View>
@@ -230,7 +242,7 @@ const styles = StyleSheet.create({
   },
   listItemContainer: {
     marginHorizontal: 30
-  }
+  },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SpeciesInfo);
