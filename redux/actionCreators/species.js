@@ -199,7 +199,7 @@ export const updateSpeciesObservation = (specimen, tripObj, img) => async dispat
   }
 }
 
-export const updateSpeciesNote = (specimen, tripObj, note) => async dispatch => {
+export const createSpeciesNote = (specimen, tripObj, note) => async dispatch => {
   try {
     const date = await new Date().toDateString()
     const response = await fetch(baseUrl + 'species', {
@@ -218,6 +218,26 @@ export const updateSpeciesNote = (specimen, tripObj, note) => async dispatch => 
   } catch(err) {
     console.log('Add species note', err);
     alert('Note could not be added')
+  }
+}
+
+export const updateSpeciesNote = (noteId, specimen, tripObj, note) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'species', {
+      method: 'PUT',
+      body: JSON.stringify({noteId, _id: specimen._id, tripObj, note}),
+      headers: {'content-type': 'application/json'}
+    })
+  
+    if (!response.ok) {
+      const err = new Error(`${response.status}: ${response.statusText}`)
+      throw err
+    }
+  
+    dispatch(fetchSpecies())
+  } catch(err) {
+    console.log('Update species note', err)
+    alert('Note could not be updated')
   }
 }
 

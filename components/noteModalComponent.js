@@ -1,10 +1,21 @@
 import React, {useState} from 'react';
-import {View, Text, Modal, StyleSheet, TextInput} from 'react-native';
+import {View, Text, Modal, StyleSheet, TextInput, ToastAndroid} from 'react-native';
 import {Icon} from 'react-native-elements';
 
 const NoteModal = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+
+  const saveNote = () => {
+    ToastAndroid.show('Note saved', ToastAndroid.SHORT, ToastAndroid.TOP, ToastAndroid.CENTER)
+    setIsEditing(!isEditing)
+    props.submitNoteHandler()
+  }
+
+  const cancelNoteUpdate = () => {
+    setIsEditing(!isEditing)
+    props.editModalNoteHanlder(props.persistNote)
+  }
 
   return (
     <View style={styles.centeredView}>
@@ -18,10 +29,24 @@ const NoteModal = (props) => {
             {isEditing ? 
             (<View>
               <View style={styles.icons}>
-                <Icon name='floppy-o' type='font-awesome' onPress={() => setIsEditing(!isEditing)}/>
+                <Icon name='floppy-o' type='font-awesome' onPress={() => saveNote()}/>
+                <Text>{'  '}</Text>
+                <Icon name='times-circle-o' type='font-awesome' onPress={() => cancelNoteUpdate()} />
               </View>
               <TextInput 
-
+                style={{
+                  backgroundColor: 'white',
+                  // borderColor: '#008b8b',
+                  // borderWidth: 2,
+                  fontSize: 20,
+                  alignItems: 'flex-start',
+                  // borderRadius: 10,
+                  // width: '100%'
+                }}
+                multiline={true}
+                value={props.note}
+                textAlignVertical='top'
+                onChangeText={(input) => {props.editModalNoteHanlder(input)}}
               />
             </View>)
             :
@@ -31,7 +56,7 @@ const NoteModal = (props) => {
                 <Text>{'  '}</Text>
                 <Icon name='times' type='font-awesome' onPress={() => props.hideModal()} />
               </View>
-              <Text style={{fontSize: 20}}>{props.note}</Text>
+              <Text selectable style={{fontSize: 20}}>{props.note}</Text>
             </View>)}
           </View>
         </View>

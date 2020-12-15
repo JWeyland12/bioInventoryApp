@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {ScrollView, View, Text, StyleSheet, ToastAndroid, FlatList, TouchableOpacity} from 'react-native';
 import {Image, Icon, Button, ListItem} from 'react-native-elements';
-import {updateSpeciesObservation, updateSpeciesNote} from '../redux/actionCreators/species';
+import {updateSpeciesObservation, updateSpeciesNote, fetchSpecies, createSpeciesNote} from '../redux/actionCreators/species';
 import {connect} from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
@@ -16,25 +16,41 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   updateSpeciesObservation,
-  updateSpeciesNote
+  updateSpeciesNote,
+  fetchSpecies,
+  createSpeciesNote
 }
 
 const SpeciesInfo = (props) => {
   const [specimen, setSpecimen] = useState({});
-  const tripArrId = props.navigation.getParam('tripArrId');
-  const speciesId = props.navigation.getParam('speciesId');
+  const [tripArrId, setTripArrId] = useState(props.navigation.getParam('tripArrId'))
+  const [speciesId, setSpeciesId] = useState(props.navigation.getParam('speciesId'))
   const [total, setTotal] = useState(tripArrId.total);
   const [totalChanged, setTotalChanged] = useState(false);
   const [images, setImages] = useState([]);
   const [note, setNote] = useState('');
   const [viewNote, setViewNote] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalNote, setModalNote] = useState('')
+  const [modalNote, setModalNote] = useState('');
+  const tripArrSelector = tripArrId._id;
+  const [noteId, setNoteId] = useState('');
+  const [persistNote, setPersistNote] = useState('')
+
+  console.log('specimen', specimen)
 
   useEffect(() => {
+    setSpeciesId(props.navigation.getParam('speciesId'));
+
     if(speciesId) {
       setSpecimen(props.species.species.filter(item => item._id.toString() === speciesId.toString())[0])
       setImages(tripArrId.images)
+      if (specimen.tripArr) {
+        for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
+          if (specimen.tripArr[i]._id.toString() === tripArrSelector.toString()) {
+            setTripArrId(specimen.tripArr[i])
+          }
+        }
+      }
     }
     if (total !== tripArrId.total) {
       if(!totalChanged) {
@@ -43,6 +59,7 @@ const SpeciesInfo = (props) => {
     }
   })
 
+  //action creator for updating the total
   const updateTotalHandler = () => {
     console.log('fired')
     ToastAndroid.show('Total saved', ToastAndroid.SHORT, ToastAndroid.TOP, ToastAndroid.CENTER)
@@ -51,6 +68,7 @@ const SpeciesInfo = (props) => {
     props.updateSpeciesObservation(specimen, tripArrId)
   }
 
+  //image upload from camera or gallery
   const verifyCameraPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.CAMERA);
     if (result.status !== 'granted') {
@@ -75,7 +93,6 @@ const SpeciesInfo = (props) => {
       return
     }
     const imageGal = await ImagePicker.launchImageLibraryAsync({
-      // allowsMultipleSelection,
       aspect: [1,1],
       quality: 0.75,
       allowsEditing: true
@@ -93,59 +110,71 @@ const SpeciesInfo = (props) => {
       quality: 0.75,
       allowsEditing: true
     });
-    // tripArrId.images.push(imageCam.uri)
     props.updateSpeciesObservation(specimen, tripArrId, imageCam.uri)
   }
 
+  //creating list of images to display
   const Images = () => {
     return images.map(image => <Image source={{uri: image.uri}} style={styles.images} key={image._id} />)
   }
 
+  //updating state from note input and note modal
   const noteTakenHandler = (input) => {
     setNote(input)
   }
 
+  const editModalNoteHanlder = (input) => {
+    setModalNote(input)
+  }
+
+  //dispatch action creators for creating and updating a note
   const submitNoteHandler = () => {
-    setNote('')
-    props.updateSpeciesNote(specimen, tripArrId, note)
+    if (note) {
+      setNote('')
+      props.createSpeciesNote(specimen, tripArrId, note)
+    }
+    if (modalNote) {
+      // setModalNote('')
+      props.updateSpeciesNote(noteId, specimen, tripArrId, modalNote)
+    }
   }
 
-  const showNote = (note) => {
-    setNote(note)
-    setViewNote(true)
+  const showModal = (item) => {
+    setModalNote(item.note)
+    setIsModalOpen(!isModalOpen)
+    setNoteId(item._id)
+    setPersistNote(item.note)
   }
 
+  //close modal and clears state that displays note in modal
+  const hideModal = () => {
+    setIsModalOpen(!isModalOpen)
+    setModalNote('')
+  }
+
+  //creates list of notes in UI
   const renderNotes = ({item}) => {
     return (
       <View style={styles.listItemContainer}>
         <ListItem 
-          title={item.date}
-          subtitle={`${item.note.slice(0, 30)}...`}
+          title={`${item.note.slice(0, 30)}...`}
+          // titleStyle={{fontSize: 20}}
+          subtitle={item.date}
           topDivider
           bottomDivider
           rightIcon={<Icon name='angle-right' type='font-awesome'/>}
           borderRadius={10}
           borderWidth={1}
           borderColor={'gray'}
-          onPress={() => showModal(item.note)}
+          onPress={() => showModal(item)}
         />
       </View>
     )
   }
 
-  const showModal = (note) => {
-    setIsModalOpen(!isModalOpen)
-    setModalNote(note)
-  }
-
-  const hideModal = () => {
-    setIsModalOpen(!isModalOpen)
-    setModalNote('')
-  }
-
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}} contentContainerStyle={{alignItems: 'center'}}>
-      <NoteModal isModalOpen={isModalOpen} note={modalNote} hideModal={hideModal}/>
+      <NoteModal isModalOpen={isModalOpen} note={modalNote} hideModal={hideModal} persistNote={persistNote} editModalNoteHanlder={editModalNoteHanlder} submitNoteHandler={submitNoteHandler}/>
       <View style={{marginTop: 30}}>
         <Text style={{fontSize: 30, fontFamily: 'monospace'}}>{specimen.comName}</Text>
       </View>
