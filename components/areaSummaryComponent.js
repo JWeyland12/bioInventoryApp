@@ -54,7 +54,6 @@ class AreaSummary extends Component {
               topDivider
               bottomDivider
               leftAvatar={{source: {uri: item.img}, size: 'large'}}
-              rightIcon={<Icon name='angle-right' type='font-awesome'/>}
             />;
     };
 

@@ -62,27 +62,27 @@ const AreaInformation = (props) => {
         <View style={styles.information}>
           <View style={styles.information}>
             <Text style={{fontSize: 25}}>Limestone Type</Text>
-            <Text style={{fontSize: 20}}>{karst}</Text>
+            <Text selectable style={{fontSize: 20}}>{karst}</Text>
           </View>
           <View style={styles.information}>
             <Text style={{fontSize: 25}}>Coordinates</Text>
-            <Text style={{fontSize: 20}}>{areaGeoRef}</Text>
+            <Text selectable style={{fontSize: 20}}>{areaGeoRef}</Text>
           </View>
           <View style={styles.information}>
             <Text style={{fontSize: 25}}>Elevation</Text>
-            <Text style={{fontSize: 20}}>{altitude}</Text>
+            <Text selectable style={{fontSize: 20}}>{altitude}</Text>
           </View>
           <View style={styles.information}>
             <Text style={{fontSize: 25}}>Location Accuracy</Text>
-            <Text style={{fontSize: 20}}>{accuracy}</Text>
+            <Text selectable style={{fontSize: 20}}>{accuracy}</Text>
           </View>
           <View style={styles.information}>
             <Text style={{fontSize: 25}}>Trips to this area</Text>
-            <Text style={{fontSize: 20}}>{numberOfTrips}</Text>
+            <Text selectable style={{fontSize: 20}}>{numberOfTrips}</Text>
           </View>
           <View style={styles.information}>
             <Text style={{fontSize: 25}}>Species found in this area</Text>
-            <Text style={{fontSize: 20}}>{numberOfSpecies.length}</Text>
+            <Text selectable style={{fontSize: 20}}>{numberOfSpecies.length}</Text>
           </View>
         </View>
       
