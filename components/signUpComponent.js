@@ -23,7 +23,12 @@ const SignUp = props => {
   const [checkUserName, setCheckUserName] = useState(true);
   const [checkPassword, setCheckPassword] = useState(true);
   const [checkConfirmPassword, setCheckConfirmPassword] = useState(true);
-  const [checkEmail, setCheckEmail] = useState(true)
+  const [checkEmail, setCheckEmail] = useState(true);
+  const [nameTouched, setNameTouched] = useState(false);
+  const [userNameTouched, setUserNameTouched] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
 
 
   const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
@@ -33,29 +38,32 @@ const SignUp = props => {
   }
 
   const registerHandler = () => {
-    if (password !== confirmPassword) {
-      setPassword('')
-      setConfirmPassword('')
-      setCheckConfirmPassword(false)
-    } if (!avatar) {
-      setCheckAvatar(false)
-    } if (!name) {
-      setCheckName(false)
-    } if (!userName) {
-      setCheckUserName(false)
-    } if (!email) {
-      setCheckEmail(false)
-    } if (!password.match(regex)) {
-      setCheckPassword(false)
-    } else {
-      setCheckPassword(true)
-      setCheckAvatar(true)
-      setCheckName(true)
-      setCheckUserName(true)
-      setCheckPassword(true)
-      setCheckConfirmPassword(true)
-      props.register(name, userName, email, password, avatar)
-    }
+    avatarCheck()
+    !nameTouched ? setCheckName(false) : null;
+    !userNameTouched ? setCheckUserName(false) : null;
+    !emailTouched ? setCheckEmail(false) : null;
+    !passwordTouched ? setCheckPassword(false) : null;
+    !confirmPasswordTouched ? setCheckConfirmPassword(false) : null, (() => registerResult())()
+  }
+
+  const registerResult = () => {
+    console.log('checkName', checkName);
+    (!checkAvatar || !checkName || !checkUserName || !checkEmail || !checkPassword) ?
+        Alert.alert('Please fix the indicated fields', '', [{text: 'Ok'}]) 
+        :
+        props.register(name, userName, email, password, avatar)
+  }
+
+  const avatarCheck = () => {
+    !avatar ? setCheckAvatar(false) : setCheckAvatar(true)
+  }
+
+  const validationCheck = (value, cb) => {
+    !value ? cb(false) : cb(true)
+  }
+
+  const passwordValidation = (value, cb) => {
+    !value.match(regex) ? cb(false) : cb(true)
   }
 
   return (
@@ -75,6 +83,8 @@ const SignUp = props => {
           onChangeText={text => setName(text)}
           placeholder='Full Name'
           value={name}
+          onFocus={() => setNameTouched(true)}
+          onBlur={() => validationCheck(name, setCheckName)}
         />
         <View style={styles.validationContainer}>
           {!checkName ? <Text style={styles.validation}>Name Required</Text> : null}
@@ -84,6 +94,8 @@ const SignUp = props => {
           onChangeText={text => setUserName(text)}
           placeholder='User Name'
           value={userName}
+          onFocus={() => setUserNameTouched(true)}
+          onBlur={() => validationCheck(userName, setCheckUserName)}
         />
         <View style={styles.validationContainer}>
           {!checkUserName ? <Text style={styles.validation}>User Name Required</Text> : null}
@@ -93,6 +105,8 @@ const SignUp = props => {
           onChangeText={text => setEmail(text)}
           placeholder='Email'
           value={email}
+          onFocus={() => setEmailTouched(true)}
+          onBlur={() => validationCheck(email, setCheckEmail)}
         />
         <View style={styles.validationContainer}>
           {!checkEmail ? <Text style={styles.validation}>Email Required</Text> : null}
@@ -102,7 +116,9 @@ const SignUp = props => {
           onChangeText={text => setPassword(text)}
           placeholder='Password'
           value={password}
+          onFocus={() => setPasswordTouched(true)}
           secureTextEntry={true}
+          onBlur={() => passwordValidation(password, setCheckPassword)}
           />
           <View style={styles.validationContainer}>
             {!checkPassword ? <Text style={styles.validation}>Password be 6-20 characters, contain one upper case letter, and one number</Text> : null}
@@ -112,7 +128,9 @@ const SignUp = props => {
           onChangeText={text => setConfirmPassword(text)}
           placeholder='Confirm Password'
           value={confirmPassword}
+          onFocus={() => setConfirmPasswordTouched(true)}
           secureTextEntry={true}
+          onBlur={() => (confirmPassword === password) ? setCheckConfirmPassword(true) : setCheckConfirmPassword(false)}
           />
           <View style={styles.validationContainer}>
             {!checkConfirmPassword ? <Text style={styles.validation}>Passwords do not match</Text> : null}
