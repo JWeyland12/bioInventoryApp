@@ -20,8 +20,8 @@ const SpeciesList = props => {
   const [modalIndex, setModalIndex] = useState('')
   const [sciName, setSciName] = useState('');
   const [comName, setComName] = useState('');
+  const [rank, setRank] = useState('')
   const [selectedImage, setSelectedImage] = useState('');
-
   const {navigate} = props.navigation
   const speciesAlpha = props.species.species.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1)
 
@@ -35,6 +35,7 @@ const SpeciesList = props => {
     const findSpecies = props.species.species.find(species => species._id.toString() === modalIndex.toString())
     setSciName(findSpecies.sciName);
     setComName(findSpecies.comName);
+    findSpecies.rank ? setRank(findSpecies.rank) : setRank('Unknown')
     setSelectedImage(findSpecies.img);
     setModal(!isModalOpen);
   }
@@ -45,7 +46,7 @@ const SpeciesList = props => {
   };
 
   const handleSubmit = () => {
-    props.updateSpecies(modalIndex, sciName, comName, selectedImage);
+    props.updateSpecies(modalIndex, sciName, comName, rank, selectedImage);
     setModal(!isModalOpen)
     setModalIndex('')
   }
@@ -97,6 +98,7 @@ const SpeciesList = props => {
             bottomDivider
             topDivider
             rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+            onPress={() => navigate('MasterSpeciesInfo', {specimen: item})}
           />
         </View>
       </Swipeout>
@@ -118,6 +120,13 @@ const SpeciesList = props => {
             style={styles.margin}
             leftIcon={<Icon name='angle-right' type='font-awesome'/>}
             leftIconContainerStyle={{paddingRight: 10}}
+            onChangeText={(text) => setComName(text)}
+            value={comName}
+          />
+          <Input 
+            style={styles.margin}
+            leftIcon={<Icon name='angle-right' type='font-awesome'/>}
+            leftIconContainerStyle={{paddingRight: 10}}
             onChangeText={(text) => setSciName(text)}
             value={sciName}
           />
@@ -125,8 +134,8 @@ const SpeciesList = props => {
             style={styles.margin}
             leftIcon={<Icon name='angle-right' type='font-awesome'/>}
             leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={(text) => setComName(text)}
-            value={comName}
+            onChangeText={(text) => setRank(text)}
+            value={rank}
           />
           <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage} />
           <View style={{margin: 10}}>

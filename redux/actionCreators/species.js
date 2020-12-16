@@ -27,7 +27,7 @@ const addSpecies = species => ({
   payload: species
 })
 
-export const postSpeciesFromMaster = (sciName, comName, img) => async dispatch => {
+export const postSpeciesFromMaster = (sciName, comName, rank, img) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -42,7 +42,7 @@ export const postSpeciesFromMaster = (sciName, comName, img) => async dispatch =
   }
   fetch(baseUrl + 'species', {
     method: 'POST',
-    body: JSON.stringify({sciName, comName, img: newPath}),
+    body: JSON.stringify({sciName, comName, rank, img: newPath}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {
@@ -64,7 +64,7 @@ export const postSpeciesFromMaster = (sciName, comName, img) => async dispatch =
   })
 }
 
-export const postSpeciesFromTrip = (sciName, comName, img, tripObj) => async dispatch => {
+export const postSpeciesFromTrip = (sciName, comName, rank, img, tripObj) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -79,7 +79,7 @@ export const postSpeciesFromTrip = (sciName, comName, img, tripObj) => async dis
   }
   fetch(baseUrl + 'species', {
     method: 'POST',
-    body: JSON.stringify({sciName, comName, img: newPath, tripObj}),
+    body: JSON.stringify({sciName, comName, rank, img: newPath, tripObj}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {
@@ -106,7 +106,7 @@ export const addSpecimen = specimen => ({
   payload: specimen
 })
 
-export const updateSpecies = (_id, sciName, comName, img) => async dispatch => {
+export const updateSpecies = (_id, sciName, comName, rank, img) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -121,7 +121,7 @@ export const updateSpecies = (_id, sciName, comName, img) => async dispatch => {
   }
   await fetch(baseUrl + 'species', {
     method: 'PUT',
-    body: JSON.stringify({_id, sciName, comName, img: newPath}),
+    body: JSON.stringify({_id, sciName, comName, rank, img: newPath}),
     headers: {'content-type': 'application/json'}
   })
   .then(response => {

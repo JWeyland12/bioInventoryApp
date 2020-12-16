@@ -15,6 +15,7 @@ import SignIn from './signInComponent';
 import SignUp from './signUpComponent';
 import Profile from './profileComponent';
 import Search from './searchComponent';
+import MasterSpeciesInfo from './masterSpeciesInfoComponent';
 import { createStackNavigator, createBottomTabNavigator, createNavigationContainer } from "react-navigation";
 import { View, Platform, StyleSheet } from "react-native";
 import { connect } from "react-redux";
@@ -71,7 +72,8 @@ const Navigator = createStackNavigator(
 const SpeciesTab = createStackNavigator(
   {
     SpeciesList: {screen: SpeciesList},
-    CreateSpecies: {screen: CreateSpecies}
+    CreateSpecies: {screen: CreateSpecies},
+    MasterSpeciesInfo: {screen: MasterSpeciesInfo}
   },
   {
     navigationOptions: {

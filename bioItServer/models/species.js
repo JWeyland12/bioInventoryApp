@@ -17,6 +17,9 @@ const speciesSchema = new Schema(
       required: true,
       unique: true
     },
+    rank: {
+      type: String
+    },
     img: {
       type: String,
       required: true,

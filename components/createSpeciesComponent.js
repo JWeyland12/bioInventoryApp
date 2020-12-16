@@ -14,6 +14,7 @@ const mapDispatchToProps = {
 const CreateSpecies = props => {
   const [sciName, setSciName] = useState('');
   const [comName, setComName] = useState('');
+  const [rank, setRank] = useState('')
   const idObject = props.navigation.getParam('idObject');
   const [specimen, setSpecimen] = useState(props.navigation.getParam('specimen'));
   const [selectedImage, setSelectedImage] = useState('');
@@ -66,8 +67,8 @@ const CreateSpecies = props => {
   const handleSubmit = () => {
     if (!specimen) {
       // create new species from trip or masterList
-    {!idObject ? props.postSpeciesFromMaster(sciName, comName, selectedImage)
-      : props.postSpeciesFromTrip(sciName, comName, selectedImage, idObject)}
+    {!idObject ? props.postSpeciesFromMaster(sciName, comName, rank, selectedImage)
+      : props.postSpeciesFromTrip(sciName, comName, rank, selectedImage, idObject)}
     {!idObject ? navigate('SpeciesList') : navigate('TripSpecies', {tripId: idObject.tripId})}
     } else {
       // observing a species - submitting a tripObj to the species
@@ -80,7 +81,7 @@ const CreateSpecies = props => {
     const alertMsg = !specimen ? 'Do you want to enter this species into the database?' : 'Do you want to create this species observation?'
     Alert.alert(
       `${alertMsg}`,
-      `${sciName} \n${comName}`,
+      `${comName} \n${sciName}`,
       [
         {
           text: 'Cancel',
@@ -129,6 +130,19 @@ const CreateSpecies = props => {
               onChangeText={sciName => setSciName(sciName)}
               placeholder='Scientific Name'
               value={sciName}
+            />
+            <Input
+              style={styles.margin}
+              leftIcon={
+                <Icon
+                  name='angle-right'
+                  type='font-awesome'
+                />
+              }
+              leftIconContainerStyle={{paddingRight: 10}}
+              onChangeText={text => setRank(text)}
+              placeholder='Rank'
+              value={rank}
             />
             <ImgPicker onImageTaken={imagePickedHandler}/>
           </View>
