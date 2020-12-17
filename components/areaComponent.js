@@ -30,7 +30,7 @@ const Areas = props => {
   const [user, setUser] = value;
   const { navigate } = props.navigation;
   const projectId = props.navigation.getParam("projectId");
-  const areas = props.areas.areas.filter((areas) => areas.project === projectId);
+  const areas = props.areas.areas.filter((areas) => areas.project === projectId).sort((a, b) => (a.area.toUpperCase() > b.area.toUpperCase()) ? 1 : -1);
 
   useLayoutEffect(() => {
     if(modalIndex) {
@@ -146,6 +146,15 @@ const Areas = props => {
   };
   return (
     <View style={{ flex: 1 }}>
+      <ListItem 
+        title='Property Summary'
+        titleStyle={{fontSize: 20}}
+        rightIcon={<Icon 
+          name='angle-right'
+          type='font-awesome'
+        />}
+        onPress={() => navigate('ProjectSummary', {projectId: projectId})}
+      />
       <RenderAreas areas={areas} />
       <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateArea', {projectId: projectId})}>
         <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />

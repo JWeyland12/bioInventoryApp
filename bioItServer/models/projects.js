@@ -24,6 +24,20 @@ const projectSchema = new Schema (
       type: String,
       required: true
     },
+    notes: [
+      {
+        note: {
+          type: String
+        }
+      }
+    ],
+    images: [
+      {
+        uri: {
+          type: String
+        }
+      }
+    ]
   },
   {
     timestamps: true

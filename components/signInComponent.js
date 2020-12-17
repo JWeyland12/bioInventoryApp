@@ -48,7 +48,7 @@ const SignIn = props => {
 }
 
 SignIn.navigationOptions = {
-  title: 'Sign In'
+  title: 'BioIt'
 }
 
 const styles = StyleSheet.create({

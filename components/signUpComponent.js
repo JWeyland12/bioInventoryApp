@@ -145,7 +145,7 @@ const SignUp = props => {
 
 
 SignUp.navigationOptions = {
-  title: "Register"
+  title: "BioIt"
 }
 
 const styles = StyleSheet.create({

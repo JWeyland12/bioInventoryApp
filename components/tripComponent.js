@@ -132,7 +132,7 @@ const Trips = props => {
         titleStyle={{fontSize: 20}}
         onPress={() => navigate('AreaSummary', {areaId: areaId, areaGeoRef: areaGeoRef})}
         bottomDivider
-        containerStyle={{height: 75}}
+        // containerStyle={{height: 75}}
         rightIcon={<Icon name='angle-right' type='font-awesome'/>}
       />
       <RenderTrips trips={trips} />

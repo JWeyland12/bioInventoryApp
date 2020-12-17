@@ -16,6 +16,8 @@ import SignUp from './signUpComponent';
 import Profile from './profileComponent';
 import Search from './searchComponent';
 import MasterSpeciesInfo from './masterSpeciesInfoComponent';
+import ProjectSummary from './projectSummaryComponent';
+import ProjectInfo from './projectInfoComponent';
 import { createStackNavigator, createBottomTabNavigator, createNavigationContainer } from "react-navigation";
 import { View, Platform, StyleSheet } from "react-native";
 import { connect } from "react-redux";
@@ -47,7 +49,9 @@ const Navigator = createStackNavigator(
     CreateSpecies: {screen: CreateSpecies},
     Search: {screen: Search},
     AreaInformation: {screen: AreaInformation},
-    SpeciesInfo: {screen: SpeciesInfo}
+    SpeciesInfo: {screen: SpeciesInfo},
+    ProjectSummary: {screen: ProjectSummary},
+    ProjectInfo: {screen: ProjectInfo}
   },
   {
     initialRouteName: "Projects",
