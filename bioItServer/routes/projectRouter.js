@@ -66,14 +66,33 @@ projectRouter
         return next(err)
       });
   })
-  .put((req, res, next) => {
-    Project.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true })
-    .then(project => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json')
-      res.json(project)
-    })
-    .catch(err => next(err))
+  .put(async (req, res, next) => {
+    console.log('body', req.body.uri)
+    if (!req.body.uri) {
+      Project.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true })
+      .then(project => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json')
+        res.json(project)
+      })
+      .catch(err => next(err))
+    } else if (req.body.uri) {
+      try {
+        const project = await Project.findById(req.body._id)
+        if (!project) {
+          res.status(400);
+          res.send({msg: 'Project not in database'})
+        }
+        project.images.push({uri: req.body.uri})
+        project.save()
+        res.status(200)
+        res.header('Content-Type', 'application/json')
+        res.json(project)
+      } catch(err) {
+        res.status(400)
+        res.send({msg: 'Server Error'})
+      }
+    }
   })
   .delete((req, res, next) => {
     async function asyncCall(req) {

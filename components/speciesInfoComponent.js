@@ -3,10 +3,9 @@ import {ScrollView, View, Text, StyleSheet, ToastAndroid, Modal, FlatList, Touch
 import {Image, Icon, Button, ListItem, Overlay} from 'react-native-elements';
 import {updateSpeciesObservation, updateSpeciesNote, fetchSpecies, createSpeciesNote} from '../redux/actionCreators/species';
 import {connect} from 'react-redux';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
 import Notes from './noteComponent';
 import NoteModal from './noteModalComponent';
+import InfoImages from './infoImagesComponent';
 
 const mapStateToProps = state => {
   return {
@@ -77,49 +76,9 @@ const SpeciesInfo = (props) => {
     props.updateSpeciesObservation(specimen, tripArrId)
   }
 
-  //image upload from camera or gallery
-  const verifyCameraPermissions = async () => {
-    const result = await Permissions.askAsync(Permissions.CAMERA);
-    if (result.status !== 'granted') {
-      Alert.alert('Permissions not granted', [{text: 'Ok'}])
-      return false
-    }
-    return true
-  }
-
-  const verifyGalleryPermissions = async () => {
-    const result = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (result.status !== 'granted') {
-      Alert.alert('Permissions not granted', [{text: 'Ok'}])
-      return false
-    }
-    return true
-  }
-
-  const pickImageHandler = async () => {
-    const hasPermission = await verifyGalleryPermissions()
-    if (!hasPermission) {
-      return
-    }
-    const imageGal = await ImagePicker.launchImageLibraryAsync({
-      aspect: [1,1],
-      quality: 0.75,
-      allowsEditing: true
-    });
-    props.updateSpeciesObservation(specimen, tripArrId, imageGal.uri)
-  }
-
-  const takeImageHandler = async () => {
-    const hasPermission = await verifyCameraPermissions 
-    if (!hasPermission) {
-      return
-    }
-    const imageCam = await ImagePicker.launchCameraAsync({
-      aspect: [1,1],
-      quality: 0.75,
-      allowsEditing: true
-    });
-    props.updateSpeciesObservation(specimen, tripArrId, imageCam.uri)
+  const newImageHandler = (image) => {
+    console.log('image', image)
+    props.updateSpeciesObservation(specimen, tripArrId, image)
   }
 
   //creating list of images to display
@@ -231,7 +190,7 @@ const SpeciesInfo = (props) => {
     <ScrollView style={{flex: 1, backgroundColor: 'white'}} contentContainerStyle={{alignItems: 'center'}}>
       <NoteModal isModalOpen={isModalOpen} note={modalNote} hideModal={hideModal} persistNote={persistNote} editModalNoteHanlder={editModalNoteHanlder} submitNoteHandler={submitNoteHandler}/>
       <View style={{marginTop: 20}}>
-        <Text style={{fontSize: 30, fontFamily: 'monospace'}}>{specimen.comName}</Text>
+        <Text style={{fontSize: 30}}>{specimen.comName}</Text>
       </View>
       <View style={styles.imageContainer}>
         <Image source={{uri: specimen.img}} style={styles.image}/>
@@ -270,11 +229,7 @@ const SpeciesInfo = (props) => {
         (<View style={styles.imagesContainer}>
           <Images />
         </View>)}
-        <View style={{flexDirection: 'row', marginTop: 20}}>
-          <Button title={'Take Picture'} onPress={takeImageHandler} />
-          <View style={{margin: 5}}></View>
-          <Button title={'Add Images'} onPress={pickImageHandler} />
-        </View>
+        <InfoImages newImageHandler={newImageHandler}/>
         <View style={styles.centeredView}>
           <Modal
             transparent={true}

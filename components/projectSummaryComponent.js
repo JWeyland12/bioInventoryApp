@@ -54,7 +54,6 @@ const ProjectSummary = (props) => {
           titleStyle={{fontSize: 20}}
           subtitle={`${item.sciName} - Property total: ${findTotal(item)}`}
           leftAvatar={{ source: {uri: item.img}, size: 'large'}}
-          onPress={() => navigate('ProjectInformation')}
         />
       </View>
     )
@@ -69,7 +68,7 @@ const ProjectSummary = (props) => {
           name='angle-right'
           type='font-awesome'
         />}
-        onPress={() => navigate('ProjectInfo', {projectId: projectId})}
+        onPress={() => navigate('ProjectInfo', {projectId: projectId, length: species.length})}
       />
       <FlatList 
         data={filteredSpecies} 
