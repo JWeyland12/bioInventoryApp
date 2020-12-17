@@ -2,13 +2,14 @@ import React, {useState, useLayoutEffect, useContext} from 'react';
 import {ScrollView, View, Text, StyleSheet, Modal, FlatList, TouchableOpacity} from 'react-native';
 import {Image, Button, ListItem, Overlay} from 'react-native-elements';
 import {connect} from 'react-redux';
-import {addImageToProject} from '../redux/actionCreators/projects';
+import {addImageToProject, addNoteToProject} from '../redux/actionCreators/projects';
 import Notes from './noteComponent';
 import InfoImages from './infoImagesComponent';
 import {UserContext} from './userContextComponent';
 
 const mapDispatchToProps = {
-  addImageToProject
+  addImageToProject,
+  addNoteToProject
 }
 
 const mapStateToProps = state => {
@@ -86,7 +87,8 @@ const ProjectInfo = (props) => {
   }
 
   const submitNoteHandler = () => {
-    // create a dispatch
+    props.addNoteToProject(projectId, note, user.token)
+    setNote('')
   }
 
   const Images = () => {

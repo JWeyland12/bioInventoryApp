@@ -67,8 +67,8 @@ projectRouter
       });
   })
   .put(async (req, res, next) => {
-    console.log('body', req.body.uri)
-    if (!req.body.uri) {
+    console.log('body', req.body)
+    if (!req.body.uri && !req.body.note) {
       Project.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true })
       .then(project => {
         res.statusCode = 200;
@@ -85,6 +85,22 @@ projectRouter
         }
         project.images.push({uri: req.body.uri})
         project.save()
+        res.status(200)
+        res.header('Content-Type', 'application/json')
+        res.json(project)
+      } catch(err) {
+        res.status(400)
+        res.send({msg: 'Server Error'})
+      }
+    } else if (req.body.note) {
+      try {
+        const project = await Project.findById(req.body._id)
+        if (!project) {
+          res.status(400)
+          res.send({msg: 'Project not in database'})
+        }
+        project.notes.push({note: req.body.note, date: req.body.date})
+        await project.save()
         res.status(200)
         res.header('Content-Type', 'application/json')
         res.json(project)

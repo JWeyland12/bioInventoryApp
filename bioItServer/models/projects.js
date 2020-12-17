@@ -28,6 +28,9 @@ const projectSchema = new Schema (
       {
         note: {
           type: String
+        },
+        date: {
+          type: String
         }
       }
     ],
