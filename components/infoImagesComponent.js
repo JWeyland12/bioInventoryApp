@@ -1,10 +1,16 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
-import {Button} from 'react-native-elements';
+import {View, Text, StyleSheet, Modal, TouchableOpacity} from 'react-native';
+import {Image, Button, Icon, Overlay} from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 
 const InfoImages = (props) => {
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  //modalVisible for image modal. modalImage is uri for modal image. modalIndex changes image
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState('');
+  const [modalIndex, setModalIndex] = useState();
+
   //image upload from camera or gallery
   const verifyCameraPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.CAMERA);
@@ -49,14 +55,134 @@ const InfoImages = (props) => {
     });
     props.newImageHandler(imageCam.uri)
   }
-  
+
+  const Images = () => {
+    return props.images.map(image => {
+      return (
+        <View key={image._id}>
+          <Overlay isVisible={isOverlayOpen} onBackdropPress={() => setIsOverlayOpen(!isOverlayOpen)} overlayStyle={styles.overlay}>
+            <Text style={{fontSize: 20}} onPress={() => {}}>Delete</Text>
+          </Overlay>
+          <TouchableOpacity onLongPress={() => setIsOverlayOpen(!isOverlayOpen)} onPress={() => imgModalHandler(image)} >
+            <Image source={{uri: image.uri}} style={styles.images}/>
+          </TouchableOpacity>
+        </View>
+      )
+    })  
+  }
+
+  //handles modal when image clicked
+  const imgModalHandler = (image) => {
+    let index = props.images.findIndex(i => i.uri === image.uri)
+    setModalIndex(index)
+    setModalImage(props.images[index].uri)
+    setIsModalOpen(!isModalOpen)
+  }
+
+  //handles modal next image
+  const nextModalImage = () => {
+    if (modalIndex + 1 <= props.images.length - 1) {
+      setModalIndex(modalIndex + 1)
+      setModalImage(props.images[modalIndex + 1].uri)
+    } else {
+      setModalIndex(0)
+      setModalImage(props.images[0].uri)
+    }
+  }
+
+  //handles modal previous image
+  const previousModalImage = () => {
+    if (modalIndex - 1 < 0) {
+      setModalIndex(props.images.length - 1)
+      setModalImage(props.images[props.images.length - 1].uri)
+    } else {
+      setModalIndex(modalIndex - 1)
+      setModalImage(props.images[modalIndex - 1].uri)
+    }
+  }
+
   return (
-    <View style={{flexDirection: 'row', marginTop: 20}}>
-      <Button title={'Take Picture'} onPress={takeImageHandler} />
-      <View style={{margin: 5}}></View>
-      <Button title={'Add Images'} onPress={pickImageHandler} />
+    <View>
+      {!props.images ? 
+      (<Text style={{fontSize: 20}}>No images</Text>) :
+      (<View style={styles.imagesContainer}>
+        <Images />
+      </View>)}
+      <View style={{flexDirection: 'row', marginTop: 20, justifyContent: 'center'}}>
+        <Button title={'Take Picture'} onPress={takeImageHandler} />
+        <View style={{margin: 5}}></View>
+        <Button title={'Add Images'} onPress={pickImageHandler} />
+      </View>
+      <View style={styles.centeredView}>
+        <Modal
+          transparent={true}
+          visible={isModalOpen}
+          onRequestClose={() => setIsModalOpen(!isModalOpen)}
+        >
+          <View style={styles.centeredView}>
+            <View>
+              <Icon name='times' type='font-awesome' onPress={() => setIsModalOpen(!isModalOpen)}/>
+            </View>
+            <View style={styles.modalView}>
+              <View style={styles.modalIcons}>
+                <Icon name='angle-left' type='font-awesome' color='white' onPress={() => previousModalImage()}/>
+              </View>
+              <Image source={{uri: modalImage}} style={{width: 350, height: 350}} />
+              <View style={styles.modalIcons}>
+                <Icon name='angle-right' type='font-awesome' color='white' onPress={() => nextModalImage()}/>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  images: {
+    width: 100,
+    height: 100,
+    borderWidth: 1,
+    borderColor: 'whitesmoke'
+  },
+  imagesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginTop: 10
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    minWidth: 375,
+    minHeight: 375,
+    backgroundColor: "#000",
+    borderRadius: 10,
+    flexDirection: 'row',
+    padding: 10,
+    // alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modalIcons: {
+    margin: 3,
+    alignSelf: 'center'
+  },
+  overlay: {
+    height: 50
+  },
+})
 
 export default InfoImages;
