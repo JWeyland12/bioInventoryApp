@@ -1,11 +1,10 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {ScrollView, View, Text, StyleSheet, FlatList} from 'react-native';
-import {Image, Button, ListItem, Overlay, Icon} from 'react-native-elements';
+import {ScrollView, View, Text, StyleSheet} from 'react-native';
+import {Image} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {addImageToProject, addNoteToProject, updateProjectNote} from '../redux/actionCreators/projects';
 import Notes from './noteComponent';
 import InfoImages from './infoImagesComponent';
-import NoteModal from './noteModalComponent';
 import {UserContext} from './userContextComponent';
 
 const mapDispatchToProps = {
@@ -108,7 +107,6 @@ const ProjectInfo = (props) => {
   const newImageHandler = (image) => {
     props.addImageToProject(projectId, image, user.token)
   }
-
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}} contentContainerStyle={{alignItems: 'center'}}>

@@ -1,12 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {ScrollView, View, Text, StyleSheet, Modal, FlatList, TouchableOpacity} from 'react-native';
-import {Image, Button, Icon, ListItem, Overlay} from 'react-native-elements';
+import {ScrollView, View, Text, StyleSheet} from 'react-native';
+import {Image} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {UserContext} from './userContextComponent';
 import {updateAreaNote, addNoteToArea, addImageToArea} from '../redux/actionCreators/areas';
 import Notes from './noteComponent';
 import InfoImages from './infoImagesComponent';
-import NoteModal from './noteModalComponent';
 
 const mapStateToProps = state => {
   return {
@@ -79,7 +78,6 @@ const AreaInformation = (props) => {
   const newImageHandler = (image) => {
     props.addImageToArea(areaId, image, user.token)
   }
-
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}} contentContainerStyle={{alignItems: 'center'}}>
@@ -154,17 +152,7 @@ const styles = new StyleSheet.create({
   information: {
     padding: 10,
     alignItems: 'center'
-  },
-  noteButton: {
-    alignItems: 'center',
-    marginTop: 20
-  },
-  listItemContainer: {
-    marginHorizontal: 30,
-  },
-  overlay: {
-    height: 50
-  },
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AreaInformation);

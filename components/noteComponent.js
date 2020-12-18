@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {ScrollView, View, Text, StyleSheet, TextInput, Modal, FlatList, ToastAndroid} from 'react-native';
-import {Button, ListItem, Overlay, Icon, Image} from 'react-native-elements';
+import {View, Text, StyleSheet, TextInput, Modal, FlatList, ToastAndroid} from 'react-native';
+import {Button, ListItem, Overlay, Icon} from 'react-native-elements';
 
 const Notes = (props) => {
   const [backgroundColor, setBackgroundColor] = useState('#f8f8ff');

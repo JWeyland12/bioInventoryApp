@@ -6,7 +6,6 @@ import {postTrip, updateTrip, deleteTrip} from '../redux/actionCreators/trips';
 import Swipeout from "react-native-swipeout";
 import {UserContext} from './userContextComponent';
 
-
 const mapStateToProps = (state) => {
   return { trips: state.trips };
 };
@@ -122,7 +121,6 @@ const Trips = props => {
       return <FlatList data={trips} renderItem={tripList} keyExtractor={(item) => item._id.toString()} />;
     }
   };
-
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
