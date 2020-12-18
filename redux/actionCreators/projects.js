@@ -156,6 +156,25 @@ export const addNoteToProject = (projectId, note, token) => async dispatch => {
   }
 }
 
+export const updateProjectNote = (projectId, noteId, note, token) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'projects', {
+      method: 'PUT',
+      body: JSON.stringify({_id: projectId, noteId, note}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      alert(err)
+    }
+    response.json()
+    dispatch(fetchProjects(token))
+  } catch(err) {
+    alert('Request could not be completed')
+    throw err
+  }
+}
+
 export const deleteProject = (_id, token) => async dispatch => {
   await fetch(baseUrl + 'projects', {
     method: 'DELETE',

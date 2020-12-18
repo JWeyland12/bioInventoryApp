@@ -110,6 +110,71 @@ export const updateArea = (areaId, area, geoRef, altitude, accuracy, karst, img,
   dispatch(fetchAreas(token))
 }
 
+export const addImageToArea = (areaId, uri, token) => async dispatch => {
+  const fileName = uri.split('/').pop();
+  const newPath = FileSystem.documentDirectory + fileName;
+  console.log('newPath', newPath)
+  try {
+    await FileSystem.moveAsync({
+      from: uri,
+      to: newPath
+    });
+    const response = await fetch(baseUrl + 'areas', {
+      method: 'PUT',
+      body: JSON.stringify({_id: areaId, uri: newPath}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = new Error(`${response.msg}`)
+      throw err
+    }
+    response.json()
+    dispatch(fetchAreas(token))
+  } catch(err) {
+    alert('Request could not be completed')
+    throw err
+  }
+}
+
+export const addNoteToArea = (areaId, note, token) => async dispatch => {
+  try {
+    const date = new Date().toDateString()
+    const response = await fetch(baseUrl + 'areas', {
+      method: 'PUT',
+      body: JSON.stringify({_id: areaId, note, date}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      alert(err)
+    }
+    response.json()
+    dispatch(fetchAreas(token))
+  } catch(err) {
+    alert('Request could not be completed')
+    throw err
+  }
+}
+
+export const updateAreaNote = (areaId, noteId, note, token) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'areas', {
+      method: 'PUT',
+      body: JSON.stringify({_id: areaId, noteId, note}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      alert(err)
+    }
+    response.json()
+    dispatch(fetchAreas(token))
+  } catch(err) {
+    alert('Request could not be completed')
+    throw err
+  }
+}
+
 export const deleteArea = (_id, token) => async dispatch => {
   await fetch(baseUrl + 'areas', {
     method: 'DELETE',

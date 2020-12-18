@@ -67,7 +67,6 @@ projectRouter
       });
   })
   .put(async (req, res, next) => {
-    console.log('body', req.body)
     if (req.body.state) {
       Project.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true })
       .then(project => {
@@ -93,20 +92,42 @@ projectRouter
         res.send({msg: 'Server Error'})
       }
     } else if (req.body.note) {
-      try {
-        const project = await Project.findById(req.body._id)
-        if (!project) {
+      if (!req.body.noteId) {
+        try {
+          const project = await Project.findById(req.body._id)
+          if (!project) {
+            res.status(400)
+            res.send({msg: 'Project not in database'})
+          }
+          project.notes.push({note: req.body.note, date: req.body.date})
+          await project.save()
+          res.status(200)
+          res.header('Content-Type', 'application/json')
+          res.json(project)
+        } catch(err) {
           res.status(400)
-          res.send({msg: 'Project not in database'})
+          res.send({msg: 'Server Error'})
         }
-        project.notes.push({note: req.body.note, date: req.body.date})
-        await project.save()
-        res.status(200)
-        res.header('Content-Type', 'application/json')
-        res.json(project)
-      } catch(err) {
-        res.status(400)
-        res.send({msg: 'Server Error'})
+      } else {
+        try {
+          const project = await Project.findById(req.body._id)
+          if (!project) {
+            res.status(400)
+            res.send({msg: 'Project not in database'})
+          }
+          for (let i = 0; i <= project.notes.length - 1; i++) {
+            if (project.notes[i]._id.toString() === req.body.noteId.toString()) {
+              project.notes[i].note = req.body.note
+              project.save()
+            }
+          }
+          res.status(200)
+          res.header('Content-Type', 'application/json')
+          res.json(project)
+        } catch(err) {
+          res.status(401)
+          res.send({msg: 'Server Error'})
+        }
       }
     }
   })

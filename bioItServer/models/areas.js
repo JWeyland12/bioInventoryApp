@@ -23,7 +23,18 @@ const areaSchema = new Schema (
     img: {
       type: String,
       required: true
-    }
+    },
+    images: [
+      {
+        uri: String
+      }
+    ],
+    notes: [
+      {
+        note: String,
+        date: String
+      }
+    ]
   },
   {
     timestamps: true

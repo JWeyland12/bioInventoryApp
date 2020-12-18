@@ -1,91 +1,68 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet, Text } from "react-native";
 import { ListItem, Card, Icon } from "react-native-elements";
-import { connect } from "react-redux";
 
-const mapStateToProps = (state) => {
-  return {
-    trips: state.trips,
-    species: state.species,
-  };
-};
+const AreaSummary = props => {
+  const [areaId, setAreaId] = useState(props.navigation.getParam("areaId"))
+  const [species, setSpecies] = useState();
+  const [isSpecies, setIsSpecies] = useState(false)
 
-class AreaSummary extends Component {
-  static navigationOptions = {
-    title: "Area Summary",
-  };
+  useEffect(() => {
+    if (!species) {
+      setSpecies(props.navigation.getParam('species'))
+      setAreaId(props.navigation.getParam('areaId'))
+    }
+    if (species) {
+      setIsSpecies(true)
+    }
+  })
 
-  render() {
-    const areaId = this.props.navigation.getParam("areaId");
-    const species = this.props.species.species;
-    const {navigate} = this.props.navigation
-    let speciesArr = [];
-
-    const speciesFil = species.forEach((s) => {
-      s.tripArr.forEach((t) => {
-        if (t.areaId === areaId) {
-          if (!speciesArr.includes(s)) {
-            speciesArr.push(s);
-          }
+  const speciesList = ({ item }) => {
+    // add species photo
+    const totalCount = item => {
+      const totalsArr = []
+      for (let i = 0; i <= item.tripArr.length - 1; i++) {
+        if (item.tripArr[i].areaId === areaId) {
+          totalsArr.push(item.tripArr[i].total)
         }
-      });
-    });
-
-    speciesArr = speciesArr.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1)
-
-
-    const speciesList = ({ item }) => {
-      // add species photo
-      const totalCount = item => {
-        const totalsArr = []
-        for (let i = 0; i <= item.tripArr.length - 1; i++) {
-          if (item.tripArr[i].areaId === areaId) {
-            totalsArr.push(item.tripArr[i].total)
-          }
-        }
-        const total = totalsArr.reduce((a, b) => {
-          return a + b;
-        }, 0)
-        return total
       }
-      return <ListItem 
-              title={item.comName} 
-              subtitle={`${item.sciName} - Area Total: ${totalCount(item)}`}
-              topDivider
-              bottomDivider
-              leftAvatar={{source: {uri: item.img}, size: 'large'}}
-            />;
-    };
+      const total = totalsArr.reduce((a, b) => {
+        return a + b;
+      }, 0)
+      return total
+    }
+    return <ListItem 
+            title={item.comName} 
+            subtitle={`${item.sciName} - Area total: ${totalCount(item)}`}
+            topDivider
+            bottomDivider
+            leftAvatar={{source: {uri: item.img}, size: 'large'}}
+          />;
+  };
 
-    const RenderSpecies = ({ speciesArr }) => {
-      if (speciesArr.length === 0) {
-        return (
-          <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
-            <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
-              <Text style={styles.textInCard}>You haven't found any species in this area yet!</Text>
-            </Card>
-          </View>
-        );
-      } else {
-        return <FlatList data={speciesArr} renderItem={speciesList} keyExtractor={(item) => item._id.toString()} />;
-      }
-    };
-
-    // const areaGeoRef = this.props.navigation.getParam('areaGeoRef')
+  const RenderSpecies = () => {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <ListItem 
-          title={'Area Information'} 
-          titleStyle={{fontSize: 20}} 
-          rightIcon={<Icon name='angle-right' type='font-awesome'/>} 
-          containerStyle={{height: 75}}
-          bottomDivider
-          onPress={() => navigate('AreaInformation', {areaId: areaId})}
-        />
-        <RenderSpecies speciesArr={speciesArr} />
-      </View>
-    );
-  }
+      <View>
+      {!isSpecies ? 
+      (<View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
+        <Card containerStyle={styles.emptyScreenCard} dividerStyle={{ display: "none" }}>
+          <Text style={styles.textInCard}>You haven't found any species in this area yet!</Text>
+        </Card>
+      </View>) :
+      (<FlatList data={species} renderItem={speciesList} keyExtractor={(item) => item._id.toString()} />)}
+    </View>
+    )
+  };
+
+  return (
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <RenderSpecies />
+    </View>
+  );
+}
+
+AreaSummary.navigationOptions = {
+  title: 'Species List'
 }
 
 const styles = StyleSheet.create({
@@ -107,7 +84,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps)(AreaSummary);
+export default AreaSummary;
 
 // const speciesFil = species.forEach((s) => {
 //   trips.forEach((trip) => {

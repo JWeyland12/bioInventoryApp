@@ -38,14 +38,71 @@ areaRouter
   }
 })
 
-.put((req, res, next) => {
-  Area.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true })
-  .then(area => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json')
-    res.json(area)
-  })
-  .catch(err => next(err))
+.put(async (req, res, next) => {
+  if (req.body.area) {
+    Area.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true })
+    .then(area => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json')
+      res.json(area)
+    })
+    .catch(err => next(err))
+  } else if (req.body.uri) {
+    try {
+      const area = await Area.findById(req.body._id)
+      if (!area) {
+        res.status(400);
+        res.send({msg: 'Area not in database'})
+      }
+      area.images.push({uri: req.body.uri})
+      area.save()
+      res.status(200)
+      res.header('Content-Type', 'application/json')
+      res.json(area)
+    } catch(err) {
+      res.status(400)
+      res.send({msg: 'Server Error'})
+    }
+  } else if (req.body.note) {
+    console.log('here I am')
+    if (!req.body.noteId) {
+      try {
+        const area = await Area.findById(req.body._id)
+        if (!area) {
+          res.status(400)
+          res.send({msg: 'Area not in database'})
+        }
+        area.notes.push({note: req.body.note, date: req.body.date})
+        await area.save()
+        res.status(200)
+        res.header('Content-Type', 'application/json')
+        res.json(area)
+      } catch(err) {
+        res.status(400)
+        res.send({msg: 'Server Error'})
+      }
+    } else {
+      try {
+        const area = await Area.findById(req.body._id)
+        if (!area) {
+          res.status(400)
+          res.send({msg: 'Area not in database'})
+        }
+        for (let i = 0; i <= area.notes.length - 1; i++) {
+          if (area.notes[i]._id.toString() === req.body.noteId.toString()) {
+            area.notes[i].note = req.body.note
+            area.save()
+          }
+        }
+        res.status(200)
+        res.header('Content-Type', 'application/json')
+        res.json(area)
+      } catch(err) {
+        res.status(401)
+        res.send({msg: 'Server Error'})
+      }
+    }
+  }
 })
 
 .delete((req, res, next) => {

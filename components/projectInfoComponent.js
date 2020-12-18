@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import {ScrollView, View, Text, StyleSheet, Modal, FlatList, TouchableOpacity} from 'react-native';
 import {Image, Button, ListItem, Overlay, Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
-import {addImageToProject, addNoteToProject} from '../redux/actionCreators/projects';
+import {addImageToProject, addNoteToProject, updateProjectNote} from '../redux/actionCreators/projects';
 import Notes from './noteComponent';
 import InfoImages from './infoImagesComponent';
 import NoteModal from './noteModalComponent';
@@ -10,7 +10,8 @@ import {UserContext} from './userContextComponent';
 
 const mapDispatchToProps = {
   addImageToProject,
-  addNoteToProject
+  addNoteToProject,
+  updateProjectNote
 }
 
 const mapStateToProps = state => {
@@ -144,9 +145,8 @@ const ProjectInfo = (props) => {
       setNote('')
     }
     if (modalNote) {
-      console.log(projectId, noteId, modalNote, user.token)
+      props.updateProjectNote(projectId, noteId, modalNote, user.token)
     }
-    
   }
 
   const Images = () => {
@@ -312,10 +312,6 @@ const styles = StyleSheet.create({
   information: {
     padding: 10,
     alignItems: 'center'
-  },
-  countButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   images: {
     width: 100,
