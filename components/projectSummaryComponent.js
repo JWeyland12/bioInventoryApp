@@ -1,38 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {ScrollView, View, Text, FlatList, StyleSheet} from 'react-native';
 import { Image, Icon, ListItem } from 'react-native-elements';
-import {connect} from 'react-redux';
-
-const mapStateToProps = state => {
-  return {
-    species: state.species
-  }
-}
 
 const ProjectSummary = (props) => {
+  const species = props.navigation.getParam('species');
   const projectId = props.navigation.getParam('projectId')
-  const {navigate} = props.navigation;
-  const species = [];
-
-
-  console.log('species', species);
-  console.log('filSpecies', filteredSpecies);
-
-  (function () {
-    props.species.species.forEach(s => {
-      s.tripArr.forEach(t => {
-        if (t.projectId.toString() === projectId.toString()) {
-          if (species.indexOf(s) === -1) {
-            species.push(s)
-          }
-        }
-      })
-    })
-  })()
-
-  const filteredSpecies = species.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1);
-
-
 
   const renderSpecies = ({item}) => {
     const findTotal = item => {
@@ -54,6 +26,8 @@ const ProjectSummary = (props) => {
           titleStyle={{fontSize: 20}}
           subtitle={`${item.sciName} - Property total: ${findTotal(item)}`}
           leftAvatar={{ source: {uri: item.img}, size: 'large'}}
+          bottomDivider
+          topDivider
         />
       </View>
     )
@@ -61,17 +35,8 @@ const ProjectSummary = (props) => {
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
-      <ListItem 
-        title='Property Information'
-        titleStyle={{fontSize: 20}}
-        rightIcon={<Icon 
-          name='angle-right'
-          type='font-awesome'
-        />}
-        onPress={() => navigate('ProjectInfo', {projectId: projectId, length: species.length})}
-      />
       <FlatList 
-        data={filteredSpecies} 
+        data={species} 
         renderItem={renderSpecies} 
         keyExtractor={item => item._id.toString()}
       />
@@ -81,7 +46,7 @@ const ProjectSummary = (props) => {
 };
 
 ProjectSummary.navigationOptions = {
-  title: 'Property Summary'
+  title: 'Species Summary'
 }
 
-export default connect(mapStateToProps)(ProjectSummary);
+export default ProjectSummary;

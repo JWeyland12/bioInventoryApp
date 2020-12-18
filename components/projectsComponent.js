@@ -92,7 +92,7 @@ const Projects = props => {
       <Swipeout left={leftButton} right={rightButton} autoClose={true}>
         <View>
           <Tile 
-            onPress={() => navigate("Areas", { projectId: item._id })} 
+            onPress={() => navigate("Areas", { projectId: item._id, name: item.name })} 
             featured title={item.name} 
             caption={`${item.county} county, ${item.state}`} 
             imageSrc={{uri: item.img}}

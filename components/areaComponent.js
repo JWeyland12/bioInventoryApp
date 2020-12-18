@@ -147,13 +147,13 @@ const Areas = props => {
   return (
     <View style={{ flex: 1 }}>
       <ListItem 
-        title='Property Summary'
+        title='Property Information'
         titleStyle={{fontSize: 20}}
         rightIcon={<Icon 
           name='angle-right'
           type='font-awesome'
         />}
-        onPress={() => navigate('ProjectSummary', {projectId: projectId})}
+        onPress={() => navigate('ProjectInfo', {projectId: projectId})}
       />
       <RenderAreas areas={areas} />
       <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateArea', {projectId: projectId})}>
@@ -212,8 +212,9 @@ const Areas = props => {
   );
 }
 
+
 Areas.navigationOptions = {
-  title: "Areas",
+  title: `Areas`
 };
 
 const styles = StyleSheet.create({

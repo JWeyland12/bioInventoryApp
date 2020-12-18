@@ -68,7 +68,7 @@ projectRouter
   })
   .put(async (req, res, next) => {
     console.log('body', req.body)
-    if (!req.body.uri && !req.body.note) {
+    if (req.body.state) {
       Project.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true })
       .then(project => {
         res.statusCode = 200;
