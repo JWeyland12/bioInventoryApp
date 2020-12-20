@@ -6,6 +6,8 @@ import { updateProject, deleteProject } from '../redux/actionCreators/projects';
 import Swipeout from "react-native-swipeout";
 import ImgPicker from './imagePickerComponent';
 import {UserContext} from './userContextComponent';
+import RoundButton from './roundedButtonComponent';
+import FormInput from './formInputComponent';
 
 const mapStateToProps = (state) => {
   return { projects: state.projects };
@@ -140,22 +142,28 @@ const Projects = props => {
         <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
       </TouchableOpacity>
       <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
-        <View style={{ margin: 10 }}>
-          <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(project) => setProjectName(project)} value={projectName} />
-          <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(state) => setProjState(state)} value={projectState} />
-          <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(county) => setProjectCounty(county)} value={projectCounty} />
+        <View style={{ margin: 10}}>
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={(input) => setProjectName(input)}
+            value={projectName}
+          />
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={(input) => setProjectState(input)}
+            value={projectState}
+          />
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={(input) => setProjectCounty(input)}
+            value={projectCounty}
+          />
           <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage}/>
-          <View style={{ margin: 10 }}>
-            <Button
-              style={styles.button}
-              title="Update Project"
-              onPress={() => {
-                handleSubmit();
-              }}
-            />
+          <View style={{ marginTop: 20, alignItems: 'center' }}>
+            <RoundButton title='Update Project' onPress={() => handleSubmit()} />
           </View>
-          <View style={{ margin: 10 }}>
-            <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => showModal()} />
+          <View style={{ margin: 10, alignItems: 'center' }}>
+            <RoundButton title='Cancel' style={{backgroundColor: 'firebrick'}} onPress={() => showModal()} />
           </View>
         </View>
       </Modal>

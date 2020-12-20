@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {View, ScrollView, Text, TextInput, StyleSheet, Alert} from 'react-native';
-import {Button, Input} from 'react-native-elements';
+import {Button, Input, Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {register} from '../redux/actionCreators/auth';
 import ImgPicker from './imagePickerComponent';
+import RoundButton from './roundedButtonComponent';
 
 const mapDispatchToProps = {
   register
@@ -29,6 +30,8 @@ const SignUp = props => {
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
+  const [viewPassword, setViewPassword] = useState(true);
+  const [viewConfirmPassword, setViewConfirmPassword] = useState(true)
 
 
   const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
@@ -79,8 +82,14 @@ const SignUp = props => {
           {!checkAvatar ? <Text style={styles.validation}>Avatar Required</Text> : null}
         </View>
         <View style={styles.inputView}>
+          <Icon 
+            color="#333"
+            name='id-card'
+            type='font-awesome'
+          />
           <TextInput 
             style={styles.margin}
+            textAlignVertical={'center'}
             onChangeText={text => setName(text)}
             placeholder='Full Name'
             value={name}
@@ -92,6 +101,11 @@ const SignUp = props => {
           {!checkName ? <Text style={styles.validation}>Name Required</Text> : null}
         </View>
         <View style={styles.inputView}>
+          <Icon 
+            color="#333"
+            name='user'
+            type='font-awesome'
+          />
           <TextInput 
             style={styles.margin}
             onChangeText={text => setUserName(text)}
@@ -105,6 +119,11 @@ const SignUp = props => {
           {!checkUserName ? <Text style={styles.validation}>User Name Required</Text> : null}
         </View>
         <View style={styles.inputView}>
+          <Icon 
+            color="#333"
+            name='envelope'
+            type='font-awesome'
+          />
           <TextInput 
             style={styles.margin}
             onChangeText={text => setEmail(text)}
@@ -117,33 +136,61 @@ const SignUp = props => {
         <View style={styles.validationContainer}>
           {!checkEmail ? <Text style={styles.validation}>Email Required</Text> : null}
         </View>
-        <TextInput
-          style={styles.margin}
-          onChangeText={text => setPassword(text)}
-          placeholder='Password'
-          value={password}
-          onFocus={() => setPasswordTouched(true)}
-          secureTextEntry={true}
-          onBlur={() => passwordValidation(password, setCheckPassword)}
+        <View style={styles.inputView}>
+          <Icon 
+            color="#333"
+            name='key'
+            type='font-awesome'
           />
+          <TextInput
+            style={styles.margin}
+            onChangeText={text => setPassword(text)}
+            placeholder='Password'
+            value={password}
+            onFocus={() => setPasswordTouched(true)}
+            secureTextEntry={viewPassword}
+            onBlur={() => passwordValidation(password, setCheckPassword)}
+          />
+          <View style={styles.viewPassword}>
+            <Icon 
+              name='eye'
+              type='font-awesome'
+              onPress={() => setViewPassword(!viewPassword)}
+            />
+          </View>
+        </View>
           <View style={styles.validationContainer}>
             {!checkPassword ? <Text style={styles.validation}>Password be 6-20 characters, contain one upper case letter, and one number</Text> : null}
           </View>
-        <TextInput
-          style={styles.margin}
-          onChangeText={text => setConfirmPassword(text)}
-          placeholder='Confirm Password'
-          value={confirmPassword}
-          onFocus={() => setConfirmPasswordTouched(true)}
-          secureTextEntry={true}
-          onBlur={() => (confirmPassword === password) ? setCheckConfirmPassword(true) : setCheckConfirmPassword(false)}
+        <View style={styles.inputView}>
+          <Icon 
+            color="#333"
+            name='key'
+            type='font-awesome'
           />
+          <TextInput
+            style={styles.margin}
+            onChangeText={text => setConfirmPassword(text)}
+            placeholder='Confirm Password'
+            value={confirmPassword}
+            onFocus={() => setConfirmPasswordTouched(true)}
+            secureTextEntry={viewConfirmPassword}
+            onBlur={() => (confirmPassword === password) ? setCheckConfirmPassword(true) : setCheckConfirmPassword(false)}
+          />
+          <View style={styles.viewPassword}>
+            <Icon 
+              name='eye'
+              type='font-awesome'
+              onPress={() => setViewConfirmPassword(!viewConfirmPassword)}
+            />
+          </View>
+        </View>
           <View style={styles.validationContainer}>
             {!checkConfirmPassword ? <Text style={styles.validation}>Passwords do not match</Text> : null}
           </View>
       </View>
       <View style={styles.button}>
-        <Button title={'Register'} onPress={() => registerHandler()}/>
+        <RoundButton title='Register' textStyle={{color: 'white'}} onPress={() => registerHandler()}/>
       </View>
     </ScrollView>
   );
@@ -158,16 +205,19 @@ const styles = StyleSheet.create({
   signInContatiner: {
     justifyContent: 'center',
     flexDirection: 'row',
-    marginTop: 30
+    marginTop: 30,
+    fontSize: 20
   },
   margin: {
-    marginTop: 20,
-    marginHorizontal: 20,
-    
+    marginVertical: 7,
+    // marginHorizontal: 10,
+    paddingHorizontal: 12,
+    fontSize: 20,
+    width: '100%'
   },
   button: {
     marginHorizontal: 100,
-    marginTop: 30
+    margin: 30
   },
   registerButton: {
     marginHorizontal: 100,
@@ -191,7 +241,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignSelf: 'center',
-    marginVertical: 5
+    marginVertical: 5,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+  },
+  viewPassword: {
+    marginLeft: 'auto',
   }
 });
 

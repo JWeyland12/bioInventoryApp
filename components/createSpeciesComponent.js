@@ -4,6 +4,8 @@ import {Input, Icon, Button, Image} from 'react-native-elements';
 import { postSpeciesFromTrip, updateSpeciesObservation, postSpeciesFromMaster } from "../redux/actionCreators/species";
 import {connect} from 'react-redux';
 import ImgPicker from './imagePickerComponent';
+import RoundButton from './roundedButtonComponent';
+import FormInput from './formInputComponent';
 
 const mapDispatchToProps = {
   postSpeciesFromTrip,
@@ -105,42 +107,21 @@ const CreateSpecies = props => {
       {!specimen ? (
         <View>
           <View style={{margin: 10}}>
-            <Input
-              style={styles.margin}
-              leftIcon={
-                <Icon
-                  name='angle-right'
-                  type='font-awesome'
-                />
-              }
-              leftIconContainerStyle={{paddingRight: 10}}
-              onChangeText={comName => setComName(comName)}
+            <FormInput 
+              iconName='angle-right' 
+              onChangeText={input => setComName(input)}
               placeholder='Common Name'
               value={comName}
             />
-            <Input
-              style={styles.margin}
-              leftIcon={
-                <Icon
-                  name='angle-right'
-                  type='font-awesome'
-                />
-              }
-              leftIconContainerStyle={{paddingRight: 10}}
-              onChangeText={sciName => setSciName(sciName)}
+            <FormInput 
+              iconName='angle-right' 
+              onChangeText={input => setSciName(input)}
               placeholder='Scientific Name'
               value={sciName}
             />
-            <Input
-              style={styles.margin}
-              leftIcon={
-                <Icon
-                  name='angle-right'
-                  type='font-awesome'
-                />
-              }
-              leftIconContainerStyle={{paddingRight: 10}}
-              onChangeText={text => setRank(text)}
+            <FormInput 
+              iconName='angle-right' 
+              onChangeText={input => setRank(input)}
               placeholder='Rank'
               value={rank}
             />
@@ -157,8 +138,8 @@ const CreateSpecies = props => {
           ) : (
             null
           )}
-          <View style={{margin: 10}}>
-            <Button style={styles.button} title='Create Species' onPress={() => confirmSpecies()}/>
+          <View style={{margin: 30, alignItems: 'center'}}>
+            <RoundButton title='Create Species' textStyle={{color: 'white'}} onPress={() => confirmSpecies()} />
           </View>
         </View>
       ) : (

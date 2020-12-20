@@ -5,6 +5,8 @@ import { postProject } from '../redux/actionCreators/projects';
 import {connect} from 'react-redux';
 import ImgPicker from './imagePickerComponent';
 import { UserContext } from './userContextComponent';
+import RoundButton from './roundedButtonComponent';
+import FormInput from './formInputComponent';
 
 const mapDispatchToProps = {
   postProject,
@@ -59,52 +61,31 @@ const CreateProject = props => {
     return (
       <View>
         <View style={{margin: 10}}>
-        <Input
-            style={styles.margin}
-          leftIcon={
-            <Icon 
-              name='angle-right'
-              type='font-awesome'
-            />
-          }
-        leftIconContainerStyle={{paddingRight: 10}}
-        onChangeText={project => setProjectName(project)}
-        placeholder='Project Name'
-        value={projectName}
-      />
-      <Input
-          style={styles.margin}
-          leftIcon={
-            <Icon 
-              name='angle-right'
-              type='font-awesome'
-            />
-          }
-        leftIconContainerStyle={{paddingRight: 10}}
-        onChangeText={state => setProjectState(state)}
-        placeholder='State'
-        value={projectState}
-      />
-      <Input
-          style={styles.margin}
-          leftIcon={
-            <Icon 
-              name='angle-right'
-              type='font-awesome'
-            />
-          }
-        leftIconContainerStyle={{paddingRight: 10}}
-        onChangeText={county => setProjectCounty(county)}
-        placeholder='County'
-        value={projectCounty}
-      />
-      <View>
-          <ImgPicker onImageTaken={imagePickedHandler}/>
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setProjectName(input)}
+            value={projectName}
+            placeholder='Property Name'
+          />
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setProjectState(input)}
+            value={projectState}
+            placeholder='State'
+          />
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setProjectCounty(input)}
+            value={projectCounty}
+            placeholder='County'
+          />
+          <View>
+            <ImgPicker onImageTaken={imagePickedHandler}/>
+          </View>
+          <View style={{alignItems: 'center', margin: 30}}>
+            <RoundButton title='Create Project' onPress={() => confirmProject()} />
+          </View>
         </View>
-      <View style={{margin: 10}}>
-        <Button style={styles.button} title='Create Project' onPress={() => {confirmProject()}}/>
-      </View>
-      </View>
       </View>
     );
 }
@@ -113,8 +94,6 @@ CreateProject.navigationOptions = {
 }
 
 export default connect(null, mapDispatchToProps)(CreateProject);
-
-
 
 const styles = StyleSheet.create({
   margins: {

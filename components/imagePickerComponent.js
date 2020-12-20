@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Button, Text, StyleSheet, Image, Alert} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import RoundButton from './roundedButtonComponent';
 
 const ImgPicker = props => {
   const [pickedImage, setPickedImage] = useState();
@@ -75,9 +76,9 @@ const ImgPicker = props => {
             </View>
           )}
         <View style={styles.imgButtons}>
-          <Button style={styles.button} title='Take Image' onPress={takeImageHandler} />
+          <RoundButton title='Take Image' style={{paddingHorizontal: 20}} textStyle={{fontSize: 15}} onPress={takeImageHandler} />
           <View style={{margin: 5}}></View>
-          <Button style={styles.button} title='Pick Image' onPress={pickImageHandler}/>
+          <RoundButton title='Pick Image' style={{paddingHorizontal: 20}} textStyle={{fontSize: 15}} onPress={pickImageHandler}/>
         </View>
       </View>
     );
@@ -97,11 +98,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: '#000',
-    borderWidth: 1
+    borderWidth: 1,
+    borderRadius: 10,
+    overflow: 'hidden'
   },
   image: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    borderRadius: 10
   },
   imgButtons: {
     flexDirection: 'row',

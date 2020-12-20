@@ -4,7 +4,9 @@ import { ListItem, Icon, Input, Button } from "react-native-elements";
 import {connect} from 'react-redux';
 import Swipeout from 'react-native-swipeout';
 import ImgPicker from './imagePickerComponent';
-import {updateSpecies, deleteSpeciesFromMaster} from '../redux/actionCreators/species'
+import {updateSpecies, deleteSpeciesFromMaster} from '../redux/actionCreators/species';
+import RoundButton from './roundedButtonComponent';
+import FormInput from './formInputComponent';
 
 const mapStateToProps = state => {
   return {species: state.species}
@@ -116,7 +118,22 @@ const SpeciesList = props => {
       </TouchableOpacity>
       <Modal animationType='fade' transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
         <View style={{margin: 10}}>
-          <Input 
+          <FormInput 
+            iconName='angle-right'
+            value={comName}
+            onChangeText={text => setComName(text)}
+          />
+          <FormInput 
+            iconName='angle-right'
+            value={sciName}
+            onChangeText={text => setSciName(text)}
+          />
+          <FormInput 
+            iconName='angle-right'
+            value={rank}
+            onChangeText={text => setRank(text)}
+          />
+          {/* <Input 
             style={styles.margin}
             leftIcon={<Icon name='angle-right' type='font-awesome'/>}
             leftIconContainerStyle={{paddingRight: 10}}
@@ -136,17 +153,13 @@ const SpeciesList = props => {
             leftIconContainerStyle={{paddingRight: 10}}
             onChangeText={(text) => setRank(text)}
             value={rank}
-          />
+          /> */}
           <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage} />
-          <View style={{margin: 10}}>
-            <Button
-              style={styles.button}
-              title='Update Species'
-              onPress={() => handleSubmit()}
-            />
+          <View style={{marginTop: 20, alignItems: 'center'}}>
+            <RoundButton title='Update Species' onPress={() => handleSubmit()} />
           </View>
-          <View style={{ margin: 10 }}>
-            <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => showModal()} />
+          <View style={{ margin: 10, alignItems: 'center' }}>
+            <RoundButton title='Cancel' style={{backgroundColor: 'firebrick'}} onPress={() => showModal()} />
           </View>
         </View>
       </Modal>

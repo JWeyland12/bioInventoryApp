@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, KeyboardAvoidingView} from 'react-native';
-import {Input, Button} from 'react-native-elements';
+import {View, Text, ScrollView, StyleSheet, KeyboardAvoidingView, TextInput} from 'react-native';
+import {Input, Button, Icon} from 'react-native-elements';
 import {signIn} from '../redux/actionCreators/auth'
 import {connect} from 'react-redux';
+import RoundButton from './roundedButtonComponent';
+
 
 const mapDispatchToProps = {
   signIn
@@ -12,36 +14,58 @@ const mapDispatchToProps = {
 const SignIn = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const {navigate} = props.navigation
+  const {navigate} = props.navigation;
+  const [viewPassword, setViewPassword] = useState(true)
 
   console.log(email)
   console.log(password)
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.signInContatiner}>
         <Text style={{fontSize: 30, fontWeight: 'bold', textDecorationLine: 'underline'}}>Sign In</Text>
       </View>
       <View style={styles.margin}>
-        <Input 
-          style={styles.margin}
-          onChangeText={text => setEmail(text)}
-          placeholder='Email'
-          value={email}
-        />
-        <Input
-          style={styles.margin}
-          onChangeText={text => setPassword(text)}
-          placeholder='Password'
-          value={password}
-          secureTextEntry={true}
+        <View style={styles.inputView}>
+          <Icon 
+            name='user'
+            type='font-awesome'
+            color='#333'
+          />
+          <TextInput 
+            style={styles.margin}
+            onChangeText={text => setEmail(text)}
+            placeholder='Email'
+            value={email}
+          />
+        </View>
+        <View style={styles.inputView}>
+        <Icon 
+            name='key'
+            type='font-awesome'
+            color='#333'
+          />
+          <TextInput
+            style={styles.margin}
+            onChangeText={text => setPassword(text)}
+            placeholder='Password'
+            value={password}
+            secureTextEntry={viewPassword}
+          />
+          <View style={styles.viewPassword}>
+            <Icon 
+              name='eye'
+              type='font-awesome'
+              onPress={() => setViewPassword(!viewPassword)}
             />
+          </View>
+        </View>
       </View>
       <View style={styles.button}>
-        <Button title={'Sign In'} onPress={() => props.signIn(email, password)}/>
+        <RoundButton title='Sign In' textStyle={{color: 'white'}} onPress={() => props.signIn(email, password)}/>
       </View>
       <View style={styles.registerButton}>
-        <Button title={'Register'} onPress={() => navigate('SignUp')}/>
+        <RoundButton title='Register' textStyle={{color: 'white'}} onPress={() => navigate('SignUp')}/>
       </View>
     </View>
   );
@@ -58,8 +82,11 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   margin: {
-    marginTop: 20,
-    marginHorizontal: 60
+    marginVertical: 7,
+    // marginHorizontal: 10,
+    paddingHorizontal: 12,
+    fontSize: 20,
+    width: '100%'
   },
   button: {
     marginHorizontal: 100,
@@ -68,6 +95,21 @@ const styles = StyleSheet.create({
   registerButton: {
     marginHorizontal: 100,
     marginTop: 10
+  },
+  inputView: {
+    width: '100%',
+    backgroundColor: '#f1f3f6',
+    borderRadius: 8,
+    display: 'flex',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginVertical: 5,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    paddingLeft: 15
+  },
+  viewPassword: {
+    marginLeft: 'auto',
   }
 });
 
