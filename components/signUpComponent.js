@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, ScrollView, Text, StyleSheet, Alert} from 'react-native';
+import {View, ScrollView, Text, TextInput, StyleSheet, Alert} from 'react-native';
 import {Button, Input} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {register} from '../redux/actionCreators/auth';
@@ -78,40 +78,46 @@ const SignUp = props => {
         <View style={styles.validationContainer}>
           {!checkAvatar ? <Text style={styles.validation}>Avatar Required</Text> : null}
         </View>
-        <Input 
-          style={styles.margin}
-          onChangeText={text => setName(text)}
-          placeholder='Full Name'
-          value={name}
-          onFocus={() => setNameTouched(true)}
-          onBlur={() => validationCheck(name, setCheckName)}
-        />
+        <View style={styles.inputView}>
+          <TextInput 
+            style={styles.margin}
+            onChangeText={text => setName(text)}
+            placeholder='Full Name'
+            value={name}
+            onFocus={() => setNameTouched(true)}
+            onBlur={() => validationCheck(name, setCheckName)}
+          />
+        </View>
         <View style={styles.validationContainer}>
           {!checkName ? <Text style={styles.validation}>Name Required</Text> : null}
         </View>
-        <Input 
-          style={styles.margin}
-          onChangeText={text => setUserName(text)}
-          placeholder='User Name'
-          value={userName}
-          onFocus={() => setUserNameTouched(true)}
-          onBlur={() => validationCheck(userName, setCheckUserName)}
-        />
+        <View style={styles.inputView}>
+          <TextInput 
+            style={styles.margin}
+            onChangeText={text => setUserName(text)}
+            placeholder='User Name'
+            value={userName}
+            onFocus={() => setUserNameTouched(true)}
+            onBlur={() => validationCheck(userName, setCheckUserName)}
+          />
+        </View>
         <View style={styles.validationContainer}>
           {!checkUserName ? <Text style={styles.validation}>User Name Required</Text> : null}
         </View>
-        <Input 
-          style={styles.margin}
-          onChangeText={text => setEmail(text)}
-          placeholder='Email'
-          value={email}
-          onFocus={() => setEmailTouched(true)}
-          onBlur={() => validationCheck(email, setCheckEmail)}
-        />
+        <View style={styles.inputView}>
+          <TextInput 
+            style={styles.margin}
+            onChangeText={text => setEmail(text)}
+            placeholder='Email'
+            value={email}
+            onFocus={() => setEmailTouched(true)}
+            onBlur={() => validationCheck(email, setCheckEmail)}
+          />
+        </View>
         <View style={styles.validationContainer}>
           {!checkEmail ? <Text style={styles.validation}>Email Required</Text> : null}
         </View>
-        <Input
+        <TextInput
           style={styles.margin}
           onChangeText={text => setPassword(text)}
           placeholder='Password'
@@ -123,7 +129,7 @@ const SignUp = props => {
           <View style={styles.validationContainer}>
             {!checkPassword ? <Text style={styles.validation}>Password be 6-20 characters, contain one upper case letter, and one number</Text> : null}
           </View>
-        <Input
+        <TextInput
           style={styles.margin}
           onChangeText={text => setConfirmPassword(text)}
           placeholder='Confirm Password'
@@ -156,7 +162,8 @@ const styles = StyleSheet.create({
   },
   margin: {
     marginTop: 20,
-    marginHorizontal: 60
+    marginHorizontal: 20,
+    
   },
   button: {
     marginHorizontal: 100,
@@ -176,6 +183,15 @@ const styles = StyleSheet.create({
   },
   validationContainer: {
     alignItems: 'center'
+  },
+  inputView: {
+    width: '100%',
+    backgroundColor: '#f1f3f6',
+    borderRadius: 8,
+    display: 'flex',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginVertical: 5
   }
 });
 
