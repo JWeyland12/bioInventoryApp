@@ -6,8 +6,8 @@ import { updateProject, deleteProject } from '../redux/actionCreators/projects';
 import Swipeout from "react-native-swipeout";
 import ImgPicker from './imagePickerComponent';
 import {UserContext} from './userContextComponent';
-import RoundButton from './roundedButtonComponent';
-import FormInput from './formInputComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
+import FormInput from './customStyledComponents/formInputComponent';
 
 const mapStateToProps = (state) => {
   return { projects: state.projects };

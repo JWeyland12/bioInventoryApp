@@ -5,8 +5,8 @@ import {connect} from 'react-redux';
 import Swipeout from 'react-native-swipeout';
 import ImgPicker from './imagePickerComponent';
 import {updateSpecies, deleteSpeciesFromMaster} from '../redux/actionCreators/species';
-import RoundButton from './roundedButtonComponent';
-import FormInput from './formInputComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
+import FormInput from './customStyledComponents/formInputComponent';
 
 const mapStateToProps = state => {
   return {species: state.species}
@@ -133,27 +133,6 @@ const SpeciesList = props => {
             value={rank}
             onChangeText={text => setRank(text)}
           />
-          {/* <Input 
-            style={styles.margin}
-            leftIcon={<Icon name='angle-right' type='font-awesome'/>}
-            leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={(text) => setComName(text)}
-            value={comName}
-          />
-          <Input 
-            style={styles.margin}
-            leftIcon={<Icon name='angle-right' type='font-awesome'/>}
-            leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={(text) => setSciName(text)}
-            value={sciName}
-          />
-          <Input 
-            style={styles.margin}
-            leftIcon={<Icon name='angle-right' type='font-awesome'/>}
-            leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={(text) => setRank(text)}
-            value={rank}
-          /> */}
           <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage} />
           <View style={{marginTop: 20, alignItems: 'center'}}>
             <RoundButton title='Update Species' onPress={() => handleSubmit()} />

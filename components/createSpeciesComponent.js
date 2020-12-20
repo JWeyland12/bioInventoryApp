@@ -4,8 +4,8 @@ import {Input, Icon, Button, Image} from 'react-native-elements';
 import { postSpeciesFromTrip, updateSpeciesObservation, postSpeciesFromMaster } from "../redux/actionCreators/species";
 import {connect} from 'react-redux';
 import ImgPicker from './imagePickerComponent';
-import RoundButton from './roundedButtonComponent';
-import FormInput from './formInputComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
+import FormInput from './customStyledComponents/formInputComponent';
 
 const mapDispatchToProps = {
   postSpeciesFromTrip,

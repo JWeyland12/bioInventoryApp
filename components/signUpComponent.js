@@ -4,7 +4,7 @@ import {Button, Input, Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {register} from '../redux/actionCreators/auth';
 import ImgPicker from './imagePickerComponent';
-import RoundButton from './roundedButtonComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
 
 const mapDispatchToProps = {
   register

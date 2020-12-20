@@ -1,10 +1,12 @@
 import React, { useState, useContext, useLayoutEffect } from "react";
-import { View, FlatList, TouchableOpacity, StyleSheet, Text, Alert, Modal } from "react-native";
+import { ScrollView, View, FlatList, TouchableOpacity, StyleSheet, Text, Alert, Modal } from "react-native";
 import { ListItem, Icon, Card, Input, Button } from "react-native-elements";
 import { connect } from "react-redux";
 import {postTrip, updateTrip, deleteTrip} from '../redux/actionCreators/trips';
 import Swipeout from "react-native-swipeout";
 import {UserContext} from './userContextComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
+import FormInput from './customStyledComponents/formInputComponent';
 
 const mapStateToProps = (state) => {
   return { trips: state.trips };
@@ -124,33 +126,38 @@ const Trips = props => {
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
-      {/* add area photo as avatar */}
       <ListItem 
         title={'Area Information'} 
         titleStyle={{fontSize: 20}}
         onPress={() => navigate('AreaInformation', {areaId: areaId, areaGeoRef: areaGeoRef})}
         bottomDivider
-        // containerStyle={{height: 75}}
         rightIcon={<Icon name='angle-right' type='font-awesome'/>}
       />
-      <RenderTrips trips={trips} />
+      <ScrollView>
+        <RenderTrips trips={trips} />
+      </ScrollView>
       <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => props.postTrip(areaId, user.token)}>
         <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
       </TouchableOpacity>
       <Modal animationType="fade" transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
         <View style={{ margin: 10 }}>
-          <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(trip) => setTripDate(trip)} value={tripDate} />
-          <View style={{ margin: 10 }}>
-            <Button
-              style={styles.button}
-              title="Update Trip"
-              onPress={() => {
-                handleSubmit();
-              }}
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setTripDate(input)}
+            value={tripDate}
+          />
+          <View style={{ margin: 10, alignItems: 'center' }}>
+            <RoundButton 
+              title='Update Trip'
+              onPress={() => handleSubmit()}
             />
           </View>
-          <View style={{ margin: 10 }}>
-            <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => showModal()} />
+          <View style={{ margin: 10, alignItems: 'center' }}>
+            <RoundButton 
+              title='Cancel'
+              style={{backgroundColor: 'firebrick'}}
+              onPress={() => showModal()}
+            />
           </View>
         </View>
       </Modal>

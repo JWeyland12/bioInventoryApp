@@ -6,6 +6,8 @@ import {postArea} from '../redux/actionCreators/areas';
 import ImgPicker from './imagePickerComponent';
 import LocationPicker from './locationPickerComponent';
 import {UserContext} from './userContextComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
+import FormInput from './customStyledComponents/formInputComponent'
 
 const mapDispatchToProps = {
   postArea,
@@ -75,58 +77,30 @@ const CreateArea = props => {
   }
     
     return (
-      <ScrollView>
+      <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={{margin: 10}}>
-          <Input
-            style={styles.margin}
-            leftIcon={
-              <Icon
-                name='angle-right'
-                type='font-awesome'
-              />
-            }
-            leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={state => setAreaName(state)}
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setAreaName(input)}
             placeholder='Area'
             value={areaName}
           />
-          <Input
-            style={styles.margin}
-            leftIcon={
-              <Icon
-                name='angle-right'
-                type='font-awesome'
-              />
-            }
-            leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={state => setAreaGeoRef(state)}
-            placeholder='Geo Reference'
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setGeoRef(input)}
+            placeholder='Coordinates'
             value={areaGeoRef}
           />
-          <Input
-            style={styles.margin}
-            leftIcon={
-              <Icon
-                name='angle-right'
-                type='font-awesome'
-              />
-            }
-            leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={state => setAltitude(state)}
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setAltitude(input)}
             placeholder='Elevation'
             value={altitude}
           />
-          <Input
-            style={styles.margin}
-            leftIcon={
-              <Icon
-                name='angle-right'
-                type='font-awesome'
-              />
-            }
-            leftIconContainerStyle={{paddingRight: 10}}
-            onChangeText={state => setKarst(state)}
-            placeholder='Limestone'
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setKarst(input)}
+            placeholder='Limestone type'
             value={karst}
           />
           <View style={{alignItems: 'center', marginVertical: 10}}>
@@ -134,8 +108,11 @@ const CreateArea = props => {
           </View>
           <LocationPicker onLocationTaken={locationTakenHandler} />
           <ImgPicker onImageTaken={imagePickedHandler}/>
-          <View style={{margin: 10}}>
-            <Button style={styles.button} title='Create Area' onPress={() => {confirmArea()}}/>
+          <View style={{margin: 10, alignItems: 'center'}}>
+            <RoundButton 
+              title='Create Area'
+              onPress={() => confirmArea()}
+            />
           </View>
         </View>
       </ScrollView>

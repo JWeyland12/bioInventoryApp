@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, KeyboardAvoidingView, TextInput} from 'react-native';
-import {Input, Button, Icon} from 'react-native-elements';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
+import {Icon} from 'react-native-elements';
 import {signIn} from '../redux/actionCreators/auth'
 import {connect} from 'react-redux';
-import RoundButton from './roundedButtonComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
 
 
 const mapDispatchToProps = {
   signIn
 }
-
 
 const SignIn = props => {
   const [email, setEmail] = useState('')

@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useContext } from "react";
-import { FlatList, View, TouchableOpacity, Text, StyleSheet, Alert, Modal } from "react-native";
+import { ScrollView, FlatList, View, TouchableOpacity, Text, StyleSheet, Alert, Modal } from "react-native";
 import { ListItem, Icon, Card, Button, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import {updateArea, deleteArea} from '../redux/actionCreators/areas';
@@ -7,6 +7,8 @@ import Swipeout from 'react-native-swipeout';
 import ImgPicker from './imagePickerComponent';
 import LocationPicker from './locationPickerComponent';
 import {UserContext} from './userContextComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
+import FormInput from './customStyledComponents/formInputComponent';
 
 const mapStateToProps = (state) => {
   return { areas: state.areas };
@@ -145,7 +147,7 @@ const Areas = props => {
     }
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <ListItem 
         title='Property Information'
         titleStyle={{fontSize: 20}}
@@ -155,58 +157,46 @@ const Areas = props => {
         />}
         onPress={() => navigate('ProjectInfo', {projectId: projectId})}
       />
-      <RenderAreas areas={areas} />
+      <ScrollView>
+        <RenderAreas areas={areas} />
+      </ScrollView>
       <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateArea', {projectId: projectId})}>
         <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
       </TouchableOpacity>
       <Modal animationType='fade' transparent={false} visible={isModalOpen} onRequestClose={() => hideModal()}>
-        <View style={{margin:10}}>
-        <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(area) => setAreaName(area)} value={areaName} />
-        <Input style={styles.margin} leftIcon={<Icon name="angle-right" type="font-awesome" />} leftIconContainerStyle={{ paddingRight: 10 }} onChangeText={(geoRef) => setAreaGeoRef(geoRef)} value={areaGeoRef} />
-        <Input
-          style={styles.margin}
-          leftIcon={
-            <Icon
-              name='angle-right'
-              type='font-awesome'
-            />
-          }
-          leftIconContainerStyle={{paddingRight: 10}}
-          onChangeText={state => setAltitude(state)}
-          placeholder='Elevation'
-          value={altitude}
-        />
-        <Input
-          style={styles.margin}
-          leftIcon={
-            <Icon
-              name='angle-right'
-              type='font-awesome'
-            />
-          }
-          leftIconContainerStyle={{paddingRight: 10}}
-          onChangeText={state => setKarst(state)}
-          placeholder='Limestone'
-          value={karst}
-        />
-        <View style={{alignItems: 'center', marginVertical: 10}}>
-          <Text>Accuracy: {accuracy}</Text>
-        </View>
-        <LocationPicker onLocationTaken={locationTakenHandler} />
-        <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage} />
-        <View style={{ margin: 10 }}>
-            <Button
-              style={styles.button}
-              title="Update Area"
-              onPress={() => {
-                handleSubmit();
-              }}
-            />
+        <ScrollView style={{margin:10}}>
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setAreaName(input)}
+            value={areaName}
+          />
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setAreaGeoRef(input)}
+            value={areaGeoRef}
+          />
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setAltitude(input)}
+            value={altitude}
+          />
+          <FormInput 
+            iconName='angle-right'
+            onChangeText={input => setKarst(input)}
+            value={karst}
+          />
+          <View style={{alignItems: 'center', marginVertical: 10}}>
+            <Text>Accuracy: {accuracy}</Text>
           </View>
-          <View style={{ margin: 10 }}>
-            <Button style={(styles.button, { backgroundColor: "red" })} title="Cancel" onPress={() => hideModal()} />
+          <LocationPicker onLocationTaken={locationTakenHandler} />
+          <ImgPicker onImageTaken={imagePickedHandler} updateImage={selectedImage} />
+          <View style={{ margin: 10, alignItems: 'center' }}>
+            <RoundButton title='Update Area' onPress={() => handleSubmit()} />
           </View>
-        </View>
+          <View style={{ margin: 10, alignItems: 'center' }}>
+            <RoundButton title='Cancel' style={{backgroundColor: 'red'}} onPress={() => hideModal()} />
+          </View>
+        </ScrollView>
       </Modal>
     </View>
   );

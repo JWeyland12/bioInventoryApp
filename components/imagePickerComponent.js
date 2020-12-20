@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Button, Text, StyleSheet, Image, Alert} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import RoundButton from './roundedButtonComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
 
 const ImgPicker = props => {
   const [pickedImage, setPickedImage] = useState();

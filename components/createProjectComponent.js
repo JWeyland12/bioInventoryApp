@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
-import {View, Button, StyleSheet, Alert} from 'react-native';
+import {ScrollView, View, Button, StyleSheet, Alert} from 'react-native';
 import {Input, Icon, Image} from 'react-native-elements';
 import { postProject } from '../redux/actionCreators/projects';
 import {connect} from 'react-redux';
 import ImgPicker from './imagePickerComponent';
 import { UserContext } from './userContextComponent';
-import RoundButton from './roundedButtonComponent';
-import FormInput from './formInputComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
+import FormInput from './customStyledComponents/formInputComponent';
 
 const mapDispatchToProps = {
   postProject,
@@ -59,7 +59,7 @@ const CreateProject = props => {
 
 
     return (
-      <View>
+      <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={{margin: 10}}>
           <FormInput 
             iconName='angle-right'
@@ -86,7 +86,7 @@ const CreateProject = props => {
             <RoundButton title='Create Project' onPress={() => confirmProject()} />
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
 }
 CreateProject.navigationOptions = {

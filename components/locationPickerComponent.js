@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, Button, Text, Alert, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
 
 const LocationPicker = props => {
   const [pickedLocation, setPickedLocation] = useState();
@@ -28,7 +29,6 @@ const LocationPicker = props => {
         accuracy: 5
       });
       console.log(location)
-      // setPickedLocation({lat: location.coords.latitude, lgn: location.coords.longitude})
       props.onLocationTaken(location)
     } catch (err) {
       Alert.alert('Could not determine location, please try again', [{text: Okay}])
@@ -40,7 +40,12 @@ const LocationPicker = props => {
   return (
     <View style={styles.locationPicker}>
       <View style={styles.button}>
-        <Button title='Get Location' onPress={getLocationHandler}/>
+        <RoundButton 
+          title='Get Location'
+          onPress={getLocationHandler}
+          textStyle={{fontSize: 15}}
+          style={{paddingHorizontal: 20}}
+        />
       </View>
     </View>
   );

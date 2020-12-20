@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
-import {Input, Icon, SearchBar, Button} from 'react-native-elements';
-import ImgPicker from './imagePickerComponent';
+import {Button} from 'react-native-elements';
 import Search from './searchComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
 
 const mapStateToProps = state => {
   return {species: state.species}
@@ -23,7 +23,10 @@ const CreateTripSpecies = (props) => {
         <Text style={{fontSize: 20}}>- OR -</Text>
       </View>
       <View style={{marginHorizontal: 50}}>
-        <Button title={'Enter New Species'} onPress={() => navigate('CreateSpecies', {idObject: idObject})} />
+        <RoundButton 
+          title='Enter New Species'
+          onPress={() => navigate('CreateSpecies', {idObject: idObject})}
+        />
       </View>
       <TouchableOpacity style={styles.TouchableOpacityStyle}>
         <Search listType={'Species'} masterList={props.species.species} navigate={navigate} idObject={idObject} />
