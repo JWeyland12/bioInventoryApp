@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import {ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Image} from 'react-native-elements';
 import {connect} from 'react-redux';
-import {addImageToProject, addNoteToProject, updateProjectNote, deleteInfoImage} from '../redux/actionCreators/projects';
+import {addImageToProject, addNoteToProject, updateProjectNote, deleteInfoImage, deleteInfoNote} from '../redux/actionCreators/projects';
 import Notes from './noteComponent';
 import InfoImages from './infoImagesComponent';
 import {UserContext} from './userContextComponent';
@@ -11,7 +11,8 @@ const mapDispatchToProps = {
   addImageToProject,
   addNoteToProject,
   updateProjectNote,
-  deleteInfoImage
+  deleteInfoImage,
+  deleteInfoNote
 }
 
 const mapStateToProps = state => {
@@ -116,7 +117,7 @@ const ProjectInfo = (props) => {
       props.deleteInfoImage(projectId, imgObj)
     }
     if (notesObj) {
-      
+      props.deleteInfoNote(projectId, notesObj)
     }
   }
 
@@ -153,7 +154,7 @@ const ProjectInfo = (props) => {
         <Text style={{fontSize: 25}}>Property Notes</Text>
       </View>
       <View>
-        <Notes submitNoteHandler={submitNoteHandler} notes={project.notes}/>
+        <Notes submitNoteHandler={submitNoteHandler} notes={project.notes} deleteInfo={deleteInfo}/>
       </View>
       <View style={styles.information}>
         <Text style={{fontSize: 25}}>Property Images</Text>

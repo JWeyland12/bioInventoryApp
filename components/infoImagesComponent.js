@@ -4,12 +4,8 @@ import {Image, Button, Icon, Overlay} from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import RoundButton from './customStyledComponents/roundedButtonComponent';
-import {deleteInfoImage} from '../redux/actionCreators/projects';
 import {connect} from 'react-redux';
 
-const mapDispatchToProps = {
-  deleteInfoImage
-}
 
 const InfoImages = (props) => {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
@@ -219,4 +215,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default connect(null, mapDispatchToProps)(InfoImages);
+export default InfoImages;

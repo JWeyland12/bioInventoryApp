@@ -207,7 +207,6 @@ export const deleteInfoImage = (_id, imgObj) => async dispatch => {
       body: JSON.stringify({_id: _id, imgObj: imgObj}),
       headers: {'content-type': 'application/json'}
     })
-    // console.log('response', response.json())
     if (!response.ok) {
       const err = response.msg
       throw err
@@ -226,3 +225,24 @@ export const deleteInfo = project => ({
   type: actionType.DELETE_PROJECT_INFO,
   payload: project
 })
+
+export const deleteInfoNote = (_id, notesObj) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'projects', {
+      method: 'DELETE',
+      body: JSON.stringify({_id: _id, notesObj: notesObj}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const project = await response.json()
+    dispatch(deleteInfo(project))
+    console.log('dispatched')
+  } catch(err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
+}

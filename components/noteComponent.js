@@ -83,7 +83,7 @@ const Notes = (props) => {
       <View>
         {noteIndex.toString() === item._id.toString() ? 
         (<Overlay isVisible={isOverlayVisible} onBackdropPress={() => overlayHandler()} overlayStyle={styles.overlay}>
-          <Text style={{fontSize: 20}} onPress={() => {}}>Delete</Text>
+          <Text style={{fontSize: 20}} onPress={() => props.deleteInfo(null, item)}>Delete</Text>
         </Overlay>)
         : null}
         <View style={styles.listItemContainer}>
