@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import {ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Image} from 'react-native-elements';
 import {connect} from 'react-redux';
-import {addImageToProject, addNoteToProject, updateProjectNote} from '../redux/actionCreators/projects';
+import {addImageToProject, addNoteToProject, updateProjectNote, deleteInfoImage} from '../redux/actionCreators/projects';
 import Notes from './noteComponent';
 import InfoImages from './infoImagesComponent';
 import {UserContext} from './userContextComponent';
@@ -10,7 +10,8 @@ import {UserContext} from './userContextComponent';
 const mapDispatchToProps = {
   addImageToProject,
   addNoteToProject,
-  updateProjectNote
+  updateProjectNote,
+  deleteInfoImage
 }
 
 const mapStateToProps = state => {
@@ -39,6 +40,7 @@ const ProjectInfo = (props) => {
     setLength(props.navigation.getParam('length'))
     setProjectId(props.navigation.getParam('projectId'))
     if (projectId) {
+      console.log('rerender')
       setProject(props.projects.projects.filter(item => item._id.toString() === projectId.toString())[0])
     }
       const species = () => {
@@ -56,7 +58,7 @@ const ProjectInfo = (props) => {
         return species
       }
       setSpecies(species().sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
-  }, [props.projects.projects])
+  }, [props.projects])
 
   const totalAreas = () => {
     const total = props.areas.areas.filter(item => item.project.toString() === projectId.toString()).length
@@ -108,6 +110,16 @@ const ProjectInfo = (props) => {
     props.addImageToProject(projectId, image, user.token)
   }
 
+  const deleteInfo = (imgObj, notesObj) => {
+    if (imgObj) {
+      console.log('req.body', imgObj)
+      props.deleteInfoImage(projectId, imgObj)
+    }
+    if (notesObj) {
+      
+    }
+  }
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}} contentContainerStyle={{alignItems: 'center'}}>
       <View style={{marginTop: 20}}>
@@ -145,7 +157,7 @@ const ProjectInfo = (props) => {
       </View>
       <View style={styles.information}>
         <Text style={{fontSize: 25}}>Property Images</Text>
-        <InfoImages newImageHandler={newImageHandler} images={project.images}/>
+        <InfoImages newImageHandler={newImageHandler} images={project.images} deleteInfo={deleteInfo}/>
       </View>
     </ScrollView>
   );

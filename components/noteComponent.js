@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput, Modal, FlatList, ToastAndroid} from 'react-native';
 import {Button, ListItem, Overlay, Icon} from 'react-native-elements';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
 
 const Notes = (props) => {
   const [backgroundColor, setBackgroundColor] = useState('#f8f8ff');
@@ -16,6 +17,7 @@ const Notes = (props) => {
   const [persistNote, setPersistNote] = useState('');
   //visible is for note overlay 'delete'. visibleImg is for image overlay 'delete'
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [noteIndex, setNotedIndex] = useState('');
 
   //textInput style onFocus
   const onFocusHandler = () => {
@@ -71,12 +73,19 @@ const Notes = (props) => {
     }
   }
 
+  const overlayHandler = (id) => {
+    setIsOverlayVisible(!isOverlayVisible)
+    {!id ? setNotedIndex(''): setNotedIndex(id)}
+  }
+
   const renderNotes = ({item}) => {
     return (
       <View>
-        <Overlay isVisible={isOverlayVisible} onBackdropPress={() => setIsOverlayVisible(!isOverlayVisible)} overlayStyle={styles.overlay}>
+        {noteIndex.toString() === item._id.toString() ? 
+        (<Overlay isVisible={isOverlayVisible} onBackdropPress={() => overlayHandler()} overlayStyle={styles.overlay}>
           <Text style={{fontSize: 20}} onPress={() => {}}>Delete</Text>
-        </Overlay>
+        </Overlay>)
+        : null}
         <View style={styles.listItemContainer}>
           <ListItem 
             title={`${item.note.slice(0, 30)}...`}
@@ -88,7 +97,7 @@ const Notes = (props) => {
             borderWidth={1}
             borderColor={'gray'}
             onPress={() => showModal(item)}
-            onLongPress={() => setIsOverlayVisible(!isOverlayVisible)}
+            onLongPress={() => overlayHandler(item._id)}
           />
         </View>
       </View>
@@ -121,7 +130,12 @@ const Notes = (props) => {
         value={note}
       />
       <View style={styles.noteButton}>
-        <Button title={'Create Note'} onPress={() => handleSubmit()}/>
+        <RoundButton 
+          title='Create Note'
+          onPress={() => handleSubmit()}
+          textStyle={{fontSize: 15}}
+          style={{paddingHorizontal: 20}}
+        />
       </View>
       <Modal
         animated='fade'
@@ -194,7 +208,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   overlay: {
-    height: 50
+    height: 50,
+    width: 'auto'
   },
   listItemContainer: {
     marginHorizontal: 30,

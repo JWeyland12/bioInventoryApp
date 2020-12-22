@@ -199,3 +199,30 @@ export const deleteProject = (_id, token) => async dispatch => {
   })
   dispatch(fetchProjects(token))
 }
+
+export const deleteInfoImage = (_id, imgObj) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'projects', {
+      method: 'DELETE',
+      body: JSON.stringify({_id: _id, imgObj: imgObj}),
+      headers: {'content-type': 'application/json'}
+    })
+    // console.log('response', response.json())
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const project = await response.json()
+    dispatch(deleteInfo(project))
+    console.log('dispatched')
+  } catch(err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
+}
+
+export const deleteInfo = project => ({
+  type: actionType.DELETE_PROJECT_INFO,
+  payload: project
+})

@@ -3,6 +3,13 @@ import {View, Text, StyleSheet, Modal, TouchableOpacity} from 'react-native';
 import {Image, Button, Icon, Overlay} from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
+import {deleteInfoImage} from '../redux/actionCreators/projects';
+import {connect} from 'react-redux';
+
+const mapDispatchToProps = {
+  deleteInfoImage
+}
 
 const InfoImages = (props) => {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
@@ -10,6 +17,7 @@ const InfoImages = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState('');
   const [modalIndex, setModalIndex] = useState();
+  const [imageIndex, setImageIndex] = useState('')
 
   //image upload from camera or gallery
   const verifyCameraPermissions = async () => {
@@ -38,7 +46,9 @@ const InfoImages = (props) => {
     const imageGal = await ImagePicker.launchImageLibraryAsync({
       aspect: [1,1],
       quality: 0.75,
-      allowsEditing: true
+      allowsMultipleSelection: true,
+
+      // allowsEditing: true
     });
     props.newImageHandler(imageGal.uri)
   }
@@ -51,19 +61,32 @@ const InfoImages = (props) => {
     const imageCam = await ImagePicker.launchCameraAsync({
       aspect: [1,1],
       quality: 0.75,
-      allowsEditing: true
+      // allowsEditing: true
     });
     props.newImageHandler(imageCam.uri)
+  }
+
+  const overlayHandler = (id) => {
+    setIsOverlayOpen(!isOverlayOpen)
+    {!id ? setImageIndex('') : setImageIndex(id)}
+  }
+
+  const deleteInfoHandler = image => {
+    props.deleteInfo(image, null)
+    setImageIndex('')
+    setIsOverlayOpen(!isOverlayOpen)
   }
 
   const Images = () => {
     return props.images.map(image => {
       return (
         <View key={image._id}>
-          <Overlay isVisible={isOverlayOpen} onBackdropPress={() => setIsOverlayOpen(!isOverlayOpen)} overlayStyle={styles.overlay}>
-            <Text style={{fontSize: 20}} onPress={() => {}}>Delete</Text>
-          </Overlay>
-          <TouchableOpacity onLongPress={() => setIsOverlayOpen(!isOverlayOpen)} onPress={() => imgModalHandler(image)} >
+          {imageIndex.toString() === image._id.toString() ?
+          (<Overlay isVisible={isOverlayOpen} onBackdropPress={() => overlayHandler()} overlayStyle={styles.overlay}>
+            <Text style={{fontSize: 20}} onPress={() => deleteInfoHandler(image)}>Delete</Text>
+          </Overlay>)
+          : null}
+          <TouchableOpacity onLongPress={() => overlayHandler(image._id)} onPress={() => imgModalHandler(image)} >
             <Image source={{uri: image.uri}} style={styles.images}/>
           </TouchableOpacity>
         </View>
@@ -109,9 +132,19 @@ const InfoImages = (props) => {
         <Images />
       </View>)}
       <View style={{flexDirection: 'row', marginTop: 20, justifyContent: 'center'}}>
-        <Button title={'Take Picture'} onPress={takeImageHandler} />
+        <RoundButton 
+          title='Take Picture' 
+          onPress={takeImageHandler}
+          textStyle={{fontSize: 15}}
+          style={{paddingHorizontal: 20}}
+        />
         <View style={{margin: 5}}></View>
-        <Button title={'Add Images'} onPress={pickImageHandler} />
+        <RoundButton 
+          title='Add Image'
+          onPress={pickImageHandler}
+          textStyle={{fontSize: 15}}
+          style={{paddingHorizontal: 20}}
+        />
       </View>
       <View style={styles.centeredView}>
         <Modal
@@ -181,8 +214,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   overlay: {
-    height: 50
+    height: 50,
+    width: 'auto'
   },
 })
 
-export default InfoImages;
+export default connect(null, mapDispatchToProps)(InfoImages);

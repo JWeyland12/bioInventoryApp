@@ -131,18 +131,62 @@ projectRouter
       }
     }
   })
-  .delete((req, res, next) => {
-    async function asyncCall(req) {
-      await Area.deleteMany({project: req.body._id})
+  .delete(async (req, res, next) => {
+    console.log('req.body', req.body)
+    if (!req.body.imgObj && !req.body.noteObj) {
+      async function asyncCall(req) {
+        await Area.deleteMany({project: req.body._id})
+      }
+      asyncCall(req, next)
+      Project.findOneAndDelete({_id: req.body._id})
+      .then(response => {
+        res.stausCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(response)
+      })
+      .catch(err => next(err))
+    } else if (req.body.imgObj) {
+      try {
+        const project = await Project.findById(req.body._id)
+
+        console.log('projectFound', project)
+
+        if (!project) {
+          res.status(401)
+          res.send({msg: 'Project not in database'})
+        }
+
+        const index = await project.images.findIndex(i => i._id.toString() === req.body.imgObj._id.toString())
+        console.log('index', index)
+        project.images.splice(index, 1)
+        project.save()
+        res.status(200)
+        res.header('Content-Type', 'application/json')
+        res.json(project)
+      } catch(err) {
+        res.status(400)
+        res.send({msg: 'Sever Error'})
+      }
+    } else if (req.body.noteObj) {
+      try {
+        const project = await Project.findById(req.body._id)
+
+        if (!project) {
+          res.status(401)
+          res.send({msg: 'Project not in database'})
+        }
+
+        const index = await project.notes.findIndex(req.body.noteObj)
+        project.notes.splice(index, 1)
+        project.save()
+        res.status(200)
+        res.header('Content-Type', 'application/json')
+        res.json(project)
+      } catch(err) {
+        res.status(400)
+        res.send({msg: 'Sever Error'})
+      }
     }
-    asyncCall(req, next)
-    Project.findOneAndDelete({_id: req.body._id})
-    .then(response => {
-      res.stausCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.json(response)
-    })
-    .catch(err => next(err))
   })
 
 

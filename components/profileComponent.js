@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {UserContext} from './userContextComponent';
 import {updateUser, deleteAccount} from '../redux/actionCreators/auth';
 import ImgPicker from './imagePickerComponent';
+import RoundButton from './customStyledComponents/roundedButtonComponent';
 
 
 const mapDispatchToProps = {
@@ -195,7 +196,9 @@ const Profile = (props) => {
       </View>
       <View style={{alignItems: 'center', marginBottom: 40}}>
         <View style={styles.logoutButton}>
-          <Button title={'Logout'} onPress={() => props.logOut()} />
+          <RoundButton 
+            title='Logout' onPress={() => props.logOut()}
+          />
         </View>
         <Text 
           style={styles.deleteAccount}
