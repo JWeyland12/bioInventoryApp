@@ -176,8 +176,9 @@ projectRouter
           res.send({msg: 'Project not in database'})
         }
 
-        const index = await project.notes.findIndex(req.body.noteObj)
-        project.notes.splice(index, 1)
+        const index = await project.notes.findIndex(i => i._id.toString() === req.body.notesObj._id.toString())
+        console.log('index', index)
+        project.images.splice(index, 1)
         project.save()
         res.status(200)
         res.header('Content-Type', 'application/json')
