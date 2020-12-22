@@ -78,12 +78,17 @@ const Notes = (props) => {
     {!id ? setNotedIndex(''): setNotedIndex(id)}
   }
 
+  const deleteInfoHandler = item => {
+    props.deleteInfo(0, item)
+    setNotedIndex('')
+  }
+
   const renderNotes = ({item}) => {
     return (
       <View>
         {noteIndex.toString() === item._id.toString() ? 
         (<Overlay isVisible={isOverlayVisible} onBackdropPress={() => overlayHandler()} overlayStyle={styles.overlay}>
-          <Text style={{fontSize: 20}} onPress={() => props.deleteInfo(null, item)}>Delete</Text>
+          <Text style={{fontSize: 20}} onPress={() => deleteInfoHandler(item)}>Delete</Text>
         </Overlay>)
         : null}
         <View style={styles.listItemContainer}>

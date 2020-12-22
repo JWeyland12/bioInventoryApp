@@ -5,6 +5,7 @@ export const DELETE_PROJECT_INFO = 'DELETE_PROJECT_INFO';
 
 export const ADD_AREAS = 'ADD_AREAS';
 export const POST_AREA = 'POST_AREA';
+export const DELETE_AREA_INFO = 'DELETE_AREA_INFO';
 
 export const ADD_TRIPS = 'ADD_TRIPS';
 export const POST_TRIP = 'POST_TRIP';

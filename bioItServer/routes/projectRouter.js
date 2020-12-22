@@ -133,7 +133,7 @@ projectRouter
   })
   .delete(async (req, res, next) => {
     console.log('req.body', req.body)
-    if (!req.body.imgObj && !req.body.noteObj) {
+    if (!req.body.imgObj && !req.body.notesObj) {
       async function asyncCall(req) {
         await Area.deleteMany({project: req.body._id})
       }
@@ -167,8 +167,9 @@ projectRouter
         res.status(400)
         res.send({msg: 'Sever Error'})
       }
-    } else if (req.body.noteObj) {
+    } else if (req.body.notesObj) {
       try {
+        console.log('here')
         const project = await Project.findById(req.body._id)
 
         if (!project) {
@@ -178,7 +179,7 @@ projectRouter
 
         const index = await project.notes.findIndex(i => i._id.toString() === req.body.notesObj._id.toString())
         console.log('index', index)
-        project.images.splice(index, 1)
+        project.notes.splice(index, 1)
         project.save()
         res.status(200)
         res.header('Content-Type', 'application/json')

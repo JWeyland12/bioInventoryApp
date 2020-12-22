@@ -15,18 +15,9 @@ export const projectRed = (
       return {projects: []}
     case actionTypes.DELETE_PROJECT_INFO:
       const index = state.projects.findIndex(i => i._id.toString() === action.payload._id.toString())
-      console.log('index', index)
       state.projects.splice(index, 1, action.payload)
-      console.log('projects', state.projects)
       return {...state}
     default:
       return state;
   }
 }
-
-// case actionTypes.PUT_PROJECT:
-    //   console.log(`action.payload: ${action.payload}`)
-    //     return {...state, 
-    //       projects: state.projects.map(
-    //         (project, i) => i === [action.payload._id] ? {project: action.payload} : project
-    //       )}

@@ -22,12 +22,12 @@ const CreateTripSpecies = (props) => {
       <View style={styles.inputView}>
         <Text style={{fontSize: 20}}>- OR -</Text>
       </View>
-      <View style={{marginHorizontal: 50}}>
+      <TouchableOpacity style={{marginHorizontal: 50}}>
         <RoundButton 
           title='Enter New Species'
           onPress={() => navigate('CreateSpecies', {idObject: idObject})}
         />
-      </View>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.TouchableOpacityStyle}>
         <Search listType={'Species'} masterList={props.species.species} navigate={navigate} idObject={idObject} />
       </TouchableOpacity>

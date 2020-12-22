@@ -3,7 +3,7 @@ import {ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Image} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {UserContext} from './userContextComponent';
-import {updateAreaNote, addNoteToArea, addImageToArea} from '../redux/actionCreators/areas';
+import {updateAreaNote, addNoteToArea, addImageToArea, deleteAreaInfoImage, deleteAreaInfoNote} from '../redux/actionCreators/areas';
 import Notes from './noteComponent';
 import InfoImages from './infoImagesComponent';
 
@@ -18,7 +18,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   addNoteToArea,
   updateAreaNote,
-  addImageToArea
+  addImageToArea,
+  deleteAreaInfoImage,
+  deleteAreaInfoNote
 }
 
 const AreaInformation = (props) => {
@@ -49,7 +51,7 @@ const AreaInformation = (props) => {
       setArea(props.areas.areas.filter(area => area._id.toString() === areaId.toString())[0])
       setSortedSpecies(numberOfSpecies.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
     }
-  }, [props.areas.areas])
+  }, [props.areas])
 
   const findTotalObs = () => {
     let total = []
@@ -77,6 +79,15 @@ const AreaInformation = (props) => {
 
   const newImageHandler = (image) => {
     props.addImageToArea(areaId, image, user.token)
+  }
+
+  const deleteInfo = (imgObj, notesObj) => {
+    if (imgObj) {
+      props.deleteAreaInfoImage(areaId, imgObj)
+    }
+    if (notesObj) {
+      props.deleteAreaInfoNote(areaId, notesObj)
+    }
   }
 
   return (
@@ -120,11 +131,11 @@ const AreaInformation = (props) => {
         <Text style={{fontSize: 25}}>Area Notes</Text>
       </View>
       <View>
-        <Notes submitNoteHandler={submitNoteHandler} notes={area.notes}/>
+        <Notes submitNoteHandler={submitNoteHandler} notes={area.notes} deleteInfo={deleteInfo}/>
       </View>
       <View style={styles.information}>
         <Text style={{fontSize: 25}}>Area Images</Text>
-        <InfoImages newImageHandler={newImageHandler} images={area.images}/>
+        <InfoImages newImageHandler={newImageHandler} images={area.images} deleteInfo={deleteInfo}/>
       </View>
     </ScrollView>
   );

@@ -14,7 +14,11 @@ export const areaRed = (
       console.log("post area",action.payload)
       return {...state, areas: state.areas.concat(action.payload)}
     case actionTypes.LOG_OUT: 
-    return {areas: []}
+      return {areas: []}
+    case actionTypes.DELETE_AREA_INFO:
+      const index = state.areas.findIndex(i => i._id.toString() === action.payload._id.toString())
+      state.areas.splice(index, 1, action.payload)
+      return {...state}
     default:
       return state;
   }

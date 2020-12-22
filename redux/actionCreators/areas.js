@@ -199,3 +199,50 @@ export const deleteArea = (_id, token) => async dispatch => {
   })
   dispatch(fetchAreas(token))
 }
+
+export const deleteAreaInfoImage = (_id, imgObj) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'areas', {
+      method: 'DELETE',
+      body: JSON.stringify({_id: _id, imgObj: imgObj}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const area = await response.json()
+    dispatch(deleteAreaInfo(area))
+    console.log('dispatched')
+  } catch(err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
+}
+
+export const deleteAreaInfo = area => ({
+  type: actionType.DELETE_AREA_INFO,
+  payload: area
+})
+
+export const deleteAreaInfoNote = (_id, notesObj) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'areas', {
+      method: 'DELETE',
+      body: JSON.stringify({_id: _id, notesObj: notesObj}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const area = await response.json()
+    dispatch(deleteAreaInfo(area))
+    console.log('dispatched')
+  } catch(err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
+}
