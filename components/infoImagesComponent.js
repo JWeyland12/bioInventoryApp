@@ -121,8 +121,8 @@ const InfoImages = (props) => {
   }
 
   return (
-    <View>
-      {!props.images ? 
+    <View style={{alignItems: 'center'}}>
+      {props.images.length === 0 ? 
       (<Text style={{fontSize: 20}}>No images</Text>) :
       (<View style={styles.imagesContainer}>
         <Images />

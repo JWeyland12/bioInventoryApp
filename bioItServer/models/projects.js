@@ -11,6 +11,7 @@ const projectSchema = new Schema (
     name: {
       type: String,
       required: true,
+      unique: false
     },
     state: {
       type: String,

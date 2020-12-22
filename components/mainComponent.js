@@ -10,6 +10,7 @@ import CreateArea from './createAreaComponent';
 import CreateSpecies from "./createSpeciesComponent";
 import CreateTripSpecies from './createTripSpeciesComponent';
 import TripSpecies from './tripSummaryComponent';
+import TripInfo from './tripInfoComponent';
 import SpeciesList from './speciesComponent';
 import SignIn from './signInComponent';
 import SignUp from './signUpComponent';
@@ -51,7 +52,8 @@ const Navigator = createStackNavigator(
     AreaInformation: {screen: AreaInformation},
     SpeciesInfo: {screen: SpeciesInfo},
     ProjectSummary: {screen: ProjectSummary},
-    ProjectInfo: {screen: ProjectInfo}
+    ProjectInfo: {screen: ProjectInfo},
+    TripInfo: {screen: TripInfo}
   },
   {
     initialRouteName: "Projects",

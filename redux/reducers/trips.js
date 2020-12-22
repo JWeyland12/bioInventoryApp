@@ -13,6 +13,12 @@ export const tripRed = (
       return {...state, trips: state.trips.concat(action.payload)}
     case actionTypes.LOG_OUT:
       return {trips: []}
+    case actionTypes.ADD_TRIP_INFO: 
+      console.log('here')
+      const index = state.trips.findIndex(i => i._id.toString() === action.payload._id.toString())
+      console.log('index', index)
+      state.trips.splice(index, 1, action.payload)
+      return {...state}
     default:
       return state;
   }

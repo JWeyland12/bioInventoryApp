@@ -12,7 +12,23 @@ const tripSchema = new Schema (
       type: String,
       required: true
     },
-    areaId: String
+    areaId: String,
+    images: [
+      {
+        uri: String
+      }
+    ],
+    notes: [
+      {
+        note: String,
+        date: String
+      }
+    ],
+    members: [
+      {
+        member: String
+      }
+    ]
   },
   {
     timestamps: true

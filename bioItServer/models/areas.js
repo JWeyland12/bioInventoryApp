@@ -10,7 +10,6 @@ const areaSchema = new Schema (
     area: {
       type: String,
       required: true,
-      unique: true
     },
     geoRef: {
       type: String,

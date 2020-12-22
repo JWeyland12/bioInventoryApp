@@ -35,14 +35,89 @@ tripRouter
     return next(err)
   }
 })
-.put((req, res, next) => {
-  Trip.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true})
-  .then(trip => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json')
-    res.json(trip)
-  })
-  .catch(err => next(err))
+.put(async (req, res, next) => {
+  if (req.body.date) {
+    Trip.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true})
+    .then(trip => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json')
+      res.json(trip)
+    })
+    .catch(err => next(err))
+  } else if (req.body.uri) {
+    try {
+      const trip = await Trip.findById(req.body._id)
+      if (!trip) {
+        res.status(400)
+        res.send({msg: 'Trip not in database'})
+      }
+      trip.images.push({uri: req.body.uri})
+      trip.save()
+      res.status(200)
+      res.header('Content-Type', 'application/json')
+      res.json(trip)
+    } catch(err) {
+      res.status(400)
+      res.send({msg: 'Server Error'})
+    }
+  } else if (req.body.note) {
+    if (!req.body.noteId) {
+      try {
+        const trip = await Trip.findById(req.body._id)
+        if (!trip) {
+          res.status(400)
+          res.send({msg: 'Trip not in database'})
+        }
+        trip.notes.push({note: req.body.note, date: req.body.date})
+        await trip.save()
+        res.status(200)
+        res.header('Content-Type', 'application/json')
+        res.json(trip)
+      } catch(err) {
+        res.status(400)
+        res.send({msg: 'Server Error'})
+      }
+    } else {
+      try {
+        const trip = await Trip.findById(req.body._id)
+        if (!trip) {
+          res.status(400)
+          res.send({msg: 'Trip not in database'})
+        }
+        for (let i = 0; i <= trip.notes.length - 1; i++) {
+          if (trip.notes[i]._id.toString() === req.body.noteId.toString()) {
+            trip.notes[i].note = req.body.note
+            trip.save()
+          }
+        }
+        res.status(200)
+        res.header('Content-Type', 'application/json')
+        res.json(trip)
+      } catch(err) {
+        res.status(401)
+        res.send({msg: 'Server Error'})
+      }
+    }
+  } else if (req.body.member) {
+    try {
+      console.log('here')
+      console.log('req.body', req.body)
+      const trip = await Trip.findById(req.body._id)
+      if (!trip) {
+        res.status(400)
+        res.send({msg: 'Trip not in database'})
+      }
+      trip.members.push({member: req.body.member})
+      trip.save()
+      res.status(200)
+      res.header('Content-Type', 'application/json')
+      res.json(trip)
+    } catch(err) {
+      res.status(400)
+      res.send({msg: 'Server Error'})
+    }
+  }
+  
 })
 .delete((req, res, next) => {
   async function removeTripRefFromSpecies(req, next) {

@@ -49,22 +49,43 @@ projectRouter
       })
       .catch((err) => next(err));
   })
-  .post(auth, (req, res, next) => {
+  .post(auth, async (req, res, next) => {
     // req.body.img = req.file.buffer
-    console.log(req.user)
-    req.body.user = req.user.id
-    Project.create(req.body)
-      .then((project) => {
-        console.log("Project Created", project);
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(project);
-      })
-      .catch(() => {
-        const err = new Error(`The ${req.body.name} project already exists!`)
-        err.statusCode = 406
-        return next(err)
-      });
+    console.log(req.body)
+    console.log(req.user.id)
+    try {
+      const exists = await Project.find()
+      console.log('projects', exists)
+      const index = exists.findIndex(i => i.name === req.body.name)
+      let user = undefined
+      if (index !== -1) {
+        user = (exists[index].user.toString() === req.user.id.toString()) ? true : false
+      }
+      console.log('index', index)
+      console.log('user', user)
+      if (!user) {
+        console.log(req.user)
+        req.body.user = req.user.id
+        Project.create(req.body)
+          .then((project) => {
+            console.log("Project Created", project);
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(project);
+          })
+          .catch(() => {
+            const err = new Error(`The ${req.body.name} project already exists!`)
+            err.statusCode = 406
+            return next(err)
+          });
+      } else {
+        next(err)
+      }
+    } catch {
+      const err = new Error(`The ${req.body.name} project already exists!`)
+      res.status(400)
+      res.send(err)
+    }
   })
   .put(async (req, res, next) => {
     if (req.body.state) {

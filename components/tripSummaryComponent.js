@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, FlatList, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {View, FlatList, TouchableOpacity, Text, StyleSheet, ScrollView} from 'react-native';
 import {ListItem, Card, Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
 
@@ -82,7 +82,10 @@ const TripSpecies = props => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <RenderSpecies speciesArr={speciesArr}/>
+      <ListItem title='Trip Information' titleStyle={{fontSize: 20}} bottomDivider onPress={() => navigate('TripInfo', {tripId: tripId, total: speciesArr.length})} />
+      <ScrollView>
+        <RenderSpecies speciesArr={speciesArr}/>
+      </ScrollView>
       <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateTripSpecies', {projectId: projectId, areaId: areaId, tripId: tripId})}>
         <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
       </TouchableOpacity>

@@ -86,6 +86,97 @@ export const updateTrip = (_id, date, token) => async dispatch => {
   dispatch(fetchTrips(token))
 }
 
+export const addMember = (_id, member) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'trips', {
+      method: 'PUT',
+      body: JSON.stringify({_id, member}),
+      headers: {'content-type': 'application/json'}
+    })
+
+    if (!response.ok) {
+      const err = response.message
+      throw err
+    }
+
+    const trip = await response.json()
+    dispatch(addTripInfo(trip))
+  } catch(err) {
+    console.log('err', err)
+    alert('Request could not be completed')
+  }
+}
+
+export const addImageToTrip = (tripId, uri) => async dispatch => {
+  const fileName = uri.split('/').pop();
+  const newPath = FileSystem.documentDirectory + fileName;
+  console.log('newPath', newPath)
+  try {
+    await FileSystem.moveAsync({
+      from: uri,
+      to: newPath
+    });
+    const response = await fetch(baseUrl + 'trips', {
+      method: 'PUT',
+      body: JSON.stringify({_id: tripId, uri: newPath}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = new Error(`${response.msg}`)
+      throw err
+    }
+    const trip = await response.json()
+    dispatch(addTripInfo(trip))
+  } catch(err) {
+    alert('Request could not be completed')
+    throw err
+  }
+}
+
+export const addNoteToTrip = (tripId, note) => async dispatch => {
+  try {
+    const date = new Date().toDateString()
+    const response = await fetch(baseUrl + 'trips', {
+      method: 'PUT',
+      body: JSON.stringify({_id: tripId, note, date}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      alert(err)
+    }
+    const trip = await response.json()
+    dispatch(addTripInfo(trip))
+  } catch(err) {
+    alert('Request could not be completed')
+    throw err
+  }
+}
+
+export const updateTripNote = (tripId, noteId, note) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'trips', {
+      method: 'PUT',
+      body: JSON.stringify({_id: tripId, noteId, note}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      alert(err)
+    }
+    const trip = await response.json()
+    dispatch(addTripInfo(trip))
+  } catch(err) {
+    alert('Request could not be completed')
+    throw err
+  }
+}
+
+const addTripInfo = info => ({
+  type: actionType.ADD_TRIP_INFO,
+  payload: info
+})
+
 export const deleteTrip = (_id, token) => async dispatch => {
   await fetch(baseUrl + 'trips', {
     method: 'DELETE',
