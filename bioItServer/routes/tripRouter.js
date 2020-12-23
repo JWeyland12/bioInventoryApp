@@ -36,6 +36,7 @@ tripRouter
   }
 })
 .put(async (req, res, next) => {
+  console.log('touch')
   if (req.body.areaId) {
     Trip.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true})
     .then(trip => {
@@ -120,30 +121,97 @@ tripRouter
   }
   
 })
-.delete((req, res, next) => {
-  async function removeTripRefFromSpecies(req, next) {
-    await Species.find()
-    .then(species => {
-      for (let i = species.length-1; i>=0; i--) {
-        for (let j = species[i].tripArr.length-1; j>=0; j--) {
-          if (species[i].tripArr[j].tripId.toString() === req.body._id.toString()) {
-            species[i].tripArr[j].remove()
-            species[i].save()
+.delete(async (req, res, next) => {
+  console.log('req.body', req.body)
+  if (!req.body.imgObj && !req.body.notesObj && !req.body.memberObj) {
+    async function removeTripRefFromSpecies(req, next) {
+      await Species.find()
+      .then(species => {
+        for (let i = species.length-1; i>=0; i--) {
+          for (let j = species[i].tripArr.length-1; j>=0; j--) {
+            if (species[i].tripArr[j].tripId.toString() === req.body._id.toString()) {
+              species[i].tripArr[j].remove()
+              species[i].save()
+            }
+            // expensive process. time complexity O(n^2), space complexity O(n). Better solution?
           }
-          // expensive process. time complexity O(n^2), space complexity O(n). Better solution?
         }
-      }
+      })
+      .catch(err => next(err))
+    }
+    removeTripRefFromSpecies(req, next)
+    Trip.findByIdAndDelete(req.body._id)
+    .then(trip => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json')
+      res.json(trip)
     })
     .catch(err => next(err))
+  } else if (req.body.imgObj) {
+    try {
+      const trip = await Trip.findById(req.body._id)
+
+      console.log('tripFound', trip)
+
+      if (!trip) {
+        res.status(401)
+        res.send({msg: 'Trip not in database'})
+      }
+
+      const index = await trip.images.findIndex(i => i._id.toString() === req.body.imgObj._id.toString())
+      console.log('index', index)
+      trip.images.splice(index, 1)
+      trip.save()
+      res.status(200)
+      res.header('Content-Type', 'application/json')
+      res.json(trip)
+    } catch(err) {
+      res.status(400)
+      res.send({msg: 'Sever Error'})
+    }
+  } else if (req.body.notesObj) {
+    try {
+      console.log('here')
+      const trip = await Trip.findById(req.body._id)
+
+      if (!trip) {
+        res.status(401)
+        res.send({msg: 'Trip not in database'})
+      }
+
+      const index = await trip.notes.findIndex(i => i._id.toString() === req.body.notesObj._id.toString())
+      console.log('index', index)
+      trip.notes.splice(index, 1)
+      trip.save()
+      res.status(200)
+      res.header('Content-Type', 'application/json')
+      res.json(trip)
+    } catch(err) {
+      res.status(400)
+      res.send({msg: 'Sever Error'})
+    }
+  } else if (req.body.memberObj) {
+    try {
+      console.log('member')
+      const trip = await Trip.findById(req.body._id)
+      console.log('trip', trip)
+      if (!trip) {
+        res.status(400)
+        res.send({msg: 'Trip not in database'})
+      }
+
+      const index = await trip.members.findIndex(i => i._id.toString() === req.body.memberObj._id.toString())
+      console.log('index', index)
+      trip.members.splice(index, 1)
+      trip.save()
+      res.status(200)
+      res.header('Content-Type', 'application/json')
+      res.json(trip)
+    } catch (error) {
+      res.status(400)
+      res.send({msg: 'Server Error'})
+    }
   }
-  removeTripRefFromSpecies(req, next)
-  Trip.findByIdAndDelete(req.body._id)
-  .then(trip => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json')
-    res.json(trip)
-  })
-  .catch(err => next(err))
 })
 
 module.exports = tripRouter

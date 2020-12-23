@@ -42,8 +42,6 @@ const InfoImages = (props) => {
     const imageGal = await ImagePicker.launchImageLibraryAsync({
       aspect: [1,1],
       quality: 0.75,
-      allowsMultipleSelection: true,
-
       // allowsEditing: true
     });
     props.newImageHandler(imageGal.uri)

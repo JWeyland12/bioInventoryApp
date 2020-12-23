@@ -28,7 +28,6 @@ const LocationPicker = props => {
         timeout: 10000,
         accuracy: 5
       });
-      console.log(location)
       props.onLocationTaken(location)
     } catch (err) {
       Alert.alert('Could not determine location, please try again', [{text: Okay}])

@@ -61,7 +61,7 @@ const SignIn = props => {
         </View>
       </View>
       <View style={styles.button}>
-        <RoundButton title='Sign In' textStyle={{color: 'white'}} onPress={() => props.signIn(email, password)}/>
+        <RoundButton title='Sign In' textStyle={{color: 'white'}} onPress={() => props.signIn(email.toLocaleLowerCase(), password)}/>
       </View>
       <View style={styles.registerButton}>
         <RoundButton title='Register' textStyle={{color: 'white'}} onPress={() => navigate('SignUp')}/>

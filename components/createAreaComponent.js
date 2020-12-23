@@ -69,7 +69,7 @@ const CreateArea = props => {
 
   const metersToFeet = (meters) => {
     const feet = meters * 3.281
-    return feet
+    return parseInt(feet)
   }
 
   const imagePickedHandler = imagePath => {

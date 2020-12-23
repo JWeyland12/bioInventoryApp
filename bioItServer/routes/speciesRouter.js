@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const Species = require("../models/species");
+const auth = require('../middleware/auth')
 
 const speciesRouter = express.Router();
 speciesRouter.use(bodyParser.json());
@@ -16,11 +17,12 @@ speciesRouter
       })
       .catch((err) => next(err));
   })
-  .post((req, res, next) => {
+  .post(auth, (req, res, next) => {
     if(req.body.tripObj) {
       //species created from a trip
     req.body.tripArr = req.body.tripObj
     }
+    req.body.user = req.user.id
     Species.create(req.body)
     .then(specimen => {
       res.statusCode = 200;
@@ -77,6 +79,8 @@ speciesRouter
     }
   })
   .delete((req, res, next) => {
+    //delete from master list \/
+    //delete from trip list => modify tripArr
     Species.findByIdAndDelete(req.body._id)
     .then(response => {
       res.statusCode = 200;
@@ -88,126 +92,3 @@ speciesRouter
 
 module.exports = speciesRouter;
 
-
-// Species.findById(req.body._id)
-//       .then((specimen) => {
-//         if (specimen && !req.body.tripArr) {
-//           specimen.sciName = req.body.sciName;
-//           specimen.comName = req.body.comName;
-//           scecimen.img = req.body.img;
-//           for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
-//             console.log("enter loop")
-
-//             if (specimen.tripArr[i]._id.toString() === req.body.tripArr._id.toString()) {
-//               specimen.tripArr[i].tripRef = req.body.tripArr.tripRef;
-//               specimen.tripArr[i].total = req.body.tripArr.total;
-//               break;
-//             } else {
-//               console.log(specimen.tripArr[i]._id);
-//               console.log(req.body.tripArr._id);
-//               console.log("you didn't enter the if block, try again");
-//             }
-//           }
-//           specimen
-//             .save()
-//             .then((specimen) => {
-//               res.statusCode = 200;
-//               res.setHeader("Content-Type", "application/json");
-//               res.json(specimen);
-//             })
-//             .catch((err) => next(err));
-//         } else {
-//           const err = new Error(`${specimen} does not exist!`);
-//           err.statusCode = 404;
-//           return next(err);
-//         }
-//       })
-//       .catch((err) => next(err));
-//   })
-
-// POST
-// async function speciesExists(req) {
-//   const specimen = await Species.exists({ sciName: req.body.sciName });
-//   return specimen;
-// }
-// speciesExists(req)
-//   .then((specimen) => {
-//     // handles species created within a trip that already exists in species list
-//     if (specimen && req.body.tripObj) {
-//       Species.findById(req.body._id)
-//         .then((specimen) => {
-//           console.log("Species exists, adding tripRef to array");
-//           const tripRefArr = specimen.tripArr.map((tripArr) => tripArr.tripRef);
-//           // make sure species is unique to trip
-//           if (!tripRefArr.includes(req.body.tripObj.tripRef)) {
-//             specimen.tripArr.push(req.body.tripObj);
-//             specimen
-//               .save()
-//               .then((specimen) => {
-//                 res.statusCode = 200;
-//                 res.setHeader("Content-Type", "application/json");
-//                 res.json(specimen);
-//               })
-//               .catch((err) => next(err));
-//           } else {
-//             const err = new Error(`You've already found a ${specimen.comName} on this trip!`);
-//             err.statusCode = 406;
-//             return next(err);
-//           }
-//         })
-//         .catch((err) => next(err));
-//     } else if (specimen) {
-//       // handles species created from species list that already exists
-//       console.log("Species created from species list - already exists");
-//       const err = new Error(`${req.body.sciName} already exists!`);
-//       err.statusCode = 406;
-//       return next(err);
-//     } else if (!specimen && req.body.tripObj) {
-//       // handles speceies created within a trip that doesn't exist
-//       console.log("species created within a trip");
-//       req.body.tripArr = [req.body.tripObj];
-//       Species.create(req.body)
-//         .then((specimen) => {
-//           res.statusCode = 200;
-//           res.setHeader("Content-Type", "application/json");
-//           res.json(specimen);
-//         })
-//         .catch((err) => next(err));
-//     } else {
-//       // handles species created from species list
-//       console.log("species created from species list");
-//       Species.create(req.body)
-//         .then((specimen) => {
-//           res.statusCode = 200;
-//           res.setHeader("Content-Type", "application/json");
-//           res.json(specimen);
-//         })
-//         .catch((err) => next(err));
-//     }
-//   })
-//   .catch((err) => next(err));
-// })
-
-// const specimen = await Species.findByIdAndUpdate({_id: req.body._id}, { $set: req.body }, {new: true})
-//       console.log(req.body._id)
-//       console.log('specimen', specimen)
-//       .then(specimen => {
-//         if (!req.body.tripObj._id) {
-//         specimen.tripArr.push(req.body.tripObj)
-//         } else {
-//           //species count in trip updated
-//           for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
-//             if (req.body.tripObj._id.toString() === specimen.tripArr[i]._id.toString()) {
-//               specimen.tripArr[i].total = req.body.tripObj.total
-//             }
-//           }
-//         }
-//         specimen.save()
-//       .then(specimen => {
-//         res.statusCode = 200;
-//         res.setHeader('Content-Type', 'application/json')
-//         res.json(specimen)
-//       })
-//       .catch(err => next(err))
-//       })
-//     }

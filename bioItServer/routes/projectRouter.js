@@ -4,6 +4,8 @@ const Project = require("../models/projects");
 const Area = require('../models/areas');
 const multer = require('multer');
 const auth = require('../middleware/auth');
+const Trip = require("../models/trips");
+const Species = require('../models/species');
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -158,6 +160,33 @@ projectRouter
       async function asyncCall(req) {
         await Area.deleteMany({project: req.body._id})
       }
+      const deleteTrips = async (req) => {
+        const areas = await Area.find({project: req.body._id})
+        const trips = await Trip.find()
+        let idArr = []
+        for (let i = 0; i <= areas.length - 1; i++) {
+          idArr.push(areas[i]._id.toString())
+        }
+        for (let j = 0; j <= trips.length - 1; j++) {
+          if (idArr.includes(trips[j].areaId.toString())) {
+            trips[j].remove()
+            trips[j].save()
+          }
+        }
+      }
+      const deleteSpecies = async req => {
+        const species = await Species.find();
+        species.forEach(s => {
+          s.tripArr.forEach(t => {
+            if (t.projectId.toString() === req.body._id.toString()) {
+              t.remove()
+              s.save()
+            }
+          })
+        })
+      }
+      deleteSpecies(req, next)
+      deleteTrips(req, next)
       asyncCall(req, next)
       Project.findOneAndDelete({_id: req.body._id})
       .then(response => {

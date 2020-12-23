@@ -1,5 +1,6 @@
 import * as actionType from "../actionTypes";
 import { baseUrl } from "../../shared/baseUrl";
+import * as FileSystem from 'expo-file-system';
 
 export const fetchTrips = (token) => (dispatch) => {
   fetch(baseUrl + "trips", {
@@ -108,6 +109,9 @@ export const addMember = (_id, member) => async dispatch => {
 }
 
 export const addImageToTrip = (tripId, uri) => async dispatch => {
+  console.log('touch')
+  console.log('tripId', tripId)
+  console.log('uri', uri)
   const fileName = uri.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
   console.log('newPath', newPath)
@@ -121,11 +125,13 @@ export const addImageToTrip = (tripId, uri) => async dispatch => {
       body: JSON.stringify({_id: tripId, uri: newPath}),
       headers: {'content-type': 'application/json'}
     })
+    console.log('response', response)
     if (!response.ok) {
       const err = new Error(`${response.msg}`)
       throw err
     }
     const trip = await response.json()
+    console.log('trip', trip)
     dispatch(addTripInfo(trip))
   } catch(err) {
     alert('Request could not be completed')
@@ -200,4 +206,73 @@ export const deleteTrip = (_id, token) => async dispatch => {
     alert(`Trip could not be deleted`)
   })
   dispatch(fetchTrips(token))
+}
+
+export const deleteTripInfoImage = (_id, imgObj) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'trips', {
+      method: 'DELETE',
+      body: JSON.stringify({_id: _id, imgObj: imgObj}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const trip = await response.json()
+    console.log('trip', trip)
+    dispatch(deleteTripInfo(trip))
+    console.log('dispatched')
+  } catch(err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
+}
+
+export const deleteTripInfo = info => ({
+  type: actionType.DELETE_TRIP_INFO,
+  payload: info
+})
+
+export const deleteTripInfoNote = (_id, notesObj) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'trips', {
+      method: 'DELETE',
+      body: JSON.stringify({_id: _id, notesObj: notesObj}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const trip = await response.json()
+    dispatch(deleteTripInfo(trip))
+    console.log('dispatched')
+  } catch(err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
+}
+
+export const deleteMember = (_id, memberObj) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'trips', {
+      method: 'DELETE',
+      body: JSON.stringify({_id: _id, memberObj: memberObj}),
+      headers: {'content-type': 'application/json'}
+    })
+
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const trip = await response.json()
+    dispatch(deleteTripInfo(trip))
+  } catch(err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
 }

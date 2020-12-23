@@ -5,7 +5,13 @@ import tripSummaryComponent from './tripSummaryComponent';
 import {connect} from 'react-redux';
 import Notes from './noteComponent';
 import InfoImages from './infoImagesComponent';
-import {addMember, addImageToTrip, addNoteToTrip, updateTripNote} from '../redux/actionCreators/trips'
+import {addMember, 
+        addImageToTrip, 
+        addNoteToTrip, 
+        updateTripNote,
+        deleteMember,
+        deleteTripInfoImage,
+        deleteTripInfoNote} from '../redux/actionCreators/trips'
 
 const mapStateToProps = state => {
   return {
@@ -18,7 +24,10 @@ const mapDispatchToProps = {
   addMember,
   addImageToTrip, 
   addNoteToTrip,
-  updateTripNote
+  updateTripNote,
+  deleteMember,
+  deleteTripInfoImage,
+  deleteTripInfoNote
 }
 
 const TripInfo = (props) => {
@@ -70,6 +79,18 @@ const TripInfo = (props) => {
     props.addImageToTrip(tripId, image)
   }
 
+  const deleteInfo = (imgObj, notesObj, member) => {
+    if (imgObj) {
+      props.deleteTripInfoImage(tripId, imgObj)
+    }
+    if (notesObj) {
+      props.deleteTripInfoNote(tripId, notesObj)
+    }
+    if (member) {
+      props.deleteMember(tripId, member)
+    }
+  }
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}} contentContainerStyle={{alignItems: 'center'}}>
       <View style={{margin: 30}}>
@@ -79,7 +100,7 @@ const TripInfo = (props) => {
         <Text style={{fontSize: 25}}>Members</Text>
       </View>
       <View>
-        <TripMembers members={trip.members} addMemberHandler={addMemberHandler}/>
+        <TripMembers members={trip.members} addMemberHandler={addMemberHandler} deleteInfo={deleteInfo}/>
       </View>
       <View style={styles.information}>
         <Text style={{fontSize: 25}}>Unique Species Found</Text>
@@ -93,11 +114,11 @@ const TripInfo = (props) => {
         <Text style={{fontSize: 25}}>Trip Notes</Text>
       </View>
       <View>
-        <Notes notes={trip.notes} submitNoteHandler={submitNoteHandler}/>
+        <Notes notes={trip.notes} submitNoteHandler={submitNoteHandler} deleteInfo={deleteInfo}/>
       </View>
       <View style={styles.information}>
         <Text style={{fontSize: 25}}>Trip Images</Text>
-        <InfoImages images={trip.images} newImageHandler={newImageHandler}/>
+        <InfoImages images={trip.images} newImageHandler={newImageHandler} deleteInfo={deleteInfo} />
       </View>
       
     </ScrollView>

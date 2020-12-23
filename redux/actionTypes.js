@@ -10,6 +10,7 @@ export const DELETE_AREA_INFO = 'DELETE_AREA_INFO';
 export const ADD_TRIPS = 'ADD_TRIPS';
 export const POST_TRIP = 'POST_TRIP';
 export const ADD_TRIP_INFO = 'ADD_TRIP_INFO';
+export const DELETE_TRIP_INFO = 'DELETE_TRIP_INFO';
 
 export const ADD_SPECIES = 'ADD_SPECIES';
 export const POST_SPECIMEN_FROM_MASTER = 'POST_SPECIMEN_FROM_MASTER';

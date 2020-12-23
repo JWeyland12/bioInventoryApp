@@ -15,10 +15,19 @@ const TripMembers = (props) => {
         <Text selectable style={{fontSize: 20, marginRight: 10}}>{item.member}</Text>
         {!editMembers ? null : 
         (<View style={{marginLeft: 'auto'}}>
-          <Icon name='minus-circle' type='font-awesome' color='firebrick'/>
+          <Icon 
+            name='minus-circle' 
+            type='font-awesome' 
+            color='firebrick'
+            onPress={() => deleteInfoHandler(item)}
+          />
         </View>)}
       </View>
     )
+  }
+
+  const deleteInfoHandler = item => {
+    props.deleteInfo(0, 0, item)
   }
 
   const addMember = () => {
@@ -29,7 +38,11 @@ const TripMembers = (props) => {
   return (
     <View>
       <View style={{alignItems: 'center'}}>
-        <Text onPress={() => setEditMembers(!editMembers)} style={{fontSize: 13, color: '#008b8b', marginBottom: 10}}>Edit</Text>
+        <Text 
+          onPress={() => setEditMembers(!editMembers)} 
+          style={{fontSize: 13, color: '#008b8b', marginBottom: 10}}>
+          {!editMembers ? 'Edit' : 'Cancel'}
+        </Text>
         <View style={{width: '100%', alignItems: 'center'}}>
           {props.members.length !== 0 ? 
           (<FlatList 
@@ -39,31 +52,32 @@ const TripMembers = (props) => {
             ) : <Text>No Members</Text>}
         </View>
       </View>
-      <View>
-        <View style={{alignItems: 'center', marginHorizontal: 30, paddingVertical: 10}}>
+        <View style={{justifyContent: 'center', marginHorizontal: 50, paddingVertical: 10, flexDirection: 'row'}}>
           <FormInput 
             iconName='user'
             onChangeText={input => setMember(input)}
             value={member}
             placeholder='Member Name'
           />
-          <View style={{flexDirection: 'row', marginTop: 10}}>
-            <RoundButton 
-              title='Cancel' 
-              style={{paddingHorizontal: 20}} 
-              textStyle={{fontSize: 15}} 
-              onPress={() => setInputMember(!inputMember)} 
+          <View style={{marginLeft: 10, alignSelf: 'center'}}>
+            <Icon 
+              name='plus'
+              type='font-awesome'
+              color='green'
+              size={30}
+              style={{marginVertical: 'auto'}}
+              onPress={() => addMember()}
             />
-            <Text>{'  '}</Text>
-            <RoundButton 
+          </View>
+          <View style={{flexDirection: 'row', marginTop: 10}}>
+            {/* <RoundButton 
               title='Add' 
               style={{paddingHorizontal: 20}} 
               textStyle={{fontSize: 15}} 
               onPress={() => addMember()} 
-            />
+            /> */}
           </View>
         </View>
-      </View>
     </View>
   );
 };

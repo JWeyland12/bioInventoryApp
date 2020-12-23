@@ -54,7 +54,7 @@ const SignUp = props => {
     (!checkAvatar || !checkName || !checkUserName || !checkEmail || !checkPassword) ?
         Alert.alert('Please fix the indicated fields', '', [{text: 'Ok'}]) 
         :
-        props.register(name, userName, email, password, avatar)
+        props.register(name, userName, email.toLocaleLowerCase(), password, avatar)
   }
 
   const avatarCheck = () => {

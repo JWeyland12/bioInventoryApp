@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {View, Alert, StyleSheet, Text} from 'react-native';
-import {Input, Icon, Button, Image} from 'react-native-elements';
+import {View, Alert, StyleSheet, Text, ScrollView} from 'react-native';
+import {Icon, Image} from 'react-native-elements';
 import { postSpeciesFromTrip, updateSpeciesObservation, postSpeciesFromMaster } from "../redux/actionCreators/species";
 import {connect} from 'react-redux';
 import ImgPicker from './imagePickerComponent';
@@ -143,7 +143,7 @@ const CreateSpecies = props => {
           </View>
         </View>
       ) : (
-        <View style={{margin: 10, alignItems: 'center'}}>
+        <ScrollView style={{margin: 10}} contentContainerStyle={{alignItems: 'center'}}>
           <View style={styles.imageContainer} >
             <Image style={styles.image} source={{uri: selectedImage}}/>
           </View>
@@ -158,9 +158,12 @@ const CreateSpecies = props => {
             <Icon name='plus' type='font-awesome' raised reverseColor color='grey' onPress={() => setTotal(total + 1)}/>
           </View>
           <View style={{marginVertical: 15}}>
-            <Button title={'Submit Observation'} onPress={() => handleSubmit()}/>
+            <RoundButton 
+              title='Submit Observation'
+              onPress={() => handleSubmit()}
+            />
           </View>
-        </View>
+        </ScrollView>
       )}
     </View>
   );
