@@ -36,7 +36,7 @@ tripRouter
   }
 })
 .put(async (req, res, next) => {
-  if (req.body.date) {
+  if (req.body.areaId) {
     Trip.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true})
     .then(trip => {
       res.statusCode = 200;
@@ -46,6 +46,7 @@ tripRouter
     .catch(err => next(err))
   } else if (req.body.uri) {
     try {
+      console.log('here am i')
       const trip = await Trip.findById(req.body._id)
       if (!trip) {
         res.status(400)
