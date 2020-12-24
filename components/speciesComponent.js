@@ -96,8 +96,8 @@ const SpeciesList = props => {
       }
     ]
     return (
-      <Swipeout left={leftButton} right={rightButton} autoClose={true}>
-        <View>
+      <View style={styles.speciesList}>
+        <Swipeout left={leftButton} right={rightButton} autoClose={true}>
           <ListItem 
             title={item.comName} 
             subtitle={item.sciName}
@@ -107,8 +107,8 @@ const SpeciesList = props => {
             rightIcon={<Icon name='angle-right' type='font-awesome'/>}
             onPress={() => navigate('MasterSpeciesInfo', {specimen: item})}
           />
-        </View>
-      </Swipeout>
+        </Swipeout>
+      </View>
     )
   }
 
@@ -193,4 +193,10 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
   },
+  speciesList: {
+    marginVertical: 2,
+    marginHorizontal: 10,
+    borderRadius: 25,
+    overflow: 'hidden'
+  }
 });
