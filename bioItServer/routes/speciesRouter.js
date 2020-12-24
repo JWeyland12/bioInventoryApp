@@ -8,14 +8,19 @@ speciesRouter.use(bodyParser.json());
 
 speciesRouter
   .route("/")
-  .get((req, res, next) => {
-    Species.find()
-      .then((species) => {
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(species);
-      })
-      .catch((err) => next(err));
+  .get(auth, async (req, res, next) => {
+    try {
+      const userSpecies = await Species.find({user: req.user.id})
+      const defaultSpecies = await Species.find({default: true})
+
+      const species = [...userSpecies, ...defaultSpecies]
+
+      res.status(200)
+      res.header('Content-Type', 'application/json')
+      res.json(species)
+    } catch (err) {
+      next(err)
+    }
   })
   .post(auth, (req, res, next) => {
     if(req.body.tripObj) {
@@ -79,6 +84,7 @@ speciesRouter
     }
   })
   .delete((req, res, next) => {
+    console.log('here')
     //delete from master list \/
     //delete from trip list => modify tripArr
     Species.findByIdAndDelete(req.body._id)
@@ -88,6 +94,59 @@ speciesRouter
       res.json(response)
     })
     .catch(err => next(err))
+  })
+
+  speciesRouter
+  .route('/admin')
+  .get(auth, async (req, res, next) => {
+    try {
+      const species = await Species.find({default: true})
+      res.status(200)
+      res.setHeader('Content-Type', 'application/json')
+      res.json(species)
+    } catch (err) {
+      res.status(400)
+      res.send({msg: 'Server Error'})
+    }
+  })
+  .post(auth, async (req, res, next) => {
+    try {
+      if(req.body.tripObj) {
+        //species created from a trip
+      req.body.tripArr = req.body.tripObj
+      }
+      req.body.user = req.user.id
+      req.body.default = true
+      const species = Species.create(req.body)
+      res.status(200)
+      res.setHeader('Content-Type', 'application/json')
+      res.json(species)
+    } catch (err) {
+      res.status(400)
+      next(err)
+    }
+  })
+  .put(async (req, res, next) => {
+    try {
+      const species = Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
+      res.status(200)
+      res.setHeader('Content-Type', 'application/json')
+      res.json(species)
+    } catch (err) {
+      res.status(200)
+      next(err)
+    }
+  })
+  .delete(async (req, res, next) => {
+    try {
+      const species = Species.findByIdAndDelete(req.body._id)
+      res.status(200)
+      res.setHeader('Content-Type', 'application/json')
+      res.json(species)
+    } catch (err) {
+      res.status(200)
+      next(err)
+    }
   })
 
 module.exports = speciesRouter;

@@ -24,6 +24,10 @@ const speciesSchema = new Schema(
       type: String,
       required: true,
     },
+    default: {
+      type: Boolean,
+      default: false
+    },
     tripArr: [
       {
         tripId: {

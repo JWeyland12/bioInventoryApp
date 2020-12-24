@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useContext } from 'react';
 import {View, FlatList, Text, StyleSheet, TouchableOpacity, Modal, Alert} from 'react-native';
 import { ListItem, Icon, Input, Button } from "react-native-elements";
 import {connect} from 'react-redux';
@@ -7,6 +7,7 @@ import ImgPicker from './imagePickerComponent';
 import {updateSpecies, deleteSpeciesFromMaster} from '../redux/actionCreators/species';
 import RoundButton from './customStyledComponents/roundedButtonComponent';
 import FormInput from './customStyledComponents/formInputComponent';
+import {UserContext} from './userContextComponent';
 
 const mapStateToProps = state => {
   return {species: state.species}
@@ -24,8 +25,11 @@ const SpeciesList = props => {
   const [comName, setComName] = useState('');
   const [rank, setRank] = useState('')
   const [selectedImage, setSelectedImage] = useState('');
+  const [specimen, setSpecimen] = useState([])
   const {navigate} = props.navigation
   const speciesAlpha = props.species.species.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1)
+  const {value} = useContext(UserContext)
+  const [user, setUser] = value
 
   useLayoutEffect(() => {
     if (modalIndex) {
@@ -35,6 +39,7 @@ const SpeciesList = props => {
 
   const setSpeciesState = () => {
     const findSpecies = props.species.species.find(species => species._id.toString() === modalIndex.toString())
+    setSpecimen(findSpecies);
     setSciName(findSpecies.sciName);
     setComName(findSpecies.comName);
     findSpecies.rank ? setRank(findSpecies.rank) : setRank('Unknown')
@@ -48,7 +53,7 @@ const SpeciesList = props => {
   };
 
   const handleSubmit = () => {
-    props.updateSpecies(modalIndex, sciName, comName, rank, selectedImage);
+    props.updateSpecies(modalIndex, sciName, comName, rank, selectedImage, specimen);
     setModal(!isModalOpen)
     setModalIndex('')
   }
@@ -74,7 +79,7 @@ const SpeciesList = props => {
         onPress: () => {
           Alert.alert(
             'Do you want to delete this project?',
-            `${item.name} \n${item.county} county, ${item.state}`,
+            `${item.comName} \n${item.sciName}`,
             [
               {
                 text: 'Cancel',
@@ -82,7 +87,7 @@ const SpeciesList = props => {
               },
               {
                 text: 'Confirm',
-                onPress: () => props.deleteSpeciesFromMaster(item._id)
+                onPress: () => props.deleteSpeciesFromMaster(item)
               }
           ],
           {cancelable: false}

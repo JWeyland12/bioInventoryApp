@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {View, Alert, StyleSheet, Text, ScrollView} from 'react-native';
 import {Icon, Image} from 'react-native-elements';
 import { postSpeciesFromTrip, updateSpeciesObservation, postSpeciesFromMaster } from "../redux/actionCreators/species";
@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import ImgPicker from './imagePickerComponent';
 import RoundButton from './customStyledComponents/roundedButtonComponent';
 import FormInput from './customStyledComponents/formInputComponent';
+import {UserContext} from './userContextComponent';
 
 const mapDispatchToProps = {
   postSpeciesFromTrip,
@@ -23,6 +24,8 @@ const CreateSpecies = props => {
   let [total, setTotal] = useState(1);
   const [doesTripExist, setDoesTripExist] = useState(false)
   const {navigate} = props.navigation;
+  const {value} = useContext(UserContext);
+  const [user, setUser] = value
   
   if(idObject) {
     idObject.total = total
@@ -69,8 +72,8 @@ const CreateSpecies = props => {
   const handleSubmit = () => {
     if (!specimen) {
       // create new species from trip or masterList
-    {!idObject ? props.postSpeciesFromMaster(sciName, comName, rank, selectedImage)
-      : props.postSpeciesFromTrip(sciName, comName, rank, selectedImage, idObject)}
+    {!idObject ? props.postSpeciesFromMaster(sciName, comName, rank, selectedImage, user)
+      : props.postSpeciesFromTrip(sciName, comName, rank, selectedImage, idObject, user)}
     {!idObject ? navigate('SpeciesList') : navigate('TripSpecies', {tripId: idObject.tripId})}
     } else {
       // observing a species - submitting a tripObj to the species
@@ -105,7 +108,7 @@ const CreateSpecies = props => {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {!specimen ? (
-        <View>
+        <ScrollView>
           <View style={{margin: 10}}>
             <FormInput 
               iconName='angle-right' 
@@ -141,7 +144,7 @@ const CreateSpecies = props => {
           <View style={{margin: 30, alignItems: 'center'}}>
             <RoundButton title='Create Species' textStyle={{color: 'white'}} onPress={() => confirmSpecies()} />
           </View>
-        </View>
+        </ScrollView>
       ) : (
         <ScrollView style={{margin: 10}} contentContainerStyle={{alignItems: 'center'}}>
           <View style={styles.imageContainer} >

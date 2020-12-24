@@ -14,6 +14,8 @@ export const DELETE_TRIP_INFO = 'DELETE_TRIP_INFO';
 
 export const ADD_SPECIES = 'ADD_SPECIES';
 export const POST_SPECIMEN_FROM_MASTER = 'POST_SPECIMEN_FROM_MASTER';
+export const UPDATE_SPECIES = 'UPDATE_SPECIES';
+export const DELETE_SPECIES = 'DELETE_SPECIES';
 
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
