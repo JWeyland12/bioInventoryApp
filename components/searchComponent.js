@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {SearchBar, ListItem, Icon} from 'react-native-elements';
-import {View, FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, FlatList, StyleSheet, Text, TouchableOpacity, Switch} from 'react-native';
 
 const Search = (props) => {
   const [masterList, setMasterList] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [filteredList, setFilteredList] = useState([]);
   const [listType, setListType] = useState('');
+  const [switchView, setSwitchView] = useState(false)
   const idObject = props.idObject
   const navigate = props.navigate;
 
@@ -24,7 +25,8 @@ const Search = (props) => {
     setSearchText(text)
     if (text) {
       const newData = masterList.filter(item => {
-        const itemData = (item.comName) ? item.comName.toUpperCase() : ''.toUpperCase()
+        const itemData = !switchView ? (item.comName) ? item.comName.toUpperCase() : ''.toUpperCase() :
+          (item.sciName) ? item.sciName.toUpperCase() : ''.toUpperCase()
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       })
@@ -34,28 +36,36 @@ const Search = (props) => {
 
   const renderList = ({item}) => {
     return (
-      <ListItem 
-      title={item.comName}
-      subtitle={item.sciName}
-      onPress={() => navigate('CreateSpecies', {specimen: item, idObject: idObject})}
-      leftAvatar={{ source: {uri: item.img}}}
-      topDivider
-      bottomDivider
-      rightIcon={<Icon name='angle-right' type='font-awesome'/>}
-    />
+      <View style={styles.listView}>
+        <ListItem 
+          title={!switchView ? item.comName : item.sciName}
+          subtitle={!switchView ? item.sciName : item.comName}
+          onPress={() => navigate('CreateSpecies', {specimen: item, idObject: idObject})}
+          leftAvatar={{ source: {uri: item.img}}}
+          topDivider
+          bottomDivider
+          rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+        />
+      </View>
     )
   }
 
   return (
     <View>
-      <SearchBar 
-        onChangeText={(text) => searchFilteredFunction(text)}
-        value={searchText}
-        placeholder={`Search ${listType}`}
-        lightTheme
-        cancelIcon
-        platform={'android'}
-      />
+      <View style={{flexDirection: 'row', marginLeft: 'auto', marginTop: 12, marginRight: 20}}>
+        <Text style={{color: 'gray'}}>Search by Scientific Name</Text>
+        <Switch value={switchView} onChange={() => setSwitchView(!switchView)} />
+      </View>
+      <View style={styles.searchBar}>
+        <SearchBar 
+          onChangeText={(text) => searchFilteredFunction(text)}
+          value={searchText}
+          placeholder={`Search ${listType}`}
+          lightTheme
+          cancelIcon
+          platform={'android'}
+        />
+      </View>
       {!searchText ? null :
       (<View>
         <FlatList 
@@ -68,24 +78,18 @@ const Search = (props) => {
   );
 };
 
+const styles = StyleSheet.create({
+  searchBar: {
+    borderRadius: 1000,
+    overflow: 'hidden',
+    marginHorizontal: 20,
+  },
+  listView: {
+    // marginVertical: 2,
+    marginHorizontal: 20,
+    borderRadius: 1000,
+    overflow: 'hidden'
+  }
+})
+
 export default Search;
-
-
- // const filterData = (text) => {
-  //   if(text) {
-  //     setSearchText(text)
-  //     const filter = [masterList.filter(name => {
-  //       function anon() {
-  //         for (const value of name) {
-  //           if(name[value].toUpperCase() === text.toUpperCase()) {
-  //             const x = name[value]
-  //             return x.toUpperCase()
-  //           }
-  //         }
-  //       }
-  //       return anon() === text.toUpperCase()
-  //     })]
-  //     console.log('filter', filter)
-  //     return filter
-  //   }
-  // }

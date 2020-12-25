@@ -54,24 +54,9 @@ const styles = StyleSheet.create({
     maxHeight: '100%',
   },
   inputView: {
-    marginTop: 75,
+    marginTop: 105,
     margin: 10,
     justifyContent: 'center',
     flexDirection: 'row'
   }
 })
-
-{/* <Input 
-          leftIcon={<Icon name="angle-right" type="font-awesome" />} 
-          leftIconContainerStyle={{ paddingRight: 10 }} 
-          onChangeText={text => setSciName(text)}
-          value={sciName}
-          placeholder={'Scientific Name'}
-        />
-        <Input 
-          leftIcon={<Icon name="angle-right" type="font-awesome" />} 
-          leftIconContainerStyle={{ paddingRight: 10 }} 
-          onChangeText={text => setComName(text)}
-          value={comName}
-          placeholder={'Common Name'}
-        /> */}

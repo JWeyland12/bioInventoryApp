@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useContext } from 'react';
-import {View, FlatList, Text, StyleSheet, TouchableOpacity, Modal, Alert} from 'react-native';
+import {View, FlatList, Text, StyleSheet, TouchableOpacity, Modal, Alert, Switch, ScrollView} from 'react-native';
 import { ListItem, Icon, Input, Button } from "react-native-elements";
 import {connect} from 'react-redux';
 import Swipeout from 'react-native-swipeout';
@@ -27,15 +27,31 @@ const SpeciesList = props => {
   const [selectedImage, setSelectedImage] = useState('');
   const [specimen, setSpecimen] = useState([])
   const {navigate} = props.navigation
-  const speciesAlpha = props.species.species.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1)
+  const [defaultSpecies, setDefaultSpecies] = useState(props.species.species.filter(item => item.default === true)
+  .sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
+  const [speciesAlpha, setSpeciesAlpha] = useState(props.species.species.filter(item => item.default === false)
+  .sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
   const {value} = useContext(UserContext)
   const [user, setUser] = value
+  const [switchView, setSwitchView] = useState(false);
+  // const sortValue = !switchView ? comName : sciName
 
   useLayoutEffect(() => {
     if (modalIndex) {
       setSpeciesState()
     }
-  }, [modalIndex]);
+    if (switchView) {
+      setDefaultSpecies(props.species.species.filter(item => item.default === true)
+      .sort((a, b) => (a.sciName.toUpperCase() > b.sciName.toUpperCase()) ? 1 : -1))
+      setSpeciesAlpha(props.species.species.filter(item => item.default === false)
+      .sort((a, b) => (a.sciName.toUpperCase() > b.sciName.toUpperCase()) ? 1 : -1))
+    } else {
+      setDefaultSpecies(props.species.species.filter(item => item.default === true)
+      .sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
+      setSpeciesAlpha(props.species.species.filter(item => item.default === false)
+      .sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
+    }
+  }, [switchView, modalIndex]);
 
   const setSpeciesState = () => {
     const findSpecies = props.species.species.find(species => species._id.toString() === modalIndex.toString())
@@ -99,8 +115,8 @@ const SpeciesList = props => {
       <View style={styles.speciesList}>
         <Swipeout left={leftButton} right={rightButton} autoClose={true}>
           <ListItem 
-            title={item.comName} 
-            subtitle={item.sciName}
+            title={!switchView ? item.comName : item.sciName} 
+            subtitle={!switchView ? item.sciName : item.comName}
             leftAvatar={{source: {uri: item.img}, size: 'medium'}}
             bottomDivider
             topDivider
@@ -113,11 +129,28 @@ const SpeciesList = props => {
   }
 
   const FlatSpeciesList = ({speciesAlpha}) => {
-    return <FlatList data={speciesAlpha} renderItem={renderSpecies} keyExtractor={(item) => item._id.toString()}/>
+    return (
+      <View>
+        <View style={{flexDirection: 'row', marginHorizontal: 12, marginTop: 12}}>
+          <Text style={{color: 'gray'}}>Default Species</Text>
+          <View style={{marginLeft: 'auto', flexDirection: 'row'}}>
+            <Text style={{color: 'gray'}}>Sort by Scientific Name</Text>
+            <Switch onChange={() => setSwitchView(!switchView)} value={switchView} />
+          </View>
+        </View>
+        <FlatList data={defaultSpecies} renderItem={renderSpecies} keyExtractor={item => item._id.toString()} />
+        <View style={{margin: 12}}>
+          <Text style={{color: 'gray'}}>My Species</Text>
+        </View>
+        <FlatList data={speciesAlpha} renderItem={renderSpecies} keyExtractor={(item) => item._id.toString()}/>
+      </View>
+    )
   }
   return (
     <View style={{flex: 1}}>
-      <FlatSpeciesList speciesAlpha={speciesAlpha}/>
+      <ScrollView>
+        <FlatSpeciesList speciesAlpha={speciesAlpha}/>
+      </ScrollView>
       <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateSpecies')}>
         <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
       </TouchableOpacity>
