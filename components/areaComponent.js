@@ -147,7 +147,7 @@ const Areas = props => {
     }
   };
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{ flex: 1 }}>
       <View style={styles.listStyle}>
         <ListItem 
           title='Property Information'

@@ -49,7 +49,7 @@ const TripSpecies = props => {
       return tripArrId
     }
     return (
-      <View>
+      <View style={styles.listStyle}>
         <ListItem 
           title={item.comName} 
           subtitle={`${item.sciName} - Total: ${totalCount(item)}`}
@@ -81,8 +81,15 @@ const TripSpecies = props => {
 
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <ListItem title='Trip Information' titleStyle={{fontSize: 20}} bottomDivider onPress={() => navigate('TripInfo', {tripId: tripId, total: speciesArr.length})} />
+    <View style={{flex: 1}}>
+      <View style={styles.listStyle}>
+        <ListItem 
+          title='Trip Information' 
+          titleStyle={{fontSize: 20}} 
+          bottomDivider 
+          rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+          onPress={() => navigate('TripInfo', {tripId: tripId, total: speciesArr.length})} />
+      </View>
       <ScrollView>
         <RenderSpecies speciesArr={speciesArr}/>
       </ScrollView>
@@ -128,6 +135,12 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOpacity: 10,
   },
+  listStyle: {
+    marginVertical: 2,
+    marginHorizontal: 10,
+    borderRadius: 25,
+    overflow: 'hidden'
+  }
 });
 
 export default connect(mapStateToProps)(TripSpecies);

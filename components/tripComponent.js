@@ -91,8 +91,8 @@ const Trips = props => {
       }
     ]
     return (
-      <Swipeout left={leftButton} right={rightButton} autoClose={true}>
-        <View>
+      <View style={styles.listStyle}>
+        <Swipeout left={leftButton} right={rightButton} autoClose={true}>
           <ListItem 
           title={item.date} 
           titleStyle={{fontSize: 20}}
@@ -102,8 +102,8 @@ const Trips = props => {
           containerStyle={{height: 75}}
           rightIcon={<Icon name='angle-right' type='font-awesome'/>}
         />
-        </View>
-      </Swipeout>
+        </Swipeout>
+      </View>
     )
   };
 
@@ -125,14 +125,16 @@ const Trips = props => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <ListItem 
-        title={'Area Information'} 
-        titleStyle={{fontSize: 20}}
-        onPress={() => navigate('AreaInformation', {areaId: areaId, areaGeoRef: areaGeoRef})}
-        bottomDivider
-        rightIcon={<Icon name='angle-right' type='font-awesome'/>}
-      />
+    <View style={{ flex: 1}}>
+      <View style={styles.listStyle}>
+        <ListItem 
+          title={'Area Information'} 
+          titleStyle={{fontSize: 20}}
+          onPress={() => navigate('AreaInformation', {areaId: areaId, areaGeoRef: areaGeoRef})}
+          bottomDivider
+          rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+        />
+      </View>
       <ScrollView>
         <RenderTrips trips={trips} />
       </ScrollView>
@@ -200,6 +202,12 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOpacity: 10,
   },
+  listStyle: {
+    marginVertical: 2,
+    marginHorizontal: 10,
+    borderRadius: 25,
+    overflow: 'hidden'
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Trips);
