@@ -148,15 +148,17 @@ const Areas = props => {
   };
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <ListItem 
-        title='Property Information'
-        titleStyle={{fontSize: 20}}
-        rightIcon={<Icon 
-          name='angle-right'
-          type='font-awesome'
-        />}
-        onPress={() => navigate('ProjectInfo', {projectId: projectId})}
-      />
+      <View style={styles.listStyle}>
+        <ListItem 
+          title='Property Information'
+          titleStyle={{fontSize: 20}}
+          rightIcon={<Icon 
+            name='angle-right'
+            type='font-awesome'
+          />}
+          onPress={() => navigate('ProjectInfo', {projectId: projectId})}
+        />
+      </View>
       <ScrollView>
         <RenderAreas areas={areas} />
       </ScrollView>
