@@ -83,17 +83,52 @@ speciesRouter
       }
     }
   })
-  .delete((req, res, next) => {
-    console.log('here')
-    //delete from master list \/
+  .delete(async (req, res, next) => {
+    console.log(req.body)
     //delete from trip list => modify tripArr
-    Species.findByIdAndDelete(req.body._id)
-    .then(response => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json')
-      res.json(response)
-    })
-    .catch(err => next(err))
+    if (!req.body.imgObj && !req.body.notesObj) {
+      Species.findByIdAndDelete(req.body._id)
+      .then(response => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json')
+        res.json(response)
+      })
+      .catch(err => next(err))
+    } else if (req.body.imgObj) {
+      console.log('here')
+      try {
+        const species = await Species.findById(req.body._id)
+        const index = species.tripArr.findIndex(i => i._id.toString() === req.body.tripArrId.toString())
+        console.log('index', index)
+        const index1 = species.tripArr[index].images.findIndex(i => i._id.toString() === req.body.imgObj._id.toString())
+        console.log('index1', index1)
+        species.tripArr[index].images.splice(index1, 1)
+        species.save()
+        res.status(200)
+        res.setHeader('Content-Type', 'application/json')
+        res.json(species)
+      } catch (err) {
+        res.status(400)
+        res.send({msg: 'Image Could not be removed'})
+      }
+    }  else if (req.body.notesObj) {
+      console.log('here')
+      try {
+        const species = await Species.findById(req.body._id)
+        const index = species.tripArr.findIndex(i => i._id.toString() === req.body.tripArrId.toString())
+        console.log('index', index)
+        const index1 = species.tripArr[index].notes.findIndex(i => i._id.toString() === req.body.notesObj._id.toString())
+        console.log('index1', index1)
+        species.tripArr[index].notes.splice(index1, 1)
+        species.save()
+        res.status(200)
+        res.setHeader('Content-Type', 'application/json')
+        res.json(species)
+      } catch (err) {
+        res.status(400)
+        res.send({msg: 'Image Could not be removed'})
+      }
+    }
   })
 
   speciesRouter

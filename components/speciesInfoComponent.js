@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {ScrollView, View, Text, StyleSheet, ToastAndroid} from 'react-native';
 import {Image, Icon} from 'react-native-elements';
-import {updateSpeciesObservation, updateSpeciesNote, createSpeciesNote} from '../redux/actionCreators/species';
+import {updateSpeciesObservation, updateSpeciesNote, createSpeciesNote, deleteSpeciesInfoImage, deleteSpeciesInfoNote} from '../redux/actionCreators/species';
 import {connect} from 'react-redux';
 import Notes from './noteComponent';
 import InfoImages from './infoImagesComponent';
@@ -15,7 +15,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   updateSpeciesObservation,
   updateSpeciesNote,
-  createSpeciesNote
+  createSpeciesNote,
+  deleteSpeciesInfoImage,
+  deleteSpeciesInfoNote
 }
 
 const SpeciesInfo = (props) => {
@@ -33,11 +35,11 @@ const SpeciesInfo = (props) => {
     if(speciesId) {
       setSpecimen(props.species.species.filter(item => item._id.toString() === speciesId.toString())[0])
       setImages(tripArrId.images)
-      if (specimen.tripArr) {
-        for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
-          if (specimen.tripArr[i]._id.toString() === tripArrSelector.toString()) {
-            setTripArrId(specimen.tripArr[i])
-          }
+    }
+    if (specimen.tripArr) {
+      for (let i = 0; i <= specimen.tripArr.length - 1; i++) {
+        if (specimen.tripArr[i]._id.toString() === tripArrSelector.toString()) {
+          setTripArrId(specimen.tripArr[i])
         }
       }
     }
@@ -71,6 +73,17 @@ const SpeciesInfo = (props) => {
     }
   }
 
+  const deleteInfo = (imgObj, notesObj) => {
+    if (imgObj) {
+      props.deleteSpeciesInfoImage(speciesId, imgObj, tripArrId._id)
+    }
+    if (notesObj) {
+      props.deleteSpeciesInfoNote(speciesId, notesObj, tripArrId._id)
+    }
+  }
+
+  //delete info image and notes
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}} contentContainerStyle={{alignItems: 'center'}}>
       <View style={{marginTop: 20}}>
@@ -100,11 +113,11 @@ const SpeciesInfo = (props) => {
         <Text style={{fontSize: 25}}>Notes</Text>
       </View>
       <View>
-        <Notes submitNoteHandler={submitNoteHandler} notes={tripArrId.notes}/>
+        <Notes submitNoteHandler={submitNoteHandler} notes={tripArrId.notes} deleteInfo={deleteInfo}/>
       </View>
       <View style={styles.information}>
         <Text style={{fontSize: 25}}>Observation Images</Text>
-        <InfoImages newImageHandler={newImageHandler} images={tripArrId.images}/>
+        <InfoImages newImageHandler={newImageHandler} images={tripArrId.images} deleteInfo={deleteInfo} />
       </View>
     </ScrollView>
   );

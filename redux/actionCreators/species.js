@@ -283,3 +283,50 @@ const deleteSpecimen = specimen => ({
   type: actionType.DELETE_SPECIES,
   payload: specimen
 })
+
+export const deleteSpeciesInfoImage = (_id, imgObj, tripArrId) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'species', {
+      method: 'DELETE',
+      body: JSON.stringify({_id: _id, imgObj: imgObj, tripArrId}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const species = await response.json()
+    dispatch(deleteSpeciesInfo(species))
+    console.log('dispatched')
+  } catch(err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
+}
+
+export const deleteSpeciesInfo = species => ({
+  type: actionType.DELETE_SPECIES_INFO,
+  payload: species
+})
+
+export const deleteSpeciesInfoNote = (_id, notesObj, tripArrId) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'species', {
+      method: 'DELETE',
+      body: JSON.stringify({_id: _id, notesObj: notesObj, tripArrId}),
+      headers: {'content-type': 'application/json'}
+    })
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const species = await response.json()
+    dispatch(deleteSpeciesInfo(species))
+    console.log('dispatched')
+  } catch(err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
+}

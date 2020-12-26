@@ -94,7 +94,7 @@ const SpeciesList = props => {
         backgroundColor: 'red',
         onPress: () => {
           Alert.alert(
-            'Do you want to delete this project?',
+            'Do you want to delete this specimen?',
             `${item.comName} \n${item.sciName}`,
             [
               {

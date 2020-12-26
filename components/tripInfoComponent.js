@@ -104,11 +104,11 @@ const TripInfo = (props) => {
       </View>
       <View style={styles.information}>
         <Text style={{fontSize: 25}}>Unique Species Found</Text>
-        <Text style={{fontSize: 20}}>{findTotalObs()}</Text>
+        <Text style={{fontSize: 20}}>{total}</Text>
       </View>
       <View style={styles.information}>
         <Text style={{fontSize: 25}}>Total Observations</Text>
-        <Text style={{fontSize: 20}}>{total}</Text>
+        <Text style={{fontSize: 20}}>{findTotalObs()}</Text>
       </View>
       <View style={styles.information}>
         <Text style={{fontSize: 25}}>Trip Notes</Text>

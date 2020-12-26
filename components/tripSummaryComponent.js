@@ -2,9 +2,15 @@ import React, { Component } from 'react';
 import {View, FlatList, TouchableOpacity, Text, StyleSheet, ScrollView} from 'react-native';
 import {ListItem, Card, Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
+import Swipeout from 'react-native-swipeout';
+
 
 const mapStateToProps = state => {
   return { species: state.species }
+}
+
+const mapDispatchToProps = {
+  //delete species from list => remove tripArr object
 }
 
 const TripSpecies = props => {
@@ -29,6 +35,29 @@ const TripSpecies = props => {
   speciesArr = speciesArr.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1)
 
   const tripSpeciesList = ({item}) => {
+    const rightButton = [
+      {
+        text: "Delete",
+        backgroundColor: 'red',
+        onPress: () => {
+          Alert.alert(
+            'Do you want to delete this specimen?',
+            `${item.comName} \n${item.sciName}`,
+            [
+              {
+                text: 'Cancel',
+                type: 'cancel'
+              },
+              {
+                text: 'Confirm',
+                onPress: () => {}
+              }
+          ],
+          {cancelable: false}
+          )
+        }
+      }
+    ]
     const totalCount = (item) => {
       let total
       for (let i = 0; i <= item.tripArr.length - 1; i++) {
@@ -50,15 +79,17 @@ const TripSpecies = props => {
     }
     return (
       <View style={styles.listStyle}>
-        <ListItem 
-          title={item.comName} 
-          subtitle={`${item.sciName} - Total: ${totalCount(item)}`}
-          topDivider
-          bottomDivider
-          leftAvatar={{source: {uri: item.img}, size: 'large'}}
-          rightIcon={<Icon name='angle-right' type='font-awesome'/>}
-          onPress={() => navigate('SpeciesInfo', {speciesId: item._id, tripArrId: findTripArrId(item) })}
-        />
+        <Swipeout right={rightButton}>
+          <ListItem 
+            title={item.comName} 
+            subtitle={`${item.sciName} - Total: ${totalCount(item)}`}
+            topDivider
+            bottomDivider
+            leftAvatar={{source: {uri: item.img}, size: 'large'}}
+            rightIcon={<Icon name='angle-right' type='font-awesome'/>}
+            onPress={() => navigate('SpeciesInfo', {speciesId: item._id, tripArrId: findTripArrId(item) })}
+          />
+        </Swipeout>
       </View>
     )
   }
