@@ -23,6 +23,7 @@ speciesRouter
     }
   })
   .post(auth, (req, res, next) => {
+    console.log('body', req.body)
     if(req.body.tripObj) {
       //species created from a trip
     req.body.tripArr = req.body.tripObj
@@ -157,7 +158,8 @@ speciesRouter
       }
       req.body.user = req.user.id
       req.body.default = true
-      const species = Species.create(req.body)
+      const species = await Species.create(req.body)
+      console.log('species', species)
       res.status(200)
       res.setHeader('Content-Type', 'application/json')
       res.json(species)
@@ -166,23 +168,38 @@ speciesRouter
       next(err)
     }
   })
-  .put(async (req, res, next) => {
+  .put(auth, async (req, res, next) => {
+    console.log(req.body)
     try {
-      const species = Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
-      res.status(200)
-      res.setHeader('Content-Type', 'application/json')
-      res.json(species)
+      if (req.body.user.admin) {
+        const species = await Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
+        res.status(200)
+        res.setHeader('Content-Type', 'application/json')
+        res.json(species)
+      } else {
+        const err = new Error('Admin privilieges required')
+        res.status(400)
+        res.send(err)
+      }
     } catch (err) {
       res.status(200)
       next(err)
     }
   })
-  .delete(async (req, res, next) => {
+  .delete(auth, async (req, res, next) => {
+    console.log('body', req.body)
     try {
-      const species = Species.findByIdAndDelete(req.body._id)
-      res.status(200)
-      res.setHeader('Content-Type', 'application/json')
-      res.json(species)
+      if (req.body.user.admin) {
+        const species = await Species.findByIdAndDelete({_id: req.body._id})
+        console.log('species', species)
+        res.status(200)
+        res.setHeader('Content-Type', 'application/json')
+        res.json(species)
+      } else {
+        const err = new Error('Admin privilieges required')
+        res.status(400)
+        res.send(err)
+      }
     } catch (err) {
       res.status(200)
       next(err)

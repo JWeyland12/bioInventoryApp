@@ -51,7 +51,7 @@ const SpeciesList = props => {
       setSpeciesAlpha(props.species.species.filter(item => item.default === false)
       .sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
     }
-  }, [switchView, modalIndex]);
+  }, [props.species, switchView, modalIndex]);
 
   const setSpeciesState = () => {
     const findSpecies = props.species.species.find(species => species._id.toString() === modalIndex.toString())
@@ -69,7 +69,7 @@ const SpeciesList = props => {
   };
 
   const handleSubmit = () => {
-    props.updateSpecies(modalIndex, sciName, comName, rank, selectedImage, specimen);
+    props.updateSpecies(modalIndex, sciName, comName, rank, selectedImage, specimen, user);
     setModal(!isModalOpen)
     setModalIndex('')
   }
@@ -103,7 +103,7 @@ const SpeciesList = props => {
               },
               {
                 text: 'Confirm',
-                onPress: () => props.deleteSpeciesFromMaster(item)
+                onPress: () => props.deleteSpeciesFromMaster(item, user)
               }
           ],
           {cancelable: false}

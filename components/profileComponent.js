@@ -7,6 +7,7 @@ import {UserContext} from './userContextComponent';
 import {updateUser, deleteAccount} from '../redux/actionCreators/auth';
 import ImgPicker from './imagePickerComponent';
 import RoundButton from './customStyledComponents/roundedButtonComponent';
+import FormInput from './customStyledComponents/formInputComponent';
 
 
 const mapDispatchToProps = {
@@ -99,8 +100,8 @@ const Profile = (props) => {
         <View style={styles.accountInfo}>
           {updateName ?
           (<View>
-            <Input
-              leftIcon={<Icon name='angle-right' type='font-awesome'/>}
+            <FormInput 
+              iconName='angle-right'
               onChangeText={text => setName(text)}
               value={name}
             />
@@ -128,11 +129,10 @@ const Profile = (props) => {
         <View style={styles.accountInfo}>
         {updateEmail ?
           (<View>
-            <Input
-              leftIcon={<Icon name='angle-right' type='font-awesome'/>}
+            <FormInput 
+              iconName='angle-right'
               onChangeText={text => setEmail(text)}
               value={email}
-              style={{borderWidth: 1}}
             />
             <View style={{flexDirection: 'row', justifyContent: 'center'}}>
               <Text 
@@ -158,19 +158,19 @@ const Profile = (props) => {
         <View style={styles.accountInfo}>
         {updatePassword ?
           (<View>
-            <Input
-              leftIcon={<Icon name='angle-right' type='font-awesome'/>}
+            <FormInput 
+              iconName='angle-right'
               onChangeText={text => setPassword(text)}
               value={password}
               secureTextEntry
-              placeholder={'New Password'}
+              placeholder='New Password'
             />
-            <Input
-              leftIcon={<Icon name='angle-right' type='font-awesome'/>}
+            <FormInput 
+              iconName='angle-right'
               onChangeText={text => setConfirmPassword(text)}
               value={confirmPassword}
               secureTextEntry
-              placeholder={'Confirm New Password'}
+              placeholder='Confirm New Password'
             />
             <View style={{flexDirection: 'row', justifyContent: 'center'}}>
               <Text 

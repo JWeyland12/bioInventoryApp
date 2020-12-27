@@ -15,6 +15,7 @@ const FormInput = (props) => {
         onChangeText={text => props.onChangeText(text)}
         placeholder={props.placeholder}
         value={props.value}
+        secureTextEntry={props.secureTextEntry}
       />
     </View>
   );

@@ -39,32 +39,26 @@ export const postSpeciesFromMaster = (sciName, comName, rank, img, user) => asyn
       from: img,
       to: newPath
     });
+    const response = await fetch(baseUrl + route, {
+      method: 'POST',
+      body: JSON.stringify({sciName, comName, rank, img: newPath}),
+      headers: {'content-type': 'application/json', 'x-auth-token': user.token}
+    })
+
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const species = await response.json()
+    console.log('response', species)
+    dispatch(addSpecimen(species))
   } catch (err) {
+    console.log('post specimen', error.message)
+    alert(`The ${sciName} could not be created or already exists!`)
     console.log(err);
     throw err;
   }
-  fetch(baseUrl + route, {
-    method: 'POST',
-    body: JSON.stringify({sciName, comName, rank, img: newPath}),
-    headers: {'content-type': 'application/json', 'x-auth-token': user.token}
-  })
-  .then(response => {
-    if (response.ok) {
-      return response
-    } else {
-      const err = new Error(`Error ${response.status}: ${response.statusText}`)
-      err.response = response
-      throw err
-    }
-  },
-  err => {throw err}
-  )
-  .then(response => response.json())
-  .then(response => dispatch(addSpecimen(response)))
-  .catch(error => {
-    console.log('post specimen', error.message)
-    alert(`The ${sciName} could not be created or already exists!`)
-  })
 }
 
 export const postSpeciesFromTrip = (sciName, comName, rank, img, tripObj, user) => async dispatch => {
@@ -76,32 +70,24 @@ export const postSpeciesFromTrip = (sciName, comName, rank, img, tripObj, user) 
       from: img,
       to: newPath
     });
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-  fetch(baseUrl + route, {
-    method: 'POST',
-    body: JSON.stringify({sciName, comName, rank, img: newPath, tripObj}),
-    headers: {'content-type': 'application/json', 'x-auth-token': user.token}
-  })
-  .then(response => {
-    if (response.ok) {
-      return response
-    } else {
-      const err = new Error(`Error ${response.status}: ${response.statusText}`)
-      err.response = response
+
+    const response = await fetch(baseUrl + route, {
+      method: 'POST',
+      body: JSON.stringify({sciName, comName, rank, img: newPath, tripObj, user: user.user}),
+      headers: {'content-type': 'application/json', 'x-auth-token': user.token}
+    })
+
+    if (!response.ok) {
+      const err = err.message
       throw err
     }
-  },
-  err => {throw err}
-  )
-  .then(response => response.json())
-  .then(response => dispatch(addSpecimen(response)))
-  .catch(error => {
+
+    const species = await response.json()
+    dispatch(addSpecimen(species))
+  } catch (err) {
     console.log('post specimen', error.message)
     alert(`The ${sciName} could not be created or already exists!`)
-  })
+  }
 }
 
 export const addSpecimen = specimen => ({
@@ -109,7 +95,7 @@ export const addSpecimen = specimen => ({
   payload: specimen
 })
 
-export const updateSpecies = (_id, sciName, comName, rank, img, specimen) => async dispatch => {
+export const updateSpecies = (_id, sciName, comName, rank, img, specimen, user) => async dispatch => {
   const route = !specimen.default ? 'species' : 'species/admin'
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
@@ -118,32 +104,25 @@ export const updateSpecies = (_id, sciName, comName, rank, img, specimen) => asy
       from: img,
       to: newPath
     });
+
+    const response = await fetch(baseUrl + route, {
+      method: 'PUT',
+      body: JSON.stringify({_id, sciName, comName, rank, img: newPath, user: user.user}),
+      headers: {'content-type': 'application/json', 'x-auth-token': user.token}
+    })
+
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const species = await response.json()
+    dispatch(updateSpecimen(species))
   } catch (err) {
+    alert(!specimen.default ? `Species ${sciName} - ${comName} could not be updated` : `The ${comName} specimen requires admin privileges to update!`)
     console.log(err);
     throw err;
   }
-  await fetch(baseUrl + route, {
-    method: 'PUT',
-    body: JSON.stringify({_id, sciName, comName, rank, img: newPath}),
-    headers: {'content-type': 'application/json'}
-  })
-  .then(response => {
-    if (response.ok) {
-      return response
-    } else {
-      const err = new Error(`Error ${response.status}: ${response.statusText}`)
-      err.response = response
-      throw err
-    }
-  },
-  err => {throw err}
-  )
-  .then(response => response.json())
-  .then(response => dispatch(updateSpecimen(response)))
-  .catch(error => {
-    console.log('Update species', error.message)
-    alert(!specimen.default ? `Species ${sciName} - ${comName} could not be updated` : `The ${comName} specimen requires admin privileges to update!`)
-  })
 }
 
 export const updateSpeciesObservation = (specimen, tripObj, img) => async dispatch => {
@@ -248,16 +227,13 @@ export const updateSpeciesNote = (noteId, specimen, tripObj, note) => async disp
   }
 }
 
-export const deleteSpeciesFromMaster = (specimen) => async dispatch => {
+export const deleteSpeciesFromMaster = (specimen, user) => async dispatch => {
   const route = !specimen.default ? 'species' : 'species/admin'
-  // if (route === 'species/admin') {
-  //   if ()
-  // }
   try {
     const response = await fetch(baseUrl + route, {
       method: 'DELETE',
-      body: JSON.stringify({_id: specimen._id}),
-      headers: {'content-type': 'application/json'}
+      body: JSON.stringify({_id: specimen._id, user: user.user}),
+      headers: {'content-type': 'application/json', 'x-auth-token': user.token}
     })
 
     if (!response.ok) {
