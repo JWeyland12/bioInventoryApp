@@ -16,9 +16,6 @@ const SignIn = props => {
   const {navigate} = props.navigation;
   const [viewPassword, setViewPassword] = useState(true)
 
-  console.log(email)
-  console.log(password)
-
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.signInContatiner}>

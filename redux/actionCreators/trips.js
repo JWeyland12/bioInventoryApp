@@ -32,7 +32,6 @@ export const addTrips = trips => ({
 
 export const postTrip = (areaId, token) => dispatch => {
   const date = new Date().toDateString()
-  console.log('date', date)
   fetch(baseUrl + 'trips', {
     method: 'POST',
     body: JSON.stringify({areaId, date}),
@@ -109,12 +108,8 @@ export const addMember = (_id, member) => async dispatch => {
 }
 
 export const addImageToTrip = (tripId, uri) => async dispatch => {
-  console.log('touch')
-  console.log('tripId', tripId)
-  console.log('uri', uri)
   const fileName = uri.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: uri,
@@ -131,7 +126,6 @@ export const addImageToTrip = (tripId, uri) => async dispatch => {
       throw err
     }
     const trip = await response.json()
-    console.log('trip', trip)
     dispatch(addTripInfo(trip))
   } catch(err) {
     alert('Request could not be completed')
@@ -221,9 +215,7 @@ export const deleteTripInfoImage = (_id, imgObj) => async dispatch => {
     }
 
     const trip = await response.json()
-    console.log('trip', trip)
     dispatch(deleteTripInfo(trip))
-    console.log('dispatched')
   } catch(err) {
     alert('Request could not be completed')
     console.log('err', err)
@@ -249,7 +241,6 @@ export const deleteTripInfoNote = (_id, notesObj) => async dispatch => {
 
     const trip = await response.json()
     dispatch(deleteTripInfo(trip))
-    console.log('dispatched')
   } catch(err) {
     alert('Request could not be completed')
     console.log('err', err)

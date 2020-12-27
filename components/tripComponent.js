@@ -39,7 +39,6 @@ const Trips = props => {
   const showModal = () => {
     setIsModalOpen(!isModalOpen)
     setModalIndex('')
-    console.log(modalIndex)
   };
 
 

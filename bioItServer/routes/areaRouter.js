@@ -21,24 +21,18 @@ areaRouter
 })
 
 .post(auth, async (req, res, next) => {
-  console.log(req.body)
-    console.log(req.user.id)
   try {
     const exists = await Area.find()
-    console.log('areas', exists)
     const index = exists.findIndex(i => i.area === req.body.area)
     let user = undefined
     if (index !== -1) {
       user = (exists[index].user.toString() === req.user.id.toString()) ? true : false
     }
-    console.log('index', index)
-      console.log('user', user)
     if (!user) {
       req.body.user = req.user.id
       req.body.project = req.body.projectId
       Area.create(req.body)
         .then((area) => {
-          console.log("Area Created", area);
           res.statusCode = 200;
           res.setHeader("Content-Type", "application/json");
           res.json(area);
@@ -84,7 +78,6 @@ areaRouter
       res.send({msg: 'Server Error'})
     }
   } else if (req.body.note) {
-    console.log('here I am')
     if (!req.body.noteId) {
       try {
         const area = await Area.findById(req.body._id)
@@ -126,12 +119,10 @@ areaRouter
 })
 
 .delete(async (req, res, next) => {
-  console.log(req.body)
   if (!req.body.imgObj && !req.body.notesObj) {
     async function updateTrips(req, next) {
       await Trip.find({areaId: req.body._id})
       .then(trips => {
-        console.log('trips', trips)
         for (let i = 0; i <= trips.length - 1; i++) {
           if (trips[i].areaId.toString() === req.body._id.toString()) {
             trips[i].remove()
@@ -169,7 +160,6 @@ areaRouter
     try {
       const area = await Area.findById(req.body._id)
 
-      console.log('areaFound', area)
 
       if (!area) {
         res.status(401)
@@ -177,7 +167,6 @@ areaRouter
       }
 
       const index = await area.images.findIndex(i => i._id.toString() === req.body.imgObj._id.toString())
-      console.log('index', index)
       area.images.splice(index, 1)
       area.save()
       res.status(200)
@@ -189,7 +178,6 @@ areaRouter
     }
   } else if (req.body.notesObj) {
     try {
-      console.log('here')
       const area = await Area.findById(req.body._id)
 
       if (!area) {
@@ -198,7 +186,6 @@ areaRouter
       }
 
       const index = await area.notes.findIndex(i => i._id.toString() === req.body.notesObj._id.toString())
-      console.log('index', index)
       area.notes.splice(index, 1)
       area.save()
       res.status(200)

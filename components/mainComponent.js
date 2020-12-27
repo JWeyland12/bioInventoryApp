@@ -195,7 +195,6 @@ const Main = props => {
   const {value} = useContext(UserContext)
   const [user, setUser] = value
 
-  console.log('user', user)
 
 useEffect(() => {
   if(props.user.token) {
@@ -209,10 +208,6 @@ useEffect(() => {
     setIsLoggedIn(false)
   }
 }, [props.user.user])
-
-
-
-console.log('isLoggedIn', isLoggedIn)
 
   return (
     <View style={{ flex: 1, paddingTop: Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight }}>

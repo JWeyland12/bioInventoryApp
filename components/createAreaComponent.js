@@ -59,7 +59,6 @@ const CreateArea = props => {
 
   const locationTakenHandler = (location) => {
     const geoRef = {}
-    console.log(location)
     geoRef.lat = location.coords.latitude
     geoRef.long = location.coords.longitude
     setAreaGeoRef(`${geoRef.lat}, ${geoRef.long}`)

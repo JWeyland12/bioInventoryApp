@@ -13,7 +13,6 @@ const multerStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = file.mimetype.split('/')[1];
-    console.log('body.name:', req.body)
     const name = req.obj.name;
     cb(null, `${name}-project-${Date.now()}.${ext}`)
   }
@@ -40,9 +39,7 @@ projectRouter.use(bodyParser.json());
 projectRouter
   .route("/")
   .get(auth, (req, res, next) => {
-    // console.log(req.user.id)
     // const user = await req.user.id
-    // console.log(user)
     Project.find({user: req.user.id})
       .then((Projects) => {
         res.statusCode = 200;
@@ -53,24 +50,17 @@ projectRouter
   })
   .post(auth, async (req, res, next) => {
     // req.body.img = req.file.buffer
-    console.log(req.body)
-    console.log(req.user.id)
     try {
       const exists = await Project.find()
-      console.log('projects', exists)
       const index = exists.findIndex(i => i.name === req.body.name)
       let user = undefined
       if (index !== -1) {
         user = (exists[index].user.toString() === req.user.id.toString()) ? true : false
       }
-      console.log('index', index)
-      console.log('user', user)
       if (!user) {
-        console.log(req.user)
         req.body.user = req.user.id
         Project.create(req.body)
           .then((project) => {
-            console.log("Project Created", project);
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
             res.json(project);
@@ -155,7 +145,6 @@ projectRouter
     }
   })
   .delete(async (req, res, next) => {
-    console.log('req.body', req.body)
     if (!req.body.imgObj && !req.body.notesObj) {
       async function asyncCall(req) {
         await Area.deleteMany({project: req.body._id})
@@ -199,7 +188,6 @@ projectRouter
       try {
         const project = await Project.findById(req.body._id)
 
-        console.log('projectFound', project)
 
         if (!project) {
           res.status(401)
@@ -207,7 +195,6 @@ projectRouter
         }
 
         const index = await project.images.findIndex(i => i._id.toString() === req.body.imgObj._id.toString())
-        console.log('index', index)
         project.images.splice(index, 1)
         project.save()
         res.status(200)
@@ -219,7 +206,6 @@ projectRouter
       }
     } else if (req.body.notesObj) {
       try {
-        console.log('here')
         const project = await Project.findById(req.body._id)
 
         if (!project) {
@@ -228,7 +214,6 @@ projectRouter
         }
 
         const index = await project.notes.findIndex(i => i._id.toString() === req.body.notesObj._id.toString())
-        console.log('index', index)
         project.notes.splice(index, 1)
         project.save()
         res.status(200)

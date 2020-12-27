@@ -35,8 +35,6 @@ const TripInfo = (props) => {
   const [trip, setTrip] = useState(props.trips.trips.filter(trip => trip._id.toString() === tripId.toString())[0])
   const [total, setTotal] = useState(props.navigation.getParam('total'));
 
-  console.log('members', trip.members)
-
   useEffect(() => {
     setTripId(props.navigation.getParam('tripId'))
     setTotal(props.navigation.getParam('total'))
@@ -44,8 +42,6 @@ const TripInfo = (props) => {
       setTrip(props.trips.trips.filter(trip => trip._id.toString() === tripId.toString())[0])
     }
   }, [props.trips])
-
-  console.log('trip', trip)
 
   const findTotalObs = () => {
     let total = []

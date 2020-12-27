@@ -33,7 +33,6 @@ export const addAreas = areas => ({
 export const postArea = (projectId, area, geoRef, altitude, accuracy, karst, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: img,
@@ -76,7 +75,6 @@ export const addArea = area => ({
 export const updateArea = (areaId, area, geoRef, altitude, accuracy, karst, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: img,
@@ -113,7 +111,6 @@ export const updateArea = (areaId, area, geoRef, altitude, accuracy, karst, img,
 export const addImageToArea = (areaId, uri, token) => async dispatch => {
   const fileName = uri.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: uri,
@@ -214,7 +211,6 @@ export const deleteAreaInfoImage = (_id, imgObj) => async dispatch => {
 
     const area = await response.json()
     dispatch(deleteAreaInfo(area))
-    console.log('dispatched')
   } catch(err) {
     alert('Request could not be completed')
     console.log('err', err)
@@ -240,7 +236,6 @@ export const deleteAreaInfoNote = (_id, notesObj) => async dispatch => {
 
     const area = await response.json()
     dispatch(deleteAreaInfo(area))
-    console.log('dispatched')
   } catch(err) {
     alert('Request could not be completed')
     console.log('err', err)

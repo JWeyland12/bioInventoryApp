@@ -36,7 +36,6 @@ tripRouter
   }
 })
 .put(async (req, res, next) => {
-  console.log('touch')
   if (req.body.areaId) {
     Trip.findByIdAndUpdate(req.body._id, { $set: req.body }, { new: true})
     .then(trip => {
@@ -47,7 +46,6 @@ tripRouter
     .catch(err => next(err))
   } else if (req.body.uri) {
     try {
-      console.log('here am i')
       const trip = await Trip.findById(req.body._id)
       if (!trip) {
         res.status(400)
@@ -102,8 +100,6 @@ tripRouter
     }
   } else if (req.body.member) {
     try {
-      console.log('here')
-      console.log('req.body', req.body)
       const trip = await Trip.findById(req.body._id)
       if (!trip) {
         res.status(400)
@@ -122,7 +118,6 @@ tripRouter
   
 })
 .delete(async (req, res, next) => {
-  console.log('req.body', req.body)
   if (!req.body.imgObj && !req.body.notesObj && !req.body.memberObj) {
     async function removeTripRefFromSpecies(req, next) {
       await Species.find()
@@ -151,7 +146,6 @@ tripRouter
     try {
       const trip = await Trip.findById(req.body._id)
 
-      console.log('tripFound', trip)
 
       if (!trip) {
         res.status(401)
@@ -159,7 +153,6 @@ tripRouter
       }
 
       const index = await trip.images.findIndex(i => i._id.toString() === req.body.imgObj._id.toString())
-      console.log('index', index)
       trip.images.splice(index, 1)
       trip.save()
       res.status(200)
@@ -171,7 +164,6 @@ tripRouter
     }
   } else if (req.body.notesObj) {
     try {
-      console.log('here')
       const trip = await Trip.findById(req.body._id)
 
       if (!trip) {
@@ -180,7 +172,6 @@ tripRouter
       }
 
       const index = await trip.notes.findIndex(i => i._id.toString() === req.body.notesObj._id.toString())
-      console.log('index', index)
       trip.notes.splice(index, 1)
       trip.save()
       res.status(200)
@@ -192,16 +183,13 @@ tripRouter
     }
   } else if (req.body.memberObj) {
     try {
-      console.log('member')
       const trip = await Trip.findById(req.body._id)
-      console.log('trip', trip)
       if (!trip) {
         res.status(400)
         res.send({msg: 'Trip not in database'})
       }
 
       const index = await trip.members.findIndex(i => i._id.toString() === req.body.memberObj._id.toString())
-      console.log('index', index)
       trip.members.splice(index, 1)
       trip.save()
       res.status(200)

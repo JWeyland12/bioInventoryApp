@@ -75,7 +75,6 @@ export const updateUser = (token, info) => async dispatch => {
 
     dispatch({type: actionTypes.UPDATE_USER, payload: user})
   } catch(err) {
-    console.log('THIS IS A BIG FAT FUCKING ERROR')
     console.log('Update User', err.message)
     alert('Server error \nCould not update account info')
   }

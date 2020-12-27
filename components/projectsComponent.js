@@ -28,7 +28,6 @@ const Projects = props => {
   const {value} = useContext(UserContext);
   const [user, setUser] = value;
 
-  console.log('projects', props.projects.projects)
   
   const alphaProjects = props.projects.projects.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase()) ? 1 : -1)
 
@@ -46,7 +45,6 @@ const Projects = props => {
     setSelectedImage(filteredProject.img)
     setModal(!isModalOpen)
   };
-  console.log('pc', selectedImage)
 
   const handleSubmit = () => {
     props.updateProject(modalIndex, projectName, projectState, projectCounty, selectedImage, user.token)
@@ -112,7 +110,6 @@ const Projects = props => {
   const showModal = () => {
     setModal(!isModalOpen)
     setModalIndex('')
-    console.log(modalIndex)
   }
 
   const RenderContent = ( {projects} ) => {
@@ -216,12 +213,3 @@ const styles = StyleSheet.create({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Projects);
-
-
-// render() {
-    //   const { navigate } = this.props.navigation;
-    //   const renderProject = ({ item }) => {
-    //     {console.log(item.imgSrc)}
-    //     const image = item.imgSrc
-    //     return <Tile onPress={() => navigate("Inventory", { projectId: item.id })} featured title={item.name} caption={`${item.county} county, ${item.state}`} imageSrc={require('./images/balconySinks.jpg')} />;
-    //   };

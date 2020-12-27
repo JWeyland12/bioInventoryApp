@@ -34,7 +34,6 @@ export const postSpeciesFromMaster = (sciName, comName, rank, img, user) => asyn
   const route = !user.user.admin ? 'species' : 'species/admin'
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: img,
@@ -72,7 +71,6 @@ export const postSpeciesFromTrip = (sciName, comName, rank, img, tripObj, user) 
   const route = !user.user.admin ? 'species' : 'species/admin'
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: img,
@@ -115,7 +113,6 @@ export const updateSpecies = (_id, sciName, comName, rank, img, specimen) => asy
   const route = !specimen.default ? 'species' : 'species/admin'
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: img,
@@ -153,7 +150,6 @@ export const updateSpeciesObservation = (specimen, tripObj, img) => async dispat
   if (img) {
     const fileName = img.split('/').pop();
     const newPath = FileSystem.documentDirectory + fileName;
-    console.log('newPath', newPath)
     try {
       await FileSystem.moveAsync({
         from: img,
@@ -186,7 +182,6 @@ export const updateSpeciesObservation = (specimen, tripObj, img) => async dispat
     })
     .then(response => {
       if (response.ok) {
-        console.log('ok response')
         return response
       } else {
         const err = new Error(`Error ${response.status}: ${response.statusText}`)
@@ -297,8 +292,7 @@ export const deleteSpeciesInfoImage = (_id, imgObj, tripArrId) => async dispatch
     }
 
     const species = await response.json()
-    dispatch(deleteSpeciesInfo(species))
-    console.log('dispatched')
+    dispatch(updateSpecimen(species))
   } catch(err) {
     alert('Request could not be completed')
     console.log('err', err)
@@ -323,8 +317,7 @@ export const deleteSpeciesInfoNote = (_id, notesObj, tripArrId) => async dispatc
     }
 
     const species = await response.json()
-    dispatch(deleteSpeciesInfo(species))
-    console.log('dispatched')
+    dispatch(updateSpecimen(species))
   } catch(err) {
     alert('Request could not be completed')
     console.log('err', err)
@@ -345,7 +338,7 @@ export const deleteSpecimenFromTrip = (_id, tripArrId) => async dispatch => {
     }
 
     const species = await response.json()
-    dispatch(deleteSpeciesInfo(species))
+    dispatch(updateSpecimen(species))
   } catch (err) {
     alert('Request could not be completed')
     console.log('err', err)

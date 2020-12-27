@@ -33,15 +33,10 @@ const ProjectInfo = (props) => {
   const [user, setUser] = value;
   const {navigate} = props.navigation;
 
-  console.log('project', project)
-  console.log('projectImg', project.img)
-  console.log('length', length)
-
   useEffect(() => {
     setLength(props.navigation.getParam('length'))
     setProjectId(props.navigation.getParam('projectId'))
     if (projectId) {
-      console.log('rerender')
       setProject(props.projects.projects.filter(item => item._id.toString() === projectId.toString())[0])
     }
       const species = () => {
@@ -113,7 +108,6 @@ const ProjectInfo = (props) => {
 
   const deleteInfo = (imgObj, notesObj) => {
     if (imgObj) {
-      console.log('req.body', imgObj)
       props.deleteInfoImage(projectId, imgObj)
     }
     if (notesObj) {

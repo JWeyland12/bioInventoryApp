@@ -50,7 +50,6 @@ const SignUp = props => {
   }
 
   const registerResult = () => {
-    console.log('checkName', checkName);
     (!checkAvatar || !checkName || !checkUserName || !checkEmail || !checkPassword) ?
         Alert.alert('Please fix the indicated fields', '', [{text: 'Ok'}]) 
         :

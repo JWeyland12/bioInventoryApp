@@ -11,7 +11,6 @@ export const areaRed = (
     case actionTypes.ADD_AREAS:
       return {...state, areas: action.payload}
     case actionTypes.POST_AREA:
-      console.log("post area",action.payload)
       return {...state, areas: state.areas.concat(action.payload)}
     case actionTypes.LOG_OUT: 
       return {areas: []}

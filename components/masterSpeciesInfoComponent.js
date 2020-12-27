@@ -5,7 +5,6 @@ import {Image} from 'react-native-elements';
 
 const MasterSpeciesInfo = (props) => {
   const [specimen, setSpecimen] = useState({})
-  console.log('specimen', specimen)
 
   useEffect(() => {
   setSpecimen(props.navigation.getParam('specimen'))

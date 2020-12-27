@@ -52,7 +52,6 @@ const SpeciesInfo = (props) => {
 
   //action creator for updating the total
   const updateTotalHandler = () => {
-    console.log('fired')
     ToastAndroid.show('Total saved', ToastAndroid.SHORT, ToastAndroid.TOP, ToastAndroid.CENTER)
     tripArrId.total = total
     setTotalChanged(false)

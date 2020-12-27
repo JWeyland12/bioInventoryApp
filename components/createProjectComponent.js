@@ -20,8 +20,6 @@ const CreateProject = props => {
   const {value} = useContext(UserContext)
   const [user, setUser] = value
 
-  console.log('user1', user)
-
   const imagePickedHandler = imagePath => {
     setSelectedImage(imagePath)
   }

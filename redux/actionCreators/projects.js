@@ -33,7 +33,6 @@ export const addProjects = projects => ({
 export const postProject = (projectName, projectState, projectCounty, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: img,
@@ -76,7 +75,6 @@ export const addProject = project => ({
 export const updateProject = (projectId, name, state, county, img, token) => async dispatch => {
   const fileName = img.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: img,
@@ -113,7 +111,6 @@ export const updateProject = (projectId, name, state, county, img, token) => asy
 export const addImageToProject = (projectId, uri, token) => async dispatch => {
   const fileName = uri.split('/').pop();
   const newPath = FileSystem.documentDirectory + fileName;
-  console.log('newPath', newPath)
   try {
     await FileSystem.moveAsync({
       from: uri,
@@ -214,7 +211,6 @@ export const deleteInfoImage = (_id, imgObj) => async dispatch => {
 
     const project = await response.json()
     dispatch(deleteInfo(project))
-    console.log('dispatched')
   } catch(err) {
     alert('Request could not be completed')
     console.log('err', err)
@@ -240,7 +236,6 @@ export const deleteInfoNote = (_id, notesObj) => async dispatch => {
 
     const project = await response.json()
     dispatch(deleteInfo(project))
-    console.log('dispatched')
   } catch(err) {
     alert('Request could not be completed')
     console.log('err', err)

@@ -21,20 +21,10 @@ const TripSpecies = props => {
   const {navigate} = props.navigation;
   let [speciesArr, setSpeciesArr] = useState([])
   const idObject = {tripId, areaId, projectId}
-  // const [species, setSpecies] = useState([])
-  const [counter, setCounter] = useState(1)
-  const [arr, setArr] = useState([])
-  console.log('conter', counter)
-  console.log('props.species', props.species.species)
-  console.log('speciesArr', speciesArr)
-
-
 
   useEffect(() => {
-      console.log('fired');
-      console.log('effectSpecies', props.species.species);
-      // setSpecies(props.species.species);
-      (function iffi() {
+      const findSpecies = () => {
+        let arr = []
         props.species.species.forEach(s => {
           s.tripArr.forEach(t => {
             if (t.tripId === tripId) {
@@ -44,18 +34,10 @@ const TripSpecies = props => {
             }
           })
         })
-        console.log('arr', arr)
         setSpeciesArr(arr.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
-      })()
-  }, [props, counter]);
-
-
-  const deleteHandler = (_id, tripArrId) => {
-    props.deleteSpecimenFromTrip(_id, tripArrId)
-    setCounter(counter + 1)
-    setArr([{}]);
-
-  }
+      }
+      findSpecies()
+  }, [props.species]);
 
   const tripSpeciesList = ({item}) => {
     const rightButton = [
@@ -73,7 +55,7 @@ const TripSpecies = props => {
               },
               {
                 text: 'Confirm',
-                onPress: () => deleteHandler(item._id, findTripArrId(item))
+                onPress: () => props.deleteSpecimenFromTrip(item._id, findTripArrId(item))
               }
           ],
           {cancelable: false}
@@ -94,7 +76,6 @@ const TripSpecies = props => {
       let tripArrId
       for (let i = 0; i <= item.tripArr.length - 1; i++) {
         if(item.tripArr[i].tripId.toString() === tripId.toString() && item.tripArr[i].areaId.toString() === areaId.toString() && item.tripArr[i].projectId.toString() === projectId.toString()){
-          console.log('tripArr', item.tripArr[i])
           tripArrId = item.tripArr[i]
         }
       }

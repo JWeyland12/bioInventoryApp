@@ -67,7 +67,6 @@ const CreateSpecies = props => {
       )
     }
   })()
-  console.log('doesTripExist', doesTripExist)
 
   const handleSubmit = () => {
     if (!specimen) {
