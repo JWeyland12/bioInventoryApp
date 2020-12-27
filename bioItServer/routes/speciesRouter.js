@@ -86,7 +86,7 @@ speciesRouter
   .delete(async (req, res, next) => {
     console.log(req.body)
     //delete from trip list => modify tripArr
-    if (!req.body.imgObj && !req.body.notesObj) {
+    if (!req.body.imgObj && !req.body.notesObj && !req.body.tripArrId) {
       Species.findByIdAndDelete(req.body._id)
       .then(response => {
         res.statusCode = 200;
@@ -127,6 +127,21 @@ speciesRouter
       } catch (err) {
         res.status(400)
         res.send({msg: 'Image Could not be removed'})
+      }
+    } else if (!req.body.notesObj && !req.body.imgObj && req.body.tripArrId) {
+      console.log('here')
+      try {
+        const species = await Species.findById(req.body._id)
+        const index = species.tripArr.findIndex(i => i._id.toString() === req.body.tripArrId.toString())
+        console.log('index', index)
+        species.tripArr.splice(index, 1)
+        species.save()
+        res.status(200)
+        res.setHeader('Content-Type', 'application/json')
+        res.json(species)
+      } catch (err) {
+        res.status(400)
+        res.send({msg: 'Specimen Could not be removed'})
       }
     }
   })

@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import {View, FlatList, TouchableOpacity, Text, StyleSheet, ScrollView} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, FlatList, TouchableOpacity, Text, StyleSheet, ScrollView, Alert} from 'react-native';
 import {ListItem, Card, Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
 import Swipeout from 'react-native-swipeout';
+import {deleteSpecimenFromTrip} from '../redux/actionCreators/species';
 
 
 const mapStateToProps = state => {
@@ -10,7 +11,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  //delete species from list => remove tripArr object
+  deleteSpecimenFromTrip
 }
 
 const TripSpecies = props => {
@@ -18,21 +19,43 @@ const TripSpecies = props => {
   const areaId = props.navigation.getParam('areaId');
   const tripId = props.navigation.getParam('tripId');
   const {navigate} = props.navigation;
-  let speciesArr = [];
+  let [speciesArr, setSpeciesArr] = useState([])
   const idObject = {tripId, areaId, projectId}
-  console.log('idObject', idObject)
+  // const [species, setSpecies] = useState([])
+  const [counter, setCounter] = useState(1)
+  const [arr, setArr] = useState([])
+  console.log('conter', counter)
+  console.log('props.species', props.species.species)
+  console.log('speciesArr', speciesArr)
 
-  const speciesFil = props.species.species.forEach((s) => {
-    s.tripArr.forEach((t) => {
-      if (t.tripId === tripId) {
-        if (!speciesArr.includes(s)) {
-          speciesArr.push(s);
-        }
-      }
-    });
-  });
 
-  speciesArr = speciesArr.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1)
+
+  useEffect(() => {
+      console.log('fired');
+      console.log('effectSpecies', props.species.species);
+      // setSpecies(props.species.species);
+      (function iffi() {
+        props.species.species.forEach(s => {
+          s.tripArr.forEach(t => {
+            if (t.tripId === tripId) {
+              if (!arr.includes(s)) {
+                arr.push(s)
+              }
+            }
+          })
+        })
+        console.log('arr', arr)
+        setSpeciesArr(arr.sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
+      })()
+  }, [props, counter]);
+
+
+  const deleteHandler = (_id, tripArrId) => {
+    props.deleteSpecimenFromTrip(_id, tripArrId)
+    setCounter(counter + 1)
+    setArr([{}]);
+
+  }
 
   const tripSpeciesList = ({item}) => {
     const rightButton = [
@@ -50,7 +73,7 @@ const TripSpecies = props => {
               },
               {
                 text: 'Confirm',
-                onPress: () => {}
+                onPress: () => deleteHandler(item._id, findTripArrId(item))
               }
           ],
           {cancelable: false}
@@ -174,4 +197,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps)(TripSpecies);
+export default connect(mapStateToProps, mapDispatchToProps)(TripSpecies);

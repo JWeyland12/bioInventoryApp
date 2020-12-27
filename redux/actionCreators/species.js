@@ -330,3 +330,24 @@ export const deleteSpeciesInfoNote = (_id, notesObj, tripArrId) => async dispatc
     console.log('err', err)
   }
 }
+
+export const deleteSpecimenFromTrip = (_id, tripArrId) => async dispatch => {
+  try {
+    const response = await fetch(baseUrl + 'species', {
+      method: 'DELETE', 
+      body: JSON.stringify({_id, tripArrId: tripArrId._id}),
+      headers: {'content-type': 'application/json'}
+    })
+
+    if (!response.ok) {
+      const err = response.msg
+      throw err
+    }
+
+    const species = await response.json()
+    dispatch(deleteSpeciesInfo(species))
+  } catch (err) {
+    alert('Request could not be completed')
+    console.log('err', err)
+  }
+}
