@@ -22,13 +22,9 @@ areaRouter
 
 .post(auth, async (req, res, next) => {
   try {
-    const exists = await Area.find()
-    const index = exists.findIndex(i => i.area === req.body.area)
-    let user = undefined
-    if (index !== -1) {
-      user = (exists[index].user.toString() === req.user.id.toString()) ? true : false
-    }
-    if (!user) {
+    const exists = await Area.find({project: req.body.projectId})
+    const index = exists.findIndex(i => i.area.toLowerCase() === req.body.area.toLowerCase())
+    if (index === -1) {
       req.body.user = req.user.id
       req.body.project = req.body.projectId
       Area.create(req.body)

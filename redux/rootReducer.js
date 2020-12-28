@@ -4,11 +4,13 @@ import {areaRed} from './reducers/areas'
 import {tripRed} from './reducers/trips';
 import {speciesRed} from './reducers/species';
 import {userReducer} from './reducers/auth';
+import {speciesListRed} from './reducers/speciesList';
 
 export const reducers = combineReducers({
   projects: projectRed,
   areas: areaRed,
   trips: tripRed,
   species: speciesRed,
-  user: userReducer
+  user: userReducer,
+  speciesList: speciesListRed
 })

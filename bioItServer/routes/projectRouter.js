@@ -51,13 +51,9 @@ projectRouter
   .post(auth, async (req, res, next) => {
     // req.body.img = req.file.buffer
     try {
-      const exists = await Project.find()
+      const exists = await Project.find({user: req.user.id})
       const index = exists.findIndex(i => i.name === req.body.name)
-      let user = undefined
-      if (index !== -1) {
-        user = (exists[index].user.toString() === req.user.id.toString()) ? true : false
-      }
-      if (!user) {
+      if (index === -1) {
         req.body.user = req.user.id
         Project.create(req.body)
           .then((project) => {

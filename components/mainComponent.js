@@ -25,7 +25,7 @@ import { connect } from "react-redux";
 import { fetchProjects } from "../redux/actionCreators/projects";
 import {fetchAreas} from '../redux/actionCreators/areas';
 import { fetchTrips } from '../redux/actionCreators/trips';
-import { fetchSpecies } from '../redux/actionCreators/species';
+import { fetchSpecies, fetchSpeciesList } from '../redux/actionCreators/species';
 import {Icon, Button} from 'react-native-elements';
 import {UserContext} from './userContextComponent';
 
@@ -33,7 +33,8 @@ const mapDispatchToProps = {
   fetchProjects,
   fetchAreas,
   fetchTrips,
-  fetchSpecies
+  fetchSpecies,
+  fetchSpeciesList
 }
 
 const Navigator = createStackNavigator(
@@ -202,12 +203,14 @@ useEffect(() => {
     props.fetchAreas(props.user.token);
     props.fetchTrips(props.user.token);
     props.fetchSpecies(props.user);
+    // props.fetchSpeciesList();
     setUser(props.user)
     setIsLoggedIn(true)
   } else {
     setIsLoggedIn(false)
   }
 }, [props.user.user])
+console.log('user', user)
 
   return (
     <View style={{ flex: 1, paddingTop: Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight }}>

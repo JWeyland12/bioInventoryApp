@@ -35,6 +35,7 @@ const Profile = (props) => {
 
   useEffect(() => {
     if(user) {
+      console.log('fire')
       setName(user.name);
       setUserName(user.userName);
       setEmail(user.email)
@@ -42,11 +43,14 @@ const Profile = (props) => {
     }
   }, [user])
 
+  console.log('avatar', avatar)
+
   const updateInfoHandler = (info, cb) => {
     ToastAndroid.show('Account Updated', ToastAndroid.SHORT, ToastAndroid.BOTTOM, ToastAndroid.CENTER)
     if(!password) {
       cb(false)
       props.updateUser(userObj.token, info)
+      console.log('info', info)
     } else {
       (password === confirmPassword) ? 
       (cb(false), setPassword(''), setConfirmPassword(''), props.updateUser(userObj.token, info)) 

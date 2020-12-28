@@ -22,31 +22,62 @@ speciesRouter
       next(err)
     }
   })
-  .post(auth, (req, res, next) => {
+  .post(auth, async (req, res, next) => {
     console.log('body', req.body)
-    if(req.body.tripObj) {
-      //species created from a trip
-    req.body.tripArr = req.body.tripObj
+    try {
+      const myExists = await Species.find({user: req.user.id})
+      const defaultExists = await Species.find({default: true})
+      const exists = [...myExists, ...defaultExists]
+      const index = exists.findIndex(i => i.sciName.toLowerCase() === req.body.sciName.toLowerCase())
+      console.log('index', index)
+      if (index === -1) {
+        console.log('enter')
+        try {
+          if(req.body.tripObj) {
+            //species created from a trip
+          req.body.tripArr = req.body.tripObj
+          }
+          req.body.user = req.user.id
+          const specimen = await Species.create(req.body)
+  
+          res.status(200)
+          res.setHeader('Content-Type', 'application/json')
+          res.json(specimen)
+          console.log('here')
+        } catch (err) {
+          res.status(400)
+          res.send({msg: 'Server Error'})
+        }
+      } else {
+        res.status(400)
+        res.send({msg: 'Species already in database!'})
+      }
+    } catch (err) {
+      res.status(400)
+      res.send({msg: 'Species already exists in database!'})
     }
-    req.body.user = req.user.id
-    Species.create(req.body)
-    .then(specimen => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json')
-      res.json(specimen)
-    })
-    .catch(err => next(err))
   })
-  .put(async (req, res, next) => {
+  .put(auth, async (req, res, next) => {
     // updated from the master list - not reassigning tripArr references
     if (!req.body.tripObj) {
-      Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
-      .then(specimen => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(specimen)
-      })
-      .catch(err => next(err))
+      const myExists = await Species.find({user: req.user.id})
+      const defaultExists = await Species.find({default: true})
+      const exists = [...myExists, ...defaultExists]
+      const index = exists.findIndex(i => i.comName.toLowerCase() === req.body.comName.toLowerCase())
+      if (index === -1) {
+        try {
+          const specimen = await Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
+          res.status(200)
+          res.setHeader('Content-Type', 'application/json')
+          res.json(specimen)
+        } catch (err) {
+          res.status(400)
+          res.send({msg: 'Server error'})
+        }
+      } else {
+        res.status(400)
+        res.send({msg: 'Species already in database!'})
+      }
     } else {
       //species observed from a trip
       try{
@@ -152,26 +183,38 @@ speciesRouter
   })
   .post(auth, async (req, res, next) => {
     try {
-      if(req.body.tripObj) {
-        //species created from a trip
-      req.body.tripArr = req.body.tripObj
+      const exists = await Species.find({default: true})
+      const index = exists.findIndex(i => i.sciName.toLowerCase() === req.body.sciName.toLowerCase())
+      if (index === -1) {
+        try {
+          if(req.body.tripObj) {
+            //species created from a trip
+          req.body.tripArr = req.body.tripObj
+          }
+          req.body.user = req.user.id
+          req.body.default = true
+          const species = await Species.create(req.body)
+          console.log('species', species)
+          res.status(200)
+          res.setHeader('Content-Type', 'application/json')
+          res.json(species)
+        } catch (err) {
+          res.status(400)
+          next(err)
+        }
+      } else {
+        res.status(400)
+        res.send({msg: 'Species already in database'})
       }
-      req.body.user = req.user.id
-      req.body.default = true
-      const species = await Species.create(req.body)
-      console.log('species', species)
-      res.status(200)
-      res.setHeader('Content-Type', 'application/json')
-      res.json(species)
-    } catch (err) {
+    } catch(err) {
       res.status(400)
-      next(err)
+      res.send({msg: 'Species already in database!'})
     }
   })
   .put(auth, async (req, res, next) => {
-    console.log(req.body)
     try {
       if (req.body.user.admin) {
+        // req.body.user = req.user.id
         const species = await Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})
         res.status(200)
         res.setHeader('Content-Type', 'application/json')

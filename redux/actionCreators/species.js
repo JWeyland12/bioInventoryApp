@@ -2,6 +2,23 @@ import * as actionType from '../actionTypes';
 import {baseUrl} from '../../shared/baseUrl';
 import * as FileSystem from 'expo-file-system';
 
+export const fetchSpeciesList = () => async dispatch => {
+  try {
+    const response = await fetch('https://explorer.natureserve.org/api/data/species')
+
+    const speciesList = await response.json()
+    dispatch(addSpeciesList(speciesList))
+  } catch (err) {
+    console.log('SpeciesList', err)
+    throw err
+  }
+}
+
+const addSpeciesList = list => ({
+  type: actionType.ADD_SPECIES_LIST,
+  payload: list
+})
+
 export const fetchSpecies = (user) => dispatch => {
   const route = !user.user.admin ? 'species' : 'species/admin'
   fetch(baseUrl + route, {
@@ -54,8 +71,7 @@ export const postSpeciesFromMaster = (sciName, comName, rank, img, user) => asyn
     console.log('response', species)
     dispatch(addSpecimen(species))
   } catch (err) {
-    console.log('post specimen', error.message)
-    alert(`The ${sciName} could not be created or already exists!`)
+    alert(`The ${sciName} specimen could not be created or already exists!`)
     console.log(err);
     throw err;
   }
@@ -119,7 +135,7 @@ export const updateSpecies = (_id, sciName, comName, rank, img, specimen, user) 
     const species = await response.json()
     dispatch(updateSpecimen(species))
   } catch (err) {
-    alert(!specimen.default ? `Species ${sciName} - ${comName} could not be updated` : `The ${comName} specimen requires admin privileges to update!`)
+    alert(!specimen.default ? `Species ${sciName} - ${comName} could not be updated or already exists` : `The ${comName} specimen requires admin privileges to update!`)
     console.log(err);
     throw err;
   }

@@ -22,3 +22,5 @@ export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
 export const LOG_OUT = 'LOG_OUT';
 export const UPDATE_USER = 'UPDATE_USER';
+
+export const ADD_SPECIES_LIST = 'ADD_SPECIES_LIST';

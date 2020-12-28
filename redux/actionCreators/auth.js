@@ -58,10 +58,22 @@ export const register = (name, userName, email, password, avatar) => async dispa
 }
 
 export const updateUser = (token, info) => async dispatch => {
+  console.log('info', info)
+  let img
   try {
+    if (info.avatar) {
+      const fileName = info.avatar.split('/').pop();
+      const newPath = FileSystem.documentDirectory + fileName;
+      await FileSystem.moveAsync({
+      from: info.avatar,
+      to: newPath
+    });
+    img = newPath
+  }
+    console.log('img', img)
     const response = await fetch(baseUrl + 'users', {
       method: 'PUT',
-      body: JSON.stringify(info),
+      body: JSON.stringify(!info.avatar ? info : {avatar: img}),
       headers: {'content-type': 'application/json', 'x-auth-token': token}
     })
 

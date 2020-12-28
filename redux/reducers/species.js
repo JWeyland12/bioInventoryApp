@@ -10,7 +10,7 @@ export const speciesRed = (
     case actionTypes.ADD_SPECIES:
       return {...state, species: action.payload}
     case actionTypes.POST_SPECIMEN_FROM_MASTER:
-      return {...state, species: state.species.concat(action.payload)}
+      return {...state, species: [...state.species, action.payload]}
     case actionTypes.LOG_OUT:
       return {species: []}
     case actionTypes.UPDATE_SPECIES: 

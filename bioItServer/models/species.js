@@ -10,12 +10,10 @@ const speciesSchema = new Schema(
     sciName: {
       type: String,
       required: true,
-      unique: true,
     },
     comName: {
       type: String,
       required: true,
-      unique: true
     },
     rank: {
       type: String
