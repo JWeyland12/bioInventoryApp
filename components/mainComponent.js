@@ -203,7 +203,6 @@ useEffect(() => {
     props.fetchAreas(props.user.token);
     props.fetchTrips(props.user.token);
     props.fetchSpecies(props.user);
-    // props.fetchSpeciesList();
     setUser(props.user)
     setIsLoggedIn(true)
   } else {

@@ -118,6 +118,7 @@ const CreateSpecies = props => {
       const searchQuery = str.toLowerCase().replace(/ /g, '%')
       const response = await fetch(`https://api.gbif.org/v1/species/search?q=${searchQuery}`)
       const list = await response.json()
+      console.log('list', list)
       for (let i = 0; i <= list.results.length - 1; i++) {
         if (!listArr.includes(list.results[i].canonicalName)) {
           listArr.push(list.results[i].canonicalName)
@@ -159,7 +160,7 @@ const CreateSpecies = props => {
               leftIconOnPress={() => setIsModalOpen(!isModalOpen)}
             />
             <TouchableOpacity style={{position: 'absolute'}}>
-              <SciNamesModal items={sciNameArr} isModalOpen={isModalOpen} modalHandler={modalHandler} />
+              <SciNamesModal items={sciNameArr} setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} modalHandler={modalHandler} />
             </TouchableOpacity>
             <FormInput 
               iconName='angle-right' 

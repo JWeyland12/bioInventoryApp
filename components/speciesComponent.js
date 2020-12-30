@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect, useContext } from 'react';
-import {View, FlatList, Text, StyleSheet, TouchableOpacity, Modal, Alert, Switch, ScrollView, ToastAndroid} from 'react-native';
-import { ListItem, Icon, Input, Button } from "react-native-elements";
+import {View, FlatList, Text, StyleSheet, TouchableOpacity, Modal, Alert, Switch, ScrollView, ToastAndroid, TouchableHighlight} from 'react-native';
+import { ListItem, Icon, Input, Button, SearchBar } from "react-native-elements";
 import {connect} from 'react-redux';
 import Swipeout from 'react-native-swipeout';
 import ImgPicker from './imagePickerComponent';
@@ -9,7 +9,8 @@ import RoundButton from './customStyledComponents/roundedButtonComponent';
 import FormInput from './customStyledComponents/formInputComponent';
 import {UserContext} from './userContextComponent';
 import NetInfo from '@react-native-community/netinfo';
-import SciNamesModal from './customStyledComponents/sciNamesModal'
+import SciNamesModal from './customStyledComponents/sciNamesModal';
+import {SearchContext, ViewSearch} from './CreateContextComponents/searchContext';
 
 const mapStateToProps = state => {
   return {species: state.species}
@@ -41,6 +42,7 @@ const SpeciesList = props => {
   const [autoList, setAutoList] = useState(false);
   const [modalView, setModalView] = useState(false);
   const [defaultView, setDefaultView] = useState(true);
+  console.log('rank', rank)
 
   useLayoutEffect(() => {
     if (modalIndex) {
@@ -67,7 +69,7 @@ const SpeciesList = props => {
     findSpecies.rank ? setRank(findSpecies.rank) : setRank('Unknown')
     setSelectedImage(findSpecies.img);
     setModal(!isModalOpen);
-    fetchData(comName)
+    fetchData(findSpecies.comName)
   }
 
   const showModal = () => {
@@ -194,7 +196,7 @@ const SpeciesList = props => {
         <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
       </TouchableOpacity>
       <Modal animationType='fade' transparent={false} visible={isModalOpen} onRequestClose={() => showModal()}>
-        <View style={{margin: 10}}>
+        <View style={{margin: 10}} onPress={() => !modalView ? null : setModalView(false)}>
           <FormInput 
             iconName='angle-right'
             value={comName}
@@ -210,7 +212,7 @@ const SpeciesList = props => {
             leftIconOnPress={() => setModalView(!modalView)}
           />
           <TouchableOpacity style={{position: 'absolute'}}>
-              <SciNamesModal items={sciNameArr} isModalOpen={modalView} modalHandler={modalHandler} />
+              <SciNamesModal items={sciNameArr} setIsModalOpen={setModalView} isModalOpen={modalView} modalHandler={modalHandler} />
             </TouchableOpacity>
           <FormInput 
             iconName='angle-right'
@@ -230,8 +232,45 @@ const SpeciesList = props => {
   );
 }
 
+const Header = (props) => {
+  const {value} = useContext(SearchContext)
+  const [searchText, setSearchText] = value
+  const {bool} = useContext(ViewSearch)
+  const [viewSearch, setViewSearch] = bool
+
+  return (
+    <View style={{width: 400}}>
+      {!viewSearch ? 
+      (<View style={{flexDirection: 'row'}}>
+        <View style={{marginRight: 'auto', marginLeft: 3}}>
+          <Text style={{color: 'white', fontSize: 20}}>Species</Text>
+        </View>
+        <View style={{marginLeft: 'auto', backgroundColor: '#008b8b'}}>
+          <TouchableHighlight onPressOut={() => setViewSearch(!viewSearch)}>
+            <Icon name='search' type='font-awesome' onPress={() => setViewSearch(!viewSearch)} iconStyle={{marginRight: 20, color: 'white', backgroundColor: '#008b8b'}} />
+          </TouchableHighlight>
+        </View>
+      </View>)
+      :
+      <View style={styles.searchBar}>
+        <SearchBar 
+          cancelIcon
+          onCancel={() => setViewSearch(!viewSearch)}
+          platform='android'
+          value={searchText}
+          onChangeText={input => setSearchText(input)}
+        />
+      </View>}
+    </View>
+  )
+}
+
 SpeciesList.navigationOptions = {
-  title: 'Species List'
+  headerRight: (
+    <View>
+      <Header />
+    </View>
+  )
 }
 
 
@@ -277,5 +316,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 25,
     overflow: 'hidden'
+  },
+  searchBar: {
+    borderRadius: 1000,
+    overflow: "hidden",
+    // minWidth: "100%",
+    maxWidth: '100%',
+    alignItems: 'center',
+    marginRight: 12,
+    marginBottom: 23,
   }
 });
