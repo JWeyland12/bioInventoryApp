@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {View, Alert, StyleSheet, Text, ScrollView} from 'react-native';
+import {View, Alert, StyleSheet, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {Icon, Image} from 'react-native-elements';
 import { postSpeciesFromTrip, updateSpeciesObservation, postSpeciesFromMaster } from "../redux/actionCreators/species";
 import {connect} from 'react-redux';
@@ -7,6 +7,8 @@ import ImgPicker from './imagePickerComponent';
 import RoundButton from './customStyledComponents/roundedButtonComponent';
 import FormInput from './customStyledComponents/formInputComponent';
 import {UserContext} from './userContextComponent';
+import NetInfo from '@react-native-community/netinfo';
+import SciNamesModal from './customStyledComponents/sciNamesModal'
 
 const mapDispatchToProps = {
   postSpeciesFromTrip,
@@ -25,8 +27,12 @@ const CreateSpecies = props => {
   const [doesTripExist, setDoesTripExist] = useState(false)
   const {navigate} = props.navigation;
   const {value} = useContext(UserContext);
-  const [user, setUser] = value
-  
+  const [user, setUser] = value;
+  let listArr = [];
+  const [sciNameArr, setSciNameArr] = useState([])
+  const [autoList, setAutoList] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   if(idObject) {
     idObject.total = total
   }
@@ -42,7 +48,7 @@ const CreateSpecies = props => {
     } else {
       setSpecimen('')
     }
-  }, [specimen])
+  }, [specimen, sciNameArr])
 
   const speciesStateHandler = async () => {
     const img = await specimen.img
@@ -104,6 +110,33 @@ const CreateSpecies = props => {
     setSelectedImage(imagePath)
   }
 
+  const fetchData = async (info) => {
+    const netInfo = await NetInfo.fetch()
+    console.log(netInfo)
+    if (netInfo.isConnected) {
+      let str = info
+      const searchQuery = str.toLowerCase().replace(/ /g, '%')
+      const response = await fetch(`https://api.gbif.org/v1/species/search?q=${searchQuery}`)
+      const list = await response.json()
+      for (let i = 0; i <= list.results.length - 1; i++) {
+        if (!listArr.includes(list.results[i].canonicalName)) {
+          listArr.push(list.results[i].canonicalName)
+        }
+      }
+      setSciNameArr(listArr)
+      setSciName(listArr[0])
+      setAutoList(true)
+    } else {
+      return
+    }
+  }
+
+  const modalHandler = i => {
+    setSciName(i)
+    setIsModalOpen(!isModalOpen)
+  }
+
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {!specimen ? (
@@ -114,13 +147,20 @@ const CreateSpecies = props => {
               onChangeText={input => setComName(input)}
               placeholder='Common Name'
               value={comName}
+              onBlur={() => fetchData(comName)}
             />
             <FormInput 
               iconName='angle-right' 
               onChangeText={input => setSciName(input)}
               placeholder='Scientific Name'
               value={sciName}
+              leftIcon={!autoList ? false : true}
+              leftIconName='angle-down'
+              leftIconOnPress={() => setIsModalOpen(!isModalOpen)}
             />
+            <TouchableOpacity style={{position: 'absolute'}}>
+              <SciNamesModal items={sciNameArr} isModalOpen={isModalOpen} modalHandler={modalHandler} />
+            </TouchableOpacity>
             <FormInput 
               iconName='angle-right' 
               onChangeText={input => setRank(input)}
@@ -208,5 +248,12 @@ const styles = StyleSheet.create({
   countButtons: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  picker: {
+    backgroundColor: '#f1f3f6',
+  },
+  pickerContainer: {
+    borderRadius: 8,
+    overflow: 'hidden'
   }
 })

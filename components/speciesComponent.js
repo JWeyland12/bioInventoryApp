@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useContext } from 'react';
-import {View, FlatList, Text, StyleSheet, TouchableOpacity, Modal, Alert, Switch, ScrollView} from 'react-native';
+import {View, FlatList, Text, StyleSheet, TouchableOpacity, Modal, Alert, Switch, ScrollView, ToastAndroid} from 'react-native';
 import { ListItem, Icon, Input, Button } from "react-native-elements";
 import {connect} from 'react-redux';
 import Swipeout from 'react-native-swipeout';
@@ -8,6 +8,8 @@ import {updateSpecies, deleteSpeciesFromMaster} from '../redux/actionCreators/sp
 import RoundButton from './customStyledComponents/roundedButtonComponent';
 import FormInput from './customStyledComponents/formInputComponent';
 import {UserContext} from './userContextComponent';
+import NetInfo from '@react-native-community/netinfo';
+import SciNamesModal from './customStyledComponents/sciNamesModal'
 
 const mapStateToProps = state => {
   return {species: state.species}
@@ -34,7 +36,11 @@ const SpeciesList = props => {
   const {value} = useContext(UserContext)
   const [user, setUser] = value
   const [switchView, setSwitchView] = useState(false);
-  // const sortValue = !switchView ? comName : sciName
+  let listArr = [];
+  const [sciNameArr, setSciNameArr] = useState([])
+  const [autoList, setAutoList] = useState(false);
+  const [modalView, setModalView] = useState(false);
+  const [defaultView, setDefaultView] = useState(true);
 
   useLayoutEffect(() => {
     if (modalIndex) {
@@ -61,6 +67,7 @@ const SpeciesList = props => {
     findSpecies.rank ? setRank(findSpecies.rank) : setRank('Unknown')
     setSelectedImage(findSpecies.img);
     setModal(!isModalOpen);
+    fetchData(comName)
   }
 
   const showModal = () => {
@@ -70,8 +77,10 @@ const SpeciesList = props => {
 
   const handleSubmit = () => {
     props.updateSpecies(modalIndex, sciName, comName, rank, selectedImage, specimen, user);
+    ToastAndroid.show('Species Updated', ToastAndroid.CENTER, ToastAndroid.BOTTOM)
     setModal(!isModalOpen)
     setModalIndex('')
+    setAutoList(!autoList)
   }
 
   const imagePickedHandler = imagePath => {
@@ -128,17 +137,41 @@ const SpeciesList = props => {
     )
   }
 
+  const fetchData = async (info) => {
+    const netInfo = await NetInfo.fetch()
+    console.log(netInfo)
+    if (netInfo.isConnected) {
+      let str = info
+      const searchQuery = str.toLowerCase().replace(/ /g, '%')
+      const response = await fetch(`https://api.gbif.org/v1/species/search?q=${searchQuery}`)
+      const list = await response.json()
+      for (let i = 0; i <= list.results.length - 1; i++) {
+        if (!listArr.includes(list.results[i].canonicalName)) {
+          listArr.push(list.results[i].canonicalName)
+        }
+      }
+      setSciNameArr(listArr)
+      // setSciName(listArr[0])
+      setAutoList(true)
+    } else {
+      return
+    }
+  }
+
   const FlatSpeciesList = ({speciesAlpha}) => {
     return (
       <View>
         <View style={{flexDirection: 'row', marginHorizontal: 12, marginTop: 12}}>
-          <Text style={{color: 'gray'}}>Default Species</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={{color: 'gray'}}>Default Species</Text>
+            <Switch onChange={() => setDefaultView(!defaultView)} value={defaultView} />
+          </View>
           <View style={{marginLeft: 'auto', flexDirection: 'row'}}>
             <Text style={{color: 'gray'}}>Sort by Scientific Name</Text>
             <Switch onChange={() => setSwitchView(!switchView)} value={switchView} />
           </View>
         </View>
-        <FlatList data={defaultSpecies} renderItem={renderSpecies} keyExtractor={item => item._id.toString()} />
+        {!defaultView ? null : (<FlatList data={defaultSpecies} renderItem={renderSpecies} keyExtractor={item => item._id.toString()} />)}
         <View style={{margin: 12}}>
           <Text style={{color: 'gray'}}>My Species</Text>
         </View>
@@ -146,6 +179,12 @@ const SpeciesList = props => {
       </View>
     )
   }
+
+  const modalHandler = i => {
+    setSciName(i)
+    setModalView(!modalView)
+  }
+
   return (
     <View style={{flex: 1}}>
       <ScrollView>
@@ -160,12 +199,19 @@ const SpeciesList = props => {
             iconName='angle-right'
             value={comName}
             onChangeText={text => setComName(text)}
+            onBlur={() => fetchData(comName)}
           />
           <FormInput 
             iconName='angle-right'
             value={sciName}
             onChangeText={text => setSciName(text)}
+            leftIcon={!autoList ? false : true}
+            leftIconName='angle-down'
+            leftIconOnPress={() => setModalView(!modalView)}
           />
+          <TouchableOpacity style={{position: 'absolute'}}>
+              <SciNamesModal items={sciNameArr} isModalOpen={modalView} modalHandler={modalHandler} />
+            </TouchableOpacity>
           <FormInput 
             iconName='angle-right'
             value={rank}

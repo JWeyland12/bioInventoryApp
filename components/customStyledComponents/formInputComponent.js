@@ -16,7 +16,19 @@ const FormInput = (props) => {
         placeholder={props.placeholder}
         value={props.value}
         secureTextEntry={props.secureTextEntry}
+        onBlur={props.onBlur}
+        onFocus={props.onFocus}
       />
+      {props.leftIcon !== true ? null : 
+        <View style={{marginLeft: 'auto'}}>
+          <Icon 
+            color={props.leftIconColor}
+            name={props.leftIconName}
+            type='font-awesome'
+            onPress={props.leftIconOnPress}
+          />
+        </View>
+      }
     </View>
   );
 };

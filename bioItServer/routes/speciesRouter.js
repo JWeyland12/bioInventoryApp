@@ -63,7 +63,7 @@ speciesRouter
       const myExists = await Species.find({user: req.user.id})
       const defaultExists = await Species.find({default: true})
       const exists = [...myExists, ...defaultExists]
-      const index = exists.findIndex(i => i.comName.toLowerCase() === req.body.comName.toLowerCase())
+      const index = exists.findIndex(i => i.sciName.toLowerCase() === req.body.sciName.toLowerCase())
       if (index === -1) {
         try {
           const specimen = await Species.findByIdAndUpdate(req.body._id, { $set: req.body }, {new: true})

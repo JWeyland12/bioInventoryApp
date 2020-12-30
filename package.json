@@ -9,7 +9,7 @@
   },
   "proxy": "http://localhost:3000",
   "dependencies": {
-    "@react-native-community/netinfo": "5.5.1",
+    "@react-native-community/netinfo": "^5.9.9",
     "expo": "~38.0.8",
     "expo-file-system": "~9.0.1",
     "expo-image-manipulator": "7.0.0",
