@@ -42,7 +42,10 @@ const SpeciesList = props => {
   const [autoList, setAutoList] = useState(false);
   const [modalView, setModalView] = useState(false);
   const [defaultView, setDefaultView] = useState(true);
-  console.log('rank', rank)
+  const {search} = useContext(SearchContext)
+  const [searchText, setSearchText] = search
+  const {bool} = useContext(ViewSearch)
+  const [viewSearch, setViewSearch] = bool
 
   useLayoutEffect(() => {
     if (modalIndex) {
@@ -160,6 +163,18 @@ const SpeciesList = props => {
     }
   }
 
+  const searchFilterFunction = text => {
+    console.log(text)
+    if (text) {
+      
+    }
+  }
+
+  if (viewSearch) {
+    console.log('searchText', searchText)
+    searchFilterFunction(searchText)
+  }
+
   const FlatSpeciesList = ({speciesAlpha}) => {
     return (
       <View>
@@ -233,8 +248,8 @@ const SpeciesList = props => {
 }
 
 const Header = (props) => {
-  const {value} = useContext(SearchContext)
-  const [searchText, setSearchText] = value
+  const {search} = useContext(SearchContext)
+  const [searchText, setSearchText] = search
   const {bool} = useContext(ViewSearch)
   const [viewSearch, setViewSearch] = bool
 
@@ -246,9 +261,7 @@ const Header = (props) => {
           <Text style={{color: 'white', fontSize: 20}}>Species</Text>
         </View>
         <View style={{marginLeft: 'auto', backgroundColor: '#008b8b'}}>
-          <TouchableHighlight onPressOut={() => setViewSearch(!viewSearch)}>
-            <Icon name='search' type='font-awesome' onPress={() => setViewSearch(!viewSearch)} iconStyle={{marginRight: 20, color: 'white', backgroundColor: '#008b8b'}} />
-          </TouchableHighlight>
+          <Icon name='search' type='font-awesome' onPress={() => setViewSearch(!viewSearch)} iconStyle={{marginRight: 20, color: 'white', backgroundColor: '#008b8b'}} />
         </View>
       </View>)
       :

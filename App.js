@@ -17,7 +17,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <UserContext.Provider value={{value: [user, setUser]}}>
-        <SearchContext.Provider value={{value: [searchText, setSearchText]}}>
+        <SearchContext.Provider value={{search: [searchText, setSearchText]}}>
           <ViewSearch.Provider value={{bool: [viewSearch, setViewSearch]}}>
             <Main />
           </ViewSearch.Provider>
