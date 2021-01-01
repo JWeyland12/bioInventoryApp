@@ -166,7 +166,7 @@ const SpeciesList = props => {
   const searchFilterFunction = text => {
     console.log(text)
     if (text) {
-      
+      console.log(text)
     }
   }
 
