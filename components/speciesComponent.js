@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect, useContext } from 'react';
 import {View, FlatList, Text, StyleSheet, TouchableOpacity, Modal, Alert, Switch, ScrollView, ToastAndroid, TouchableHighlight} from 'react-native';
-import { ListItem, Icon, Input, Button, SearchBar } from "react-native-elements";
+import { ListItem, Icon, Input, Image, Button, SearchBar } from "react-native-elements";
 import {connect} from 'react-redux';
 import Swipeout from 'react-native-swipeout';
 import ImgPicker from './imagePickerComponent';
@@ -32,7 +32,7 @@ const SpeciesList = props => {
   const {navigate} = props.navigation
   const [defaultSpecies, setDefaultSpecies] = useState(props.species.species.filter(item => item.default === true)
   .sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
-  const [speciesAlpha, setSpeciesAlpha] = useState(props.species.species.filter(item => item.default === false)
+  const [mySpecies, setMySpecies] = useState(props.species.species.filter(item => item.default === false)
   .sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
   const {value} = useContext(UserContext)
   const [user, setUser] = value
@@ -46,23 +46,34 @@ const SpeciesList = props => {
   const [searchText, setSearchText] = search
   const {bool} = useContext(ViewSearch)
   const [viewSearch, setViewSearch] = bool
-
+  const [filteredList, setFilteredList] = useState([])
+  const [mySpeciesFiltered, setMySpeciesFiltered] = useState([])
+  
   useLayoutEffect(() => {
     if (modalIndex) {
       setSpeciesState()
     }
     if (switchView) {
+      console.log('sortsciName')
       setDefaultSpecies(props.species.species.filter(item => item.default === true)
       .sort((a, b) => (a.sciName.toUpperCase() > b.sciName.toUpperCase()) ? 1 : -1))
-      setSpeciesAlpha(props.species.species.filter(item => item.default === false)
+      setMySpecies(props.species.species.filter(item => item.default === false)
       .sort((a, b) => (a.sciName.toUpperCase() > b.sciName.toUpperCase()) ? 1 : -1))
     } else {
+      console.log('sortcomName')
       setDefaultSpecies(props.species.species.filter(item => item.default === true)
       .sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
-      setSpeciesAlpha(props.species.species.filter(item => item.default === false)
+      setMySpecies(props.species.species.filter(item => item.default === false)
       .sort((a, b) => (a.comName.toUpperCase() > b.comName.toUpperCase()) ? 1 : -1))
     }
-  }, [props.species, switchView, modalIndex]);
+    if (searchText) {
+      console.log('searchText', searchText)
+      searchFilterFunction(searchText)
+    } else {
+      console.log('searchText', searchText)
+      searchFilterFunction(searchText)
+    }
+  }, [props.species, switchView, modalIndex, searchText]);
 
   const setSpeciesState = () => {
     const findSpecies = props.species.species.find(species => species._id.toString() === modalIndex.toString())
@@ -156,7 +167,6 @@ const SpeciesList = props => {
         }
       }
       setSciNameArr(listArr)
-      // setSciName(listArr[0])
       setAutoList(true)
     } else {
       return
@@ -166,16 +176,23 @@ const SpeciesList = props => {
   const searchFilterFunction = text => {
     console.log(text)
     if (text) {
-      console.log(text)
+      const newData = defaultSpecies.filter(item => {
+        const itemData = item.comName ? item.comName.toUpperCase() : ''.toUpperCase()
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      })
+      const newData1 = mySpecies.filter(item => {
+        const itemData1 = item.comName ? item.comName.toUpperCase() : ''.toUpperCase()
+        const textData1 = text.toUpperCase();
+        return itemData1.indexOf(textData1) > -1
+      })
+      setFilteredList(newData)
+      setMySpeciesFiltered(newData1)
     }
   }
 
-  if (viewSearch) {
-    console.log('searchText', searchText)
-    searchFilterFunction(searchText)
-  }
 
-  const FlatSpeciesList = ({speciesAlpha}) => {
+  const FlatSpeciesList = () => {
     return (
       <View>
         <View style={{flexDirection: 'row', marginHorizontal: 12, marginTop: 12}}>
@@ -188,11 +205,11 @@ const SpeciesList = props => {
             <Switch onChange={() => setSwitchView(!switchView)} value={switchView} />
           </View>
         </View>
-        {!defaultView ? null : (<FlatList data={defaultSpecies} renderItem={renderSpecies} keyExtractor={item => item._id.toString()} />)}
+        {!defaultView ? null : (<FlatList data={!searchText ? defaultSpecies : filteredList} renderItem={renderSpecies} keyExtractor={item => item._id.toString()} />)}
         <View style={{margin: 12}}>
           <Text style={{color: 'gray'}}>My Species</Text>
         </View>
-        <FlatList data={speciesAlpha} renderItem={renderSpecies} keyExtractor={(item) => item._id.toString()}/>
+        <FlatList data={!searchText ? mySpecies : mySpeciesFiltered} renderItem={renderSpecies} keyExtractor={(item) => item._id.toString()}/>
       </View>
     )
   }
@@ -205,7 +222,7 @@ const SpeciesList = props => {
   return (
     <View style={{flex: 1}}>
       <ScrollView>
-        <FlatSpeciesList speciesAlpha={speciesAlpha}/>
+        <FlatSpeciesList />
       </ScrollView>
       <TouchableOpacity style={styles.TouchableOpacityStyle} onPress={() => navigate('CreateSpecies')}>
         <Icon name={"plus"} type={"font-awesome"} raised reverse color="#00ced1" style={styles.FloatingButtonStyle} />
@@ -253,6 +270,11 @@ const Header = (props) => {
   const {bool} = useContext(ViewSearch)
   const [viewSearch, setViewSearch] = bool
 
+  const cancelSearchHandler = () => {
+    // setSearchText('')
+    setViewSearch(!viewSearch)
+  }
+
   return (
     <View style={{width: 400}}>
       {!viewSearch ? 
@@ -261,7 +283,7 @@ const Header = (props) => {
           <Text style={{color: 'white', fontSize: 20}}>Species</Text>
         </View>
         <View style={{marginLeft: 'auto', backgroundColor: '#008b8b'}}>
-          <Icon name='search' type='font-awesome' onPress={() => setViewSearch(!viewSearch)} iconStyle={{marginRight: 20, color: 'white', backgroundColor: '#008b8b'}} />
+          <Icon name='search' type='font-awesome' onPress={() =>cancelSearchHandler()} iconStyle={{marginRight: 20, color: 'white', backgroundColor: '#008b8b'}} />
         </View>
       </View>)
       :
@@ -272,6 +294,7 @@ const Header = (props) => {
           platform='android'
           value={searchText}
           onChangeText={input => setSearchText(input)}
+          placeholder='Filter species'
         />
       </View>}
     </View>
