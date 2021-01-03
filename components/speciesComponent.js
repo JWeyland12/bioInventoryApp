@@ -52,6 +52,7 @@ const SpeciesList = props => {
   useLayoutEffect(() => {
     if (modalIndex) {
       setSpeciesState()
+      console.log('enter')
     }
     if (switchView) {
       console.log('sortsciName')
